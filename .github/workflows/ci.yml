@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ["3.10", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: pip install -e ".[dev]"
+      - run: ruff check .
+      - run: pytest -q
+      - name: Every must-keep fact survives on the corpus and the held-out set
+        run: |
+          whittle bench --counter estimate --fail-under-retention 100
+          whittle bench --counter estimate --corpus bench/holdout --fail-under-retention 100
+  dogfood:
+    # The server's own tool definitions should earn an A from mcp-reportcard.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e . mcp-reportcard
+      - run: mcp-reportcard check "python -m whittle_mcp.server" --fail-under 90 -f markdown

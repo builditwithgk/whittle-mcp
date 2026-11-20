@@ -1,0 +1,15 @@
+......................F..............                                                                            [100%]
+====================================================== FAILURES =======================================================
+_______________________________ test_retention_on_the_corpus_and_beats_naive_truncation _______________________________
+
+    @pytest.mark.skipif(not CORPUS.exists(), reason="corpus not built (bench/make_corpus.py)")
+    def test_retention_on_the_corpus_and_beats_naive_truncation():
+        samples = load_corpus(CORPUS)
+>       assert len(samples) >= 40
+E       assert 0 >= 40
+E        +  where 0 = len([])
+
+tests\test_engine.py:79: AssertionError
+=============================================== short test summary info ===============================================
+FAILED tests/test_engine.py::test_retention_on_the_corpus_and_beats_naive_truncation - assert 0 >= 40
+1 failed, 36 passed in 4.49s

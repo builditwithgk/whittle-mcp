@@ -1,0 +1,10 @@
+{
+ "kind": "log",
+ "options": {},
+ "source": "python script run (py-recursion)",
+ "facts": {
+  "contains": [
+   "RecursionError: maximum recursion depth exceeded"
+  ]
+ }
+}

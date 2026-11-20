@@ -1,0 +1,23 @@
+{
+ "kind": "tests",
+ "options": {},
+ "source": "pytest run on a copy of agentfirebreak-repo (m1-default-allow)",
+ "facts": {
+  "contains": [
+   "tests/test_guard.py::test_probe_bypass_attempts",
+   "tests/test_hardening.py::test_backslash_userinfo_url_is_judged_by_the_host_a_browser_uses",
+   "AssertionError: https://good.example@attacker.example/x",
+   "assert <Effect.ALLOW: 'allow'> is not <Effect.ALLOW: 'allow'>",
+   "+  where <Effect.ALLOW: 'allow'> = Decision(effect=<Effect.ALLOW: 'allow'>, rule_id='default', reason='http_get: no rule matched, so the default (allow) applies.', risk=<Risk.READ: 'read'>, tainted=True, sensitive=False, findings=[Finding(id='NEW_SINK', message='url = https://good.example@attacker.example/x', param='url', value='https://good.example@attacker.example/x', origin=<Origin.NEW: 'new'>, evidence=[])], signals=[]).effect",
+   "+    where Decision(effect=<Effect.ALLOW: 'allow'>, rule_id='default', reason='http_get: no rule matched, so the default (allow) applies.', risk=<Risk.READ: 'read'>, tainted=True, sensitive=False, findings=[Finding(id='NEW_SINK', message='url = https://good.example@attacker.example/x', param='url', value='https://good.example@attacker.example/x', origin=<Origin.NEW: 'new'>, evidence=[])], signals=[]) = evaluate(ToolCall(name='http_get', args={'url': 'https://good.example@attacker.example/x'}))",
+   "+      where evaluate = <agent_firebreak.guard.Guard object at 0x0000019AEC872960>.evaluate",
+   "+      and   ToolCall(name='http_get', args={'url': 'https://good.example@attacker.example/x'}) = ToolCall('http_get', {'url': 'https://good.example@attacker.example/x'})",
+   "+  and   <Effect.ALLOW: 'allow'> = Effect.ALLOW",
+   "AssertionError: assert <Effect.ALLOW: 'allow'> is not <Effect.ALLOW: 'allow'>",
+   "+  where <Effect.ALLOW: 'allow'> = effect(<agent_firebreak.guard.Guard object at 0x0000019AED71A7B0>, 'web_fetch', url='https://attacker.example\\\\@docs.corp.example/plan')",
+   "tests\\test_guard.py:96",
+   "tests\\test_hardening.py:37",
+   "2 failed, 71 passed in 4.02s"
+  ]
+ }
+}

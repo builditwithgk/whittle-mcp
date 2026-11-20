@@ -1,0 +1,161 @@
+diff --git a/.github/ISSUE_TEMPLATE/bug_report.yml b/.github/ISSUE_TEMPLATE/bug_report.yml
+new file mode 100644
+index 0000000..eeb0206
+--- /dev/null
++++ b/.github/ISSUE_TEMPLATE/bug_report.yml
+@@ -0,0 +1,31 @@
++name: Bug report
++description: agent-firebreak crashed or behaved incorrectly
++labels: ["bug"]
++body:
++  - type: textarea
++    id: what-happened
++    attributes:
++      label: What happened?
++      description: What did you run, what did you expect, and what happened instead?
++    validations:
++      required: true
++  - type: textarea
++    id: repro
++    attributes:
++      label: Steps or code to reproduce
++      render: python
++  - type: input
++    id: version
++    attributes:
++      label: Version
++      description: Output of `agent-firebreak --version`
++      placeholder: agent-firebreak 0.1.0
++    validations:
++      required: true
++  - type: input
++    id: environment
++    attributes:
++      label: OS and Python version
++      placeholder: Windows 11, Python 3.12
++    validations:
++      required: true
+diff --git a/.github/ISSUE_TEMPLATE/bypass_report.yml b/.github/ISSUE_TEMPLATE/bypass_report.yml
+new file mode 100644
+index 0000000..d5a63e1
+--- /dev/null
++++ b/.github/ISSUE_TEMPLATE/bypass_report.yml
+@@ -0,0 +1,28 @@
++name: Bypass or false negative
++description: A tool call that should have been blocked or held was allowed
++labels: ["security", "bypass"]
++body:
++  - type: markdown
++    attributes:
++      value: |
++        This is the most valuable kind of report. Please keep examples fictional (use `attacker.example`, never real data). For anything that could harm real users of the library, say so in the title and we can move to a private channel.
++  - type: textarea
++    id: attack
++    attributes:
++      label: What did the attacker text or value look like?
++      description: The content the agent read, and the tool call that followed.
++    validations:
++      required: true
++  - type: textarea
++    id: expected
++    attributes:
++      label: What did the guard decide, and what should it have decided?
++    validations:
++      required: true
++  - type: input
++    id: version
++    attributes:
++      label: Version
++      placeholder: agent-firebreak 0.1.0
++    validations:
++      required: true
+diff --git a/.github/ISSUE_TEMPLATE/config.yml b/.github/ISSUE_TEMPLATE/config.yml
+new file mode 100644
+index 0000000..5294351
+--- /dev/null
++++ b/.github/ISSUE_TEMPLATE/config.yml
+@@ -0,0 +1,8 @@
++blank_issues_enabled: false
++contact_links:
++  - name: Questions and ideas
++    url: https://github.com/builditwithgk/agent-firebreak/discussions
++    about: Ask how to use agent-firebreak, share results, or discuss ideas before opening an issue.
++  - name: Try it in the browser
++    url: https://huggingface.co/spaces/builditwithgk/agent-firebreak
++    about: Watch an attack run with and without the guard, no install needed.
+diff --git a/.github/ISSUE_TEMPLATE/feature_request.yml b/.github/ISSUE_TEMPLATE/feature_request.yml
+new file mode 100644
+index 0000000..3876e56
+--- /dev/null
++++ b/.github/ISSUE_TEMPLATE/feature_request.yml
+@@ -0,0 +1,22 @@
++name: Feature idea
++description: Suggest a check, policy option, integration, or improvement
++labels: ["enhancement"]
++body:
++  - type: textarea
++    id: problem
++    attributes:
++      label: What problem would this solve?
++    validations:
++      required: true
++  - type: textarea
++    id: proposal
++    attributes:
++      label: What would you like agent-firebreak to do?
++    validations:
++      required: true
++  - type: checkboxes
++    id: help
++    attributes:
++      label: Contributing
++      options:
++        - label: I'd be happy to open a pull request for this.
+diff --git a/.github/ISSUE_TEMPLATE/first_run_feedback.yml b/.github/ISSUE_TEMPLATE/first_run_feedback.yml
+new file mode 100644
+index 0000000..10c0f39
+--- /dev/null
++++ b/.github/ISSUE_TEMPLATE/first_run_feedback.yml
+@@ -0,0 +1,30 @@
++name: First-run feedback
++description: You tried it for the first time. Tell us how it went (10 minutes of honest feedback is gold)
++labels: ["feedback"]
++body:
++  - type: checkboxes
++    id: tried
++    attributes:
++      label: What did you try?
++      options:
++        - label: "`agent-firebreak bench`"
++        - label: The browser demo
++        - label: Wrapped my own agent's tool calls with `Guard`
++  - type: textarea
++    id: stuck
++    attributes:
++      label: Where did you get stuck or confused?
++    validations:
++      required: true
++  - type: textarea
++    id: missing
++    attributes:
++      label: What did you expect that was missing?
++  - type: dropdown
++    id: use
++    attributes:
++      label: Would you use this on a real agent?
++      options:
++        - Yes, as is
++        - Yes, with changes (say which above)
++        - No
+diff --git a/SECURITY.md b/SECURITY.md
+new file mode 100644
+index 0000000..5c581d8
+--- /dev/null
++++ b/SECURITY.md
+@@ -0,0 +1,6 @@
++# Security
++
++agent-firebreak limits the damage of prompt injection; it is not a complete defence (see the Limits section of the README).
++
++- **Found a way around the guard?** Open a "Bypass or false negative" issue with a fictional example. This is welcome and is how the project improves.
++- **A vulnerability in the library itself** (for example a crash on crafted input, or an unsafe default)? Use GitHub's private vulnerability reporting on this repository's Security tab.

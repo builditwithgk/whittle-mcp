@@ -1,0 +1,220 @@
+diff --git a/README.md b/README.md
+index 08a2b57..4a9b494 100644
+--- a/README.md
++++ b/README.md
+@@ -6,6 +6,8 @@
+ 
+ When an agent picks the wrong tool, sends malformed arguments, or burns context on bloated definitions, the cause is usually in the server — and the model only ever sees what your `tools/list` says. `mcp-reportcard` checks exactly that, in seconds, for any MCP server in any language.
+ 
++![mcp-reportcard grading a sloppy MCP server (D) and the same service written properly (A)](https://raw.githubusercontent.com/builditwithgk/mcp-reportcard/main/docs/demo.gif)
++
+ **Try it in the browser:** [huggingface.co/spaces/builditwithgk/mcp-reportcard](https://huggingface.co/spaces/builditwithgk/mcp-reportcard) — paste a `tools/list` JSON, get the report card.
+ 
+ ## Why it's different
+diff --git a/docs/demo.gif b/docs/demo.gif
+new file mode 100644
+index 0000000..9dccc5a
+Binary files /dev/null and b/docs/demo.gif differ
+diff --git a/scripts/make_demo_gif.py b/scripts/make_demo_gif.py
+new file mode 100644
+index 0000000..e5b7e24
+--- /dev/null
++++ b/scripts/make_demo_gif.py
+@@ -0,0 +1,197 @@
++"""Render docs/demo.gif: mcp-reportcard grading the bad example (D) and then the good one (A).
++
++The output is real: both example servers are checked (with --fuzz) in-process, the terminal
++report is captured from rich with its colours, and each frame is drawn with Pillow.
++
++    pip install -e ".[dev]" pillow
++    python scripts/make_demo_gif.py            # writes docs/demo.gif
++"""
++
++from __future__ import annotations
++
++import io
++import sys
++from pathlib import Path
++
++import anyio
++from PIL import Image, ImageDraw, ImageFont
++from rich.console import Console
++from rich.segment import Segment
++from rich.terminal_theme import TerminalTheme
++
++ROOT = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(ROOT / "examples"))
++import bad_server  # noqa: E402
++import good_server  # noqa: E402
++
++from mcp_reportcard.analyze import analyze  # noqa: E402
++from mcp_reportcard.connect import fetch_tools  # noqa: E402
++from mcp_reportcard.fuzz import run_fuzz  # noqa: E402
++from mcp_reportcard.report import print_terminal  # noqa: E402
++
++COLS, ROWS = 92, 34
++FONT_SIZE, LINE_H, PAD, TITLE_H = 15, 21, 22, 34
++BG, FG, TITLE_BG = (24, 24, 27), (226, 226, 220), (40, 40, 44)
++PROMPT, MUTED = (110, 200, 140), (150, 150, 145)
++THEME = TerminalTheme(
++    BG, FG,
++    [(40, 40, 44), (240, 100, 90), (110, 200, 140), (235, 180, 80), (110, 160, 255),
++     (200, 130, 230), (90, 200, 220), (210, 210, 205)],
++    [(110, 110, 110), (255, 125, 115), (140, 225, 165), (250, 205, 110), (140, 185, 255),
++     (220, 160, 245), (120, 220, 235), (245, 245, 240)],
++)
++
++
++def _font(name: str) -> ImageFont.FreeTypeFont:
++    for candidate in (Path("C:/Windows/Fonts") / name, Path("/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf")):
++        if candidate.exists():
++            return ImageFont.truetype(str(candidate), FONT_SIZE)
++    return ImageFont.load_default()
++
++
++REGULAR, BOLD = _font("consola.ttf"), _font("consolab.ttf")
++CELL_W = REGULAR.getlength("M")
++
++Run = tuple[str, tuple[int, int, int], bool]  # text, colour, bold
++Line = list[Run]
++
++
++async def _report(server, label):  # noqa: ANN001
++    name, tools = await fetch_tools(server)
++    outcomes, skipped = await run_fuzz(server, tools)
++    return analyze(tools, server=name, fuzz_outcomes=outcomes, fuzz_skipped=skipped)
++
++
++def capture(report) -> list[Line]:  # noqa: ANN001
++    """Render the real terminal report and convert rich segments into coloured runs."""
++    console = Console(record=True, width=COLS, force_terminal=True, color_system="truecolor",
++                      file=io.StringIO(), legacy_windows=False)
++    print_terminal(report, console=console)
++    lines: list[Line] = []
++    for segs in Segment.split_lines(console._record_buffer):  # noqa: SLF001
++        line: Line = []
++        for seg in segs:
++            if not seg.text:
++                continue
++            style = seg.style
++            colour = FG
++            if style and style.color:
++                colour = tuple(style.color.get_truecolor(THEME))  # ColorTriplet -> (r, g, b)
++            if style and style.dim:
++                colour = tuple(int(c * 0.6 + b * 0.4) for c, b in zip(colour, BG))
++            line.append((seg.text, tuple(colour), bool(style and style.bold)))
++        lines.append(line)
++    while lines and not "".join(t for t, _, _ in lines[-1]).strip():
++        lines.pop()
++    return lines
++
++
++def text_of(line: Line) -> str:
++    return "".join(t for t, _, _ in line)
++
++
++CORNERS = str.maketrans({"╭": "┌", "╮": "┐", "╰": "└", "╯": "┘"})  # Consolas lacks rounded corners
++SHOWCASE = ("F002", "X001", "D004")  # the most telling issues for the bad example
++
++
++def condense(lines: list[Line], showcase: tuple[str, ...] = SHOWCASE) -> list[Line]:
++    """Keep the panel, the tool table, a few hand-picked issues (with fixes) and the fuzz summary."""
++    lines = [[(t.translate(CORNERS), c, b) for t, c, b in line] for line in lines]
++    head: list[Line] = []
++    blocks: list[list[Line]] = []
++    tail: list[Line] = []
++    section = "head"
++    for line in lines:
++        t = text_of(line)
++        if t.strip() == "Issues":
++            section = "issues"
++            head.append(line)
++        elif t.startswith("Fuzzing"):
++            section = "tail"
++            tail.append(line)
++        elif section == "issues":
++            if t.startswith("  ") and not t.startswith("       "):
++                blocks.append([line])  # a new issue
++            elif blocks:
++                blocks[-1].append(line)  # its fix, or a wrapped continuation
++        elif section == "head":
++            head.append(line)
++        # anything after the Fuzzing line (skipped tools, "Most common") is dropped
++    if not blocks:
++        return head + tail
++    picked: list[list[Line]] = []
++    for rule in showcase:
++        for block in blocks:
++            if text_of(block[0]).strip().startswith(rule) and block not in picked:
++                picked.append(block)
++                break
++    body = [line for block in picked for line in block]
++    more = len(blocks) - len(picked)
++    if more:
++        body.append([(f"  … and {more} more issues, each with a fix", MUTED, False)])
++    return head + body + tail
++
++
++def frame(lines: list[Line], cursor: bool = False) -> Image.Image:
++    w = int(PAD * 2 + CELL_W * COLS)
++    h = TITLE_H + PAD * 2 + LINE_H * ROWS
++    img = Image.new("RGB", (w, h), BG)
++    d = ImageDraw.Draw(img)
++    d.rectangle([0, 0, w, TITLE_H], fill=TITLE_BG)
++    for i, c in enumerate([(240, 100, 90), (235, 180, 80), (110, 200, 140)]):
++        d.ellipse([16 + i * 20, 12, 28 + i * 20, 24], fill=c)
++    title = "mcp-reportcard — health check for MCP servers"
++    d.text(((w - REGULAR.getlength(title)) / 2, 9), title, font=REGULAR, fill=MUTED)
++    visible = lines[-ROWS:]
++    for row, line in enumerate(visible):
++        x, y = PAD, TITLE_H + PAD + row * LINE_H
++        for text, colour, bold in line:
++            d.text((x, y), text, font=BOLD if bold else REGULAR, fill=colour)
++            x += CELL_W * len(text)
++        if cursor and row == len(visible) - 1:
++            d.rectangle([x + 1, y + 2, x + CELL_W - 1, y + LINE_H - 3], fill=FG)
++    return img
++
++
++def scene(frames, durations, before: list[Line], command: str, output: list[Line], hold: int) -> list[Line]:  # noqa: ANN001
++    prompt: Run = ("$ ", PROMPT, True)
++    for i in range(0, len(command) + 1, 2):
++        frames.append(frame(before + [[prompt, (command[:i], FG, False)]], cursor=True))
++        durations.append(45)
++    frames.append(frame(before + [[prompt, (command, FG, False)]], cursor=True))
++    durations.append(500)
++    shown = before + [[prompt, (command, FG, False)]]
++    for i in range(0, len(output), 3):
++        shown_now = shown + output[: i + 3]
++        frames.append(frame(shown_now))
++        durations.append(70)
++    final = shown + output
++    frames.append(frame(final + [[prompt]], cursor=True))
++    durations.append(hold)
++    return final
++
++
++def main() -> None:
++    bad = anyio.run(_report, bad_server.server, "bad")
++    good = anyio.run(_report, good_server.server, "good")
++    bad_lines = condense(capture(bad))
++    good_lines = condense(capture(good))
++
++    frames: list[Image.Image] = []
++    durations: list[int] = []
++    comment = [[("# A sloppy MCP server: vague descriptions, no param docs, leaky errors", MUTED, False)]]
++    scene(frames, durations, comment, 'mcp-reportcard check "python bad_server.py" --fuzz', bad_lines, 4500)
++    comment = [[("# The same service, written properly", MUTED, False)]]
++    scene(frames, durations, comment, 'mcp-reportcard check "python good_server.py" --fuzz', good_lines, 4000)
++
++    out = ROOT / "docs" / "demo.gif"
++    out.parent.mkdir(exist_ok=True)
++    palette = [f.convert("P", palette=Image.Palette.ADAPTIVE, colors=64) for f in frames]
++    palette[0].save(out, save_all=True, append_images=palette[1:], duration=durations, loop=0,
++                    optimize=True, disposal=1)
++    print(f"Wrote {out} ({out.stat().st_size / 1024:.0f} KB, {len(frames)} frames, "
++          f"bad={bad.grade} {bad.score}, good={good.grade} {good.score})")
++
++
++if __name__ == "__main__":
++    main()

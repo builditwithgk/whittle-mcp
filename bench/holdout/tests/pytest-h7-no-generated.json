@@ -1,0 +1,19 @@
+{
+ "kind": "tests",
+ "options": {},
+ "source": "pytest on a mutated copy of whittle-mcp (h7-no-generated)",
+ "facts": {
+  "contains": [
+   "tests/test_engine.py::test_retention_on_the_corpus_and_beats_naive_truncation",
+   "tests/test_trimmers.py::test_diff_collapses_lockfiles_and_whitespace_only_and_keeps_changes",
+   "assert 0 >= 40",
+   "+  where 0 = len([])",
+   "assert ('generated or lock file' in 'whittle diff: 3 files, +62 -62; collapsed: 1 whitespace-only change\\ndiff --git a/src/app.py b/src/app.py\\nindex 1..2...n-    \"dep59\": \"1.0.0\"\\n+    \"dep59\": \"1.0.1\"\\ndiff --git a/pad.py b/pad.py\\n[whitespace-only change: +1 -1 collapsed]')",
+   "assert len(samples) >= 40",
+   "assert \"generated or lock file\" in text and \"whitespace-only change\" in text",
+   "tests\\test_engine.py:79",
+   "tests\\test_trimmers.py:114",
+   "2 failed, 35 passed in 4.52s"
+  ]
+ }
+}

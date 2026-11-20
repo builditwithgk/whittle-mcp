@@ -1,0 +1,142 @@
+diff --git a/src/agent_firebreak/bench.py b/src/agent_firebreak/bench.py
+index 53812ed..e94d22d 100644
+--- a/src/agent_firebreak/bench.py
++++ b/src/agent_firebreak/bench.py
+@@ -59,7 +59,8 @@ def format_table(bench: dict[str, Any], scenarios: list[Scenario]) -> str:
+         rows.append(f"{s.id:26} {cells[0]:14} {cells[1]:14} {cells[2]:14}")
+     m = bench["summary"]
+     rows += ["", f"Attacks landed (of {m['attacks']}):   off {m['attacks_landed']['off']}, "
+-                 f"guard on {m['attacks_landed']['on_deny']} (human denies), {m['attacks_landed']['on_approve']} (human approves)",
++                 f"guard on {m['attacks_landed']['on_deny']} (human denies), "
++                 f"{m['attacks_landed']['on_approve']} (human approves)",
+              f"Normal tasks done (of {m['benign']}): off {m['benign_completed']['off']}, "
+              f"guard on {m['benign_completed']['on_deny']} (deny), {m['benign_completed']['on_approve']} (approve)",
+              f"Approval prompts on normal tasks: {m['benign_asks']['on_approve']}",
+diff --git a/src/agent_firebreak/cli.py b/src/agent_firebreak/cli.py
+index 58dca47..1f8202d 100644
+--- a/src/agent_firebreak/cli.py
++++ b/src/agent_firebreak/cli.py
+@@ -92,7 +92,8 @@ def main(argv: list[str] | None = None) -> int:
+     else:
+         print(format_table(out, scenarios))
+     m = out["summary"]
+-    regressed = m["attacks_landed"]["on_deny"] or m["attacks_landed"]["on_approve"]         or m["benign_completed"]["on_approve"] != m["benign"]
++    regressed = (m["attacks_landed"]["on_deny"] or m["attacks_landed"]["on_approve"]
++                 or m["benign_completed"]["on_approve"] != m["benign"])
+     return 1 if regressed else 0  # CI fails if an attack lands or a normal task breaks
+ 
+ 
+diff --git a/src/agent_firebreak/guard.py b/src/agent_firebreak/guard.py
+index 7ab178a..9fd9c38 100644
+--- a/src/agent_firebreak/guard.py
++++ b/src/agent_firebreak/guard.py
+@@ -8,7 +8,7 @@ from typing import Any
+ 
+ from agent_firebreak.audit import AuditLog
+ from agent_firebreak.detectors import scan
+-from agent_firebreak.models import (Decision, Effect, Finding, Origin, Risk, Segment, Signal, ToolCall, ToolSpec,
++from agent_firebreak.models import (Decision, Finding, Origin, Risk, Segment, Signal, ToolCall, ToolSpec,
+                                     Trust)
+ from agent_firebreak.normalize import (Entity, extract_entities, flatten_strings, normalise_text, normalise_url)
+ from agent_firebreak.policy import Facts, Policy, Rule
+@@ -73,6 +73,8 @@ class Guard:
+         if spec:
+             findings += self._check_sinks(spec, call)
+             findings += self._check_payload(spec, call)
++        else:  # a tool nobody declared cannot be judged, so a human decides
++            findings.append(Finding("UNKNOWN_TOOL", f"{call.name} is not a declared tool", call.name))
+         facts = Facts(risk.value, self.tainted, self.sensitive, frozenset(f.id for f in findings),
+                       frozenset(s.id for s in self.signals))
+         rule, effect = self.policy.decide(facts)
+diff --git a/src/agent_firebreak/models.py b/src/agent_firebreak/models.py
+index 458c637..a105223 100644
+--- a/src/agent_firebreak/models.py
++++ b/src/agent_firebreak/models.py
+@@ -44,8 +44,11 @@ class Segment:
+     meta: dict[str, Any] = field(default_factory=dict)
+ 
+     def to_dict(self) -> dict[str, Any]:
+-        return {"label": self.label, "text": self.text, "trust": self.trust.value,
+-                "tags": list(self.tags), "sensitive": self.sensitive, **({"poison": self.meta["poison"]} if self.meta.get("poison") else {})}
++        out = {"label": self.label, "text": self.text, "trust": self.trust.value,
++               "tags": list(self.tags), "sensitive": self.sensitive}
++        if self.meta.get("poison"):
++            out["poison"] = self.meta["poison"]
++        return out
+ 
+ 
+ @dataclass(frozen=True)
+diff --git a/src/agent_firebreak/policy.py b/src/agent_firebreak/policy.py
+index 6af4920..78856a2 100644
+--- a/src/agent_firebreak/policy.py
++++ b/src/agent_firebreak/policy.py
+@@ -60,9 +60,15 @@ when = {{ risk = ["external"], tainted = true, signals_any = {json.dumps(ALL_SIG
+ effect = "ask"
+ reason = "{{tool}}: untrusted content read earlier contained suspicious patterns ({{signals}})."
+ 
++[[rule]]
++id = "ask-unknown-tool"
++when = {{ findings_any = ["UNKNOWN_TOOL"] }}
++effect = "ask"
++reason = "{{tool}}: this tool was not declared to the guard, so its risk is unknown."
++
+ [[rule]]
+ id = "allow-clean"
+-when = {{ findings_none = ["UNTRUSTED_SINK", "NEW_SINK", "EXFIL_LINK", "AUTOFETCH_IMAGE"] }}
++when = {{ findings_none = ["UNTRUSTED_SINK", "NEW_SINK", "EXFIL_LINK", "AUTOFETCH_IMAGE", "UNKNOWN_TOOL"] }}
+ effect = "allow"
+ reason = "{{tool}}: no untrusted value reaches a sensitive parameter."
+ """
+diff --git a/src/agent_firebreak/runner.py b/src/agent_firebreak/runner.py
+index e7ee4c0..0524f8c 100644
+--- a/src/agent_firebreak/runner.py
++++ b/src/agent_firebreak/runner.py
+@@ -116,7 +116,7 @@ async def run_scenario(scenario: Scenario, agent: Agent, *, guard_on: bool = Tru
+ def _judge(scenario: Scenario, result: RunResult, calls: list[dict[str, Any]], decisions: list[str],
+            final_executed: bool) -> None:
+     if scenario.is_attack:
+-        result.landed = bool(scenario.success) and matches(scenario.success, calls)
++        result.landed = scenario.success is not None and matches(scenario.success, calls)
+         if result.landed:
+             result.outcome = "landed"
+         elif "blocked" in decisions:
+diff --git a/src/agent_firebreak/world.py b/src/agent_firebreak/world.py
+index 93a021e..c8ce257 100644
+--- a/src/agent_firebreak/world.py
++++ b/src/agent_firebreak/world.py
+@@ -88,7 +88,10 @@ class World:
+         for cid, note in seed.get("customer_notes", {}).items():
+             for customer in self.customers:
+                 if customer["id"] == cid:
+-                    customer["notes"], customer["poison"] = _page(note)
++                    text, poison = _page(note)
++                    customer["notes"] = text
++                    if poison:
++                        customer["poison"] = poison
+         self.pages = {normalise_url(normalise_text(u))[0]: _page(v) for u, v in seed.get("pages", {}).items()}
+         self.effects: list[dict[str, Any]] = []
+ 
+diff --git a/tests/test_guard.py b/tests/test_guard.py
+index 8d04edc..4dcd27f 100644
+--- a/tests/test_guard.py
++++ b/tests/test_guard.py
+@@ -78,3 +78,19 @@ def test_cli(capsys, tmp_path):
+     out = capsys.readouterr().out
+     assert "blocked" in out and json.loads(out[out.rindex("{\n  \"summary\""):])["summary"]["attacks"] == 8
+     assert main(["run", "nope"]) == 2
++
++
++def test_undeclared_tool_is_never_silently_allowed():
++    d = guard().evaluate(ToolCall("wire_money", {"to": "x"}))
++    assert d.effect is Effect.ASK and d.rule_id == "ask-unknown-tool"
++
++
++def test_probe_bypass_attempts():
++    g = guard()
++    g.observe(Segment("page", "mail drop@attacker.example"))
++    for to in ("Drop@Attacker.Example", "Bob <drop@attacker.example>", ["me@corp.example", "drop@attacker.example"],
++               "me@corp.example, drop@attacker.example", {"addr": "drop@attacker.example"}):
++        assert send(g, to).effect is Effect.BLOCK, to
++    assert send(g, "drоp@attacker.example").effect is not Effect.ALLOW  # homoglyph
++    for url in ("https://good.example@attacker.example/x", "https://good.example.attacker.example/"):
++        assert g.evaluate(ToolCall("http_get", {"url": url})).effect is not Effect.ALLOW, url

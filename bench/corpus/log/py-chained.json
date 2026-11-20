@@ -1,0 +1,11 @@
+{
+ "kind": "log",
+ "options": {},
+ "source": "python script run (py-chained)",
+ "facts": {
+  "contains": [
+   "KeyError: 'user_id'",
+   "RuntimeError: lookup failed"
+  ]
+ }
+}

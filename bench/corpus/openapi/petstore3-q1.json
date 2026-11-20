@@ -1,0 +1,33 @@
+{
+ "kind": "openapi",
+ "options": {
+  "paths": [
+   "/pet/*"
+  ]
+ },
+ "source": "https://petstore3.swagger.io/api/v3/openapi.json (query {\"paths\": [\"/pet/*\"]})",
+ "facts": {
+  "contains": [
+   "findPetsByStatus",
+   "findPetsByTags",
+   "getPetById",
+   "updatePetWithForm",
+   "deletePet",
+   "uploadFile",
+   "status",
+   "tags",
+   "petId",
+   "name",
+   "api_key",
+   "additionalMetadata",
+   "200",
+   "400",
+   "default",
+   "404",
+   "/pet/findByStatus",
+   "/pet/findByTags",
+   "/pet/{petId}",
+   "/pet/{petId}/uploadImage"
+  ]
+ }
+}

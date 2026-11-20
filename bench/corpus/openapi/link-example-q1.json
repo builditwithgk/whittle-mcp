@@ -1,0 +1,17 @@
+{
+ "kind": "openapi",
+ "options": {
+  "paths": [
+   "/2.0/users/*"
+  ]
+ },
+ "source": "https://raw.githubusercontent.com/OAI/learn.openapis.org/main/examples/v3.0/link-example.json (query {\"paths\": [\"/2.0/users/*\"]})",
+ "facts": {
+  "contains": [
+   "getUserByName",
+   "username",
+   "200",
+   "/2.0/users/{username}"
+  ]
+ }
+}

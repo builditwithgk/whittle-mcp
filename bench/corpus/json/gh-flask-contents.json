@@ -1,0 +1,22 @@
+{
+ "kind": "json",
+ "options": {},
+ "source": "public API response",
+ "facts": {
+  "json_paths": [
+   "$[]._links",
+   "$[]._links.git",
+   "$[]._links.html",
+   "$[]._links.self",
+   "$[].download_url",
+   "$[].git_url",
+   "$[].html_url",
+   "$[].name",
+   "$[].path",
+   "$[].sha",
+   "$[].size",
+   "$[].type",
+   "$[].url"
+  ]
+ }
+}

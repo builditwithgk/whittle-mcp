@@ -1,0 +1,1265 @@
+{
+  "objects": [
+    {
+      "downloads": {
+        "monthly": 41619293,
+        "weekly": 10706557
+      },
+      "dependents": "171",
+      "updated": "2026-11-19T17:56:15.405Z",
+      "searchScore": 312.44476,
+      "package": {
+        "name": "@playwright/mcp",
+        "keywords": [],
+        "version": "0.0.86",
+        "description": "Playwright Tools for MCP",
+        "sanitized_name": "@playwright/mcp",
+        "publisher": {
+          "email": "npm-oidc-no-reply@github.com",
+          "trustedPublisher": {
+            "oidcConfigId": "ce039ad0-4930-49d9-9abb-149547347162",
+            "id": "github"
+          },
+          "username": "GitHub Actions"
+        },
+        "maintainers": [
+          {
+            "email": "pavel.feldman@gmail.com",
+            "username": "pavelfeldman"
+          },
+          {
+            "email": "yury.semikhatsky@gmail.com",
+            "username": "yurys"
+          },
+          {
+            "email": "dgozman@microsoft.com",
+            "username": "dgozman-ms"
+          },
+          {
+            "email": "microsoft-oss-publishing@microsoft.com",
+            "username": "microsoft-oss-releases"
+          },
+          {
+            "email": "npmjs@microsoft.com",
+            "username": "microsoft1es"
+          }
+        ],
+        "license": "Apache-2.0",
+        "date": "2026-11-18T18:54:16.868Z",
+        "links": {
+          "homepage": "https://playwright.dev",
+          "repository": "git+https://github.com/microsoft/playwright-mcp.git",
+          "bugs": "https://github.com/microsoft/playwright-mcp/issues",
+          "npm": "https://www.npmjs.com/package/@playwright/mcp"
+        }
+      },
+      "score": {
+        "final": 312.44476,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 4034314,
+        "weekly": 1426375
+      },
+      "dependents": "12",
+      "updated": "2026-11-19T17:54:05.744Z",
+      "searchScore": 260.71844,
+      "package": {
+        "name": "@upstash/context7-mcp",
+        "keywords": [
+          "modelcontextprotocol",
+          "mcp",
+          "context7",
+          "vibe-coding",
+          "developer tools",
+          "documentation",
+          "context"
+        ],
+        "version": "4.7.3",
+        "description": "MCP server for Context7",
+        "sanitized_name": "@upstash/context7-mcp",
+        "publisher": {
+          "email": "fahreddin@upstash.com",
+          "username": "fahreddin.ozcan"
+        },
+        "maintainers": [
+          {
+            "email": "mehmet@upstash.com",
+            "username": "mdogan"
+          },
+          {
+            "email": "bill@upstash.com",
+            "username": "buggyhunter"
+          },
+          {
+            "email": "cahidardaooz@gmail.com",
+            "username": "cahidarda"
+          },
+          {
+            "email": "fahreddin@upstash.com",
+            "username": "fahreddin.ozcan"
+          },
+          {
+            "email": "enes@upstash.com",
+            "username": "upstashnpm"
+          },
+          {
+            "email": "hello@joshtriedcoding.com",
+            "username": "joshtc"
+          },
+          {
+            "email": "burak@upstash.com",
+            "username": "burak-ups"
+          },
+          {
+            "email": "shannon@upstash.com",
+            "username": "shannonr"
+          }
+        ],
+        "license": "MIT",
+        "date": "2026-11-17T13:56:10.008Z",
+        "links": {
+          "homepage": "https://github.com/upstash/context7#readme",
+          "repository": "git+https://github.com/upstash/context7.git",
+          "bugs": "https://github.com/upstash/context7/issues",
+          "npm": "https://www.npmjs.com/package/@upstash/context7-mcp"
+        }
+      },
+      "score": {
+        "final": 260.71844,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 10069364,
+        "weekly": 2494666
+      },
+      "dependents": "67",
+      "updated": "2026-11-19T17:56:28.350Z",
+      "searchScore": 254.73265,
+      "package": {
+        "name": "chrome-devtools-mcp",
+        "keywords": [],
+        "version": "1.13.0",
+        "description": "MCP server for Chrome DevTools",
+        "sanitized_name": "chrome-devtools-mcp",
+        "publisher": {
+          "email": "npm-oidc-no-reply@github.com",
+          "trustedPublisher": {
+            "oidcConfigId": "fc609452-d18f-45b3-b9b4-b39b1d121272",
+            "id": "github"
+          },
+          "username": "GitHub Actions"
+        },
+        "maintainers": [
+          {
+            "email": "mathias@qiwi.be",
+            "username": "mathias"
+          },
+          {
+            "email": "alexei.rudenko@gmail.com",
+            "username": "orkon"
+          },
+          {
+            "email": "node-team-npm+wombot@google.com",
+            "username": "google-wombot"
+          }
+        ],
+        "license": "Apache-2.0",
+        "date": "2026-11-11T12:46:51.192Z",
+        "links": {
+          "homepage": "https://github.com/ChromeDevTools/chrome-devtools-mcp#readme",
+          "repository": "git+https://github.com/ChromeDevTools/chrome-devtools-mcp.git",
+          "bugs": "https://github.com/ChromeDevTools/chrome-devtools-mcp/issues",
+          "npm": "https://www.npmjs.com/package/chrome-devtools-mcp"
+        }
+      },
+      "score": {
+        "final": 254.73265,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 2507540,
+        "weekly": 645601
+      },
+      "dependents": "91",
+      "updated": "2026-11-19T17:59:45.553Z",
+      "searchScore": 240.11238,
+      "package": {
+        "name": "@hono/mcp",
+        "keywords": [],
+        "version": "0.3.5",
+        "description": "MCP Middleware for Hono",
+        "sanitized_name": "@hono/mcp",
+        "publisher": {
+          "actor": {
+            "name": "yusukebe",
+            "type": "user",
+            "email": "yusuke@kamawada.com"
+          },
+          "email": "npm-oidc-no-reply@github.com",
+          "trustedPublisher": {
+            "oidcConfigId": "43872966-28a3-4843-bde6-a3e080961e58",
+            "id": "github"
+          },
+          "username": "GitHub Actions"
+        },
+        "maintainers": [
+          {
+            "email": "yusuke@kamawada.com",
+            "username": "yusukebe"
+          }
+        ],
+        "license": "MIT",
+        "date": "2026-10-28T12:00:14.173Z",
+        "links": {
+          "homepage": "https://honohub.dev/docs/hono-mcp",
+          "repository": "git+https://github.com/honojs/middleware.git",
+          "npm": "https://www.npmjs.com/package/@hono/mcp"
+        }
+      },
+      "score": {
+        "final": 240.11238,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 6481660,
+        "weekly": 2245030
+      },
+      "dependents": "29",
+      "updated": "2026-11-19T17:59:15.239Z",
+      "searchScore": 237.27292,
+      "package": {
+        "name": "@better-auth/mcp",
+        "keywords": [
+          "mcp",
+          "model context protocol",
+          "auth",
+          "oauth",
+          "oidc",
+          "rfc9728",
+          "rfc8707",
+          "typescript",
+          "better-auth"
+        ],
+        "version": "1.7.26",
+        "description": "Model Context Protocol (MCP) plugin for Better Auth",
+        "sanitized_name": "@better-auth/mcp",
+        "publisher": {
+          "email": "npm-oidc-no-reply@github.com",
+          "trustedPublisher": {
+            "oidcConfigId": "06dfd0c8-b9c7-4ffe-8fa9-203d897b461d",
+            "id": "github"
+          },
+          "username": "GitHub Actions"
+        },
+        "maintainers": [
+          {
+            "email": "Bekacru@gmail.com",
+            "username": "bekacru"
+          },
+          {
+            "email": "gustavo@better-auth.com",
+            "username": "better-gustavo"
+          }
+        ],
+        "license": "MIT",
+        "date": "2026-11-18T17:56:45.762Z",
+        "links": {
+          "homepage": "https://www.better-auth.com/docs/plugins/mcp",
+          "repository": "git+https://github.com/better-auth/better-auth.git",
+          "bugs": "https://github.com/better-auth/better-auth/issues",
+          "npm": "https://www.npmjs.com/package/@better-auth/mcp"
+        }
+      },
+      "score": {
+        "final": 237.27292,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 936555,
+        "weekly": 259331
+      },
+      "dependents": 0,
+      "updated": "2026-11-20T07:58:14.712Z",
+      "searchScore": 234.96835,
+      "package": {
+        "name": "@hostinger/mcp",
+        "keywords": [
+          "hostinger",
+          "mcp",
+          "server",
+          "rest",
+          "api"
+        ],
+        "version": "4.14.0",
+        "description": "MCP server for Hostinger API",
+        "sanitized_name": "@hostinger/mcp",
+        "publisher": {
+          "email": "npm-oidc-no-reply@github.com",
+          "trustedPublisher": {
+            "oidcConfigId": "fd1191bf-b6ce-45f6-a3ac-6ff870a6bf61",
+            "id": "github"
+          },
+          "username": "GitHub Actions"
+        },
+        "maintainers": [
+          {
+            "email": "devs@hostinger.com",
+            "username": "devs_hostinger"
+          }
+        ],
+        "license": "MIT",
+        "date": "2026-11-20T07:57:42.806Z",
+        "links": {
+          "homepage": "https://github.com/hostinger/api-mcp-server#readme",
+          "repository": "git+https://github.com/hostinger/api-mcp-server.git",
+          "bugs": "https://github.com/hostinger/api-mcp-server/issues",
+          "npm": "https://www.npmjs.com/package/@hostinger/mcp"
+        }
+      },
+      "score": {
+        "final": 234.96835,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 1891298,
+        "weekly": 453610
+      },
+      "dependents": "20",
+      "updated": "2026-11-19T17:58:13.059Z",
+      "searchScore": 233.07808,
+      "package": {
+        "name": "@mcp-ui/client",
+        "keywords": [],
+        "version": "7.1.1",
+        "description": "mcp-ui Client SDK",
+        "sanitized_name": "@mcp-ui/client",
+        "publisher": {
+          "email": "idosalomon@gmail.com",
+          "actor": {
+            "name": "idosal",
+            "type": "user",
+            "email": "idosalomon@gmail.com"
+          },
+          "username": "idosal"
+        },
+        "maintainers": [
+          {
+            "email": "idosalomon@gmail.com",
+            "username": "idosal"
+          }
+        ],
+        "license": "Apache-2.0",
+        "date": "2026-05-09T22:34:39.215Z",
+        "links": {
+          "npm": "https://www.npmjs.com/package/@mcp-ui/client"
+        }
+      },
+      "score": {
+        "final": 233.07808,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 1167090,
+        "weekly": 258121
+      },
+      "dependents": "1",
+      "updated": "2026-11-20T07:58:17.275Z",
+      "searchScore": 227.37674,
+      "package": {
+        "name": "hostinger-api-mcp",
+        "keywords": [
+          "hostinger",
+          "mcp",
+          "server",
+          "rest",
+          "api"
+        ],
+        "version": "4.14.0",
+        "description": "MCP server for Hostinger API",
+        "sanitized_name": "hostinger-api-mcp",
+        "publisher": {
+          "email": "npm-oidc-no-reply@github.com",
+          "actor": {
+            "name": "algirdasci",
+            "type": "user",
+            "email": "algirdas.cicinskas@hostinger.com"
+          },
+          "trustedPublisher": {
+            "oidcConfigId": "c8389073-0164-4be0-a58b-1ae5bb3ff347",
+            "id": "github"
+          },
+          "username": "GitHub Actions"
+        },
+        "maintainers": [
+          {
+            "email": "devs@hostinger.com",
+            "username": "devs_hostinger"
+          }
+        ],
+        "license": "MIT",
+        "date": "2026-11-20T07:57:44.454Z",
+        "links": {
+          "homepage": "https://github.com/hostinger/api-mcp-server#readme",
+          "repository": "git+https://github.com/hostinger/api-mcp-server.git",
+          "bugs": "https://github.com/hostinger/api-mcp-server/issues",
+          "npm": "https://www.npmjs.com/package/hostinger-api-mcp"
+        }
+      },
+      "score": {
+        "final": 227.37674,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 796975,
+        "weekly": 273137
+      },
+      "dependents": "7",
+      "updated": "2026-11-19T18:01:38.469Z",
+      "searchScore": 226.462,
+      "package": {
+        "name": "@supabase/mcp-utils",
+        "keywords": [],
+        "version": "0.11.0",
+        "description": "MCP utilities",
+        "sanitized_name": "@supabase/mcp-utils",
+        "publisher": {
+          "email": "npm-oidc-no-reply@github.com",
+          "trustedPublisher": {
+            "oidcConfigId": "615e1818-aedf-41d0-af83-e2f5d3bbce40",
+            "id": "github"
+          },
+          "username": "GitHub Actions"
+        },
+        "maintainers": [
+          {
+            "email": "etienne@supabase.io",
+            "username": "etienne_supa"
+          },
+          {
+            "email": "greg.nmr@gmail.com",
+            "username": "gregnr"
+          },
+          {
+            "email": "katerina.skroumpelou@supabase.io",
+            "username": "mandarini"
+          },
+          {
+            "email": "matthewjonrossman@gmail.com",
+            "username": "mattrossman"
+          }
+        ],
+        "license": "Apache-2.0",
+        "date": "2026-11-17T18:06:13.742Z",
+        "links": {
+          "homepage": "https://github.com/supabase/mcp#readme",
+          "repository": "git+https://github.com/supabase/mcp.git",
+          "bugs": "https://github.com/supabase/mcp/issues",
+          "npm": "https://www.npmjs.com/package/@supabase/mcp-utils"
+        }
+      },
+      "score": {
+        "final": 226.462,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 353406,
+        "weekly": 110882
+      },
+      "dependents": 0,
+      "updated": "2026-11-19T18:04:09.467Z",
+      "searchScore": 226.33934,
+      "package": {
+        "name": "@aikidosec/mcp",
+        "keywords": [
+          "aikido",
+          "mcp",
+          "server",
+          "security"
+        ],
+        "version": "1.0.35",
+        "description": "Aikido MCP server",
+        "sanitized_name": "@aikidosec/mcp",
+        "publisher": {
+          "email": "npm-oidc-no-reply@github.com",
+          "trustedPublisher": {
+            "oidcConfigId": "9075f41c-c186-4f85-8877-98520b2b987d",
+            "id": "github"
+          },
+          "approver": {
+            "name": "matthias_aikido",
+            "email": "matthias.gekiere@aikido.dev"
+          },
+          "username": "GitHub Actions"
+        },
+        "maintainers": [
+          {
+            "email": "matthias.gekiere@aikido.dev",
+            "username": "matthias_aikido"
+          },
+          {
+            "email": "sander@aikido.dev",
+            "username": "sander_aikido"
+          }
+        ],
+        "license": "AGPL",
+        "date": "2026-11-18T14:09:59.303Z",
+        "links": {
+          "npm": "https://www.npmjs.com/package/@aikidosec/mcp"
+        }
+      },
+      "score": {
+        "final": 226.33934,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 37422251,
+        "weekly": 10494143
+      },
+      "dependents": "199",
+      "updated": "2026-11-19T17:57:00.534Z",
+      "searchScore": 225.86316,
+      "package": {
+        "name": "@ai-sdk/mcp",
+        "keywords": [
+          "ai",
+          "mcp"
+        ],
+        "version": "2.0.101",
+        "description": "The **Model Context Protocol (MCP) client** for the [AI SDK](https://ai-sdk.dev/docs) lets you connect to MCP servers and use their tools with AI SDK functions like `generateText` and `streamText`.",
+        "sanitized_name": "@ai-sdk/mcp",
+        "publisher": {
+          "email": "npm-oidc-no-reply@github.com",
+          "trustedPublisher": {
+            "oidcConfigId": "89789df1-3c61-42f5-8b4f-1fcbd5455d78",
+            "id": "github"
+          },
+          "username": "GitHub Actions"
+        },
+        "maintainers": [
+          {
+            "email": "matheus.frndes@gmail.com",
+            "username": "matheuss"
+          },
+          {
+            "email": "matt.j.straka@gmail.com",
+            "username": "matt.straka"
+          }
+        ],
+        "license": "Apache-2.0",
+        "date": "2026-11-17T20:56:29.006Z",
+        "links": {
+          "homepage": "https://ai-sdk.dev/docs",
+          "repository": "https://github.com/vercel/ai",
+          "bugs": "https://github.com/vercel/ai/issues",
+          "npm": "https://www.npmjs.com/package/@ai-sdk/mcp"
+        }
+      },
+      "score": {
+        "final": 225.86316,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 713454,
+        "weekly": 151194
+      },
+      "dependents": 0,
+      "updated": "2026-11-19T17:59:09.604Z",
+      "searchScore": 225.53479,
+      "package": {
+        "name": "n8n-nodes-mcp",
+        "keywords": [
+          "n8n-community-node-package",
+          "mcp",
+          "mcp-client",
+          "mcp-client-node",
+          "mcp-client-n8n",
+          "mcp-client-n8n-node",
+          "mcp-client-n8n-node-package"
+        ],
+        "version": "0.1.37",
+        "description": "MCP nodes for n8n ",
+        "sanitized_name": "n8n-nodes-mcp",
+        "publisher": {
+          "email": "npm-oidc-no-reply@github.com",
+          "trustedPublisher": {
+            "oidcConfigId": "oidc:ea27ee0a-505f-4105-bb99-a74594f18065",
+            "id": "github"
+          },
+          "username": "GitHub Actions"
+        },
+        "maintainers": [
+          {
+            "email": "me@iamfiscus.com",
+            "username": "jdfiscus"
+          }
+        ],
+        "license": "MIT",
+        "date": "2026-01-02T02:49:12.359Z",
+        "links": {
+          "homepage": "https://github.com/nerding-io/n8n-nodes-mcp#readme",
+          "repository": "git+https://github.com/nerding-io/n8n-nodes-mcp.git",
+          "bugs": "https://github.com/nerding-io/n8n-nodes-mcp/issues",
+          "npm": "https://www.npmjs.com/package/n8n-nodes-mcp"
+        }
+      },
+      "score": {
+        "final": 225.53479,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 371868,
+        "weekly": 105161
+      },
+      "dependents": "1",
+      "updated": "2026-11-19T18:00:53.479Z",
+      "searchScore": 225.46075,
+      "package": {
+        "name": "@currents/mcp",
+        "keywords": [
+          "currents",
+          "mcp-server",
+          "playwright",
+          "dashboard",
+          "reporting"
+        ],
+        "version": "2.7.0",
+        "description": "Currents MCP server",
+        "sanitized_name": "@currents/mcp",
+        "publisher": {
+          "email": "npm-oidc-no-reply@github.com",
+          "actor": {
+            "name": "currents.npm",
+            "type": "user",
+            "email": "npm@currents.dev"
+          },
+          "trustedPublisher": {
+            "oidcConfigId": "b98660b5-72c7-4f64-8b8b-f95b52e448e1",
+            "id": "github"
+          },
+          "username": "GitHub Actions"
+        },
+        "maintainers": [
+          {
+            "email": "agoldis@gmail.com",
+            "username": "agoldis"
+          },
+          {
+            "email": "npm@currents.dev",
+            "username": "currents.npm"
+          },
+          {
+            "email": "dj@currents.dev",
+            "username": "twk3"
+          },
+          {
+            "email": "gimenez.maxi@gmail.com",
+            "username": "maxigimenez"
+          }
+        ],
+        "license": "Apache-2.0",
+        "date": "2026-10-14T18:31:14.957Z",
+        "links": {
+          "homepage": "https://currents.dev",
+          "repository": "git+https://github.com/currents-dev/currents-mcp.git",
+          "bugs": "https://github.com/currents-dev/currents-mcp/issues",
+          "npm": "https://www.npmjs.com/package/@currents/mcp"
+        }
+      },
+      "score": {
+        "final": 225.46075,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 1918786,
+        "weekly": 482406
+      },
+      "dependents": "123",
+      "updated": "2026-11-19T17:59:34.590Z",
+      "searchScore": 224.07823,
+      "package": {
+        "name": "@langchain/mcp-adapters",
+        "keywords": [
+          "langchain",
+          "mcp",
+          "model-context-protocol",
+          "ai",
+          "tools"
+        ],
+        "version": "2.0.3",
+        "description": "LangChain.js adapters for Model Context Protocol (MCP)",
+        "sanitized_name": "@langchain/mcp-adapters",
+        "publisher": {
+          "email": "npm-oidc-no-reply@github.com",
+          "actor": {
+            "name": "hntrl",
+            "type": "user",
+            "email": "hunter@hntrl.io"
+          },
+          "trustedPublisher": {
+            "oidcConfigId": "c7dd0e88-c2f7-4c58-8bb7-bc32f797557c",
+            "id": "github"
+          },
+          "username": "GitHub Actions"
+        },
+        "maintainers": [
+          {
+            "email": "oss-admin@langchain.dev",
+            "username": "lc-oss-admin"
+          },
+          {
+            "email": "infra@langchain.dev",
+            "username": "langchain-security"
+          }
+        ],
+        "license": "MIT",
+        "date": "2026-11-11T22:03:17.438Z",
+        "links": {
+          "homepage": "https://github.com/langchain-ai/langchainjs/tree/main/libs/langchain-mcp-adapters/",
+          "repository": "git+ssh://git@github.com/langchain-ai/langchainjs.git",
+          "bugs": "https://github.com/langchain-ai/langchainjs/issues",
+          "npm": "https://www.npmjs.com/package/@langchain/mcp-adapters"
+        }
+      },
+      "score": {
+        "final": 224.07823,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 3078333,
+        "weekly": 672583
+      },
+      "dependents": "103",
+      "updated": "2026-11-19T18:03:02.040Z",
+      "searchScore": 223.67691,
+      "package": {
+        "name": "@deepseek-ai/dsh-mcp-client",
+        "keywords": [],
+        "version": "0.0.1-rc.1",
+        "description": "MCP client bridge: connects to MCP servers and registers their tools on ctx.tools",
+        "sanitized_name": "@deepseek-ai/dsh-mcp-client",
+        "publisher": {
+          "email": "imccyu@gmail.com",
+          "username": "imccyu"
+        },
+        "maintainers": [
+          {
+            "email": "imccyu@gmail.com",
+            "username": "imccyu"
+          },
+          {
+            "email": "tianyi@deepseek.com",
+            "username": "tianyicui-deepseek"
+          }
+        ],
+        "license": "BSD-3-Clause",
+        "date": "2026-08-10T19:38:15.865Z",
+        "links": {
+          "homepage": "https://github.com/deepseek-ai/deepseek-harness#readme",
+          "repository": "git+https://github.com/deepseek-ai/deepseek-harness.git",
+          "bugs": "https://github.com/deepseek-ai/deepseek-harness/issues",
+          "npm": "https://www.npmjs.com/package/@deepseek-ai/dsh-mcp-client"
+        }
+      },
+      "score": {
+        "final": 223.67691,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 3893443,
+        "weekly": 946730
+      },
+      "dependents": "54",
+      "updated": "2026-11-19T17:55:18.756Z",
+      "searchScore": 222.8686,
+      "package": {
+        "name": "mcp-proxy",
+        "keywords": [
+          "MCP",
+          "SSE",
+          "proxy"
+        ],
+        "version": "6.11.0",
+        "description": "A TypeScript SSE proxy for MCP servers that use stdio transport.",
+        "sanitized_name": "mcp-proxy",
+        "publisher": {
+          "email": "npm-oidc-no-reply@github.com",
+          "actor": {
+            "name": "punkpeye",
+            "type": "user",
+            "email": "frank@glama.ai"
+          },
+          "trustedPublisher": {
+            "oidcConfigId": "6fbbcab7-2831-4145-929b-0701c5eef258",
+            "id": "github"
+          },
+          "username": "GitHub Actions"
+        },
+        "maintainers": [
+          {
+            "email": "frank@glama.ai",
+            "username": "punkpeye"
+          }
+        ],
+        "license": "MIT",
+        "date": "2026-11-19T00:20:25.227Z",
+        "links": {
+          "homepage": "https://glama.ai/mcp",
+          "repository": "git+https://github.com/punkpeye/mcp-proxy.git",
+          "bugs": "https://github.com/punkpeye/mcp-proxy/issues",
+          "npm": "https://www.npmjs.com/package/mcp-proxy"
+        }
+      },
+      "score": {
+        "final": 222.8686,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 11312272,
+        "weekly": 2568108
+      },
+      "dependents": "13",
+      "updated": "2026-11-20T08:16:23.881Z",
+      "searchScore": 222.57765,
+      "package": {
+        "name": "@storybook/mcp",
+        "keywords": [
+          "mcp",
+          "storybook"
+        ],
+        "version": "10.6.8",
+        "description": "MCP server that serves knowledge about your components based on your Storybook stories and documentation",
+        "sanitized_name": "@storybook/mcp",
+        "publisher": {
+          "email": "npm-oidc-no-reply@github.com",
+          "trustedPublisher": {
+            "oidcConfigId": "5e0ff805-da09-4236-8fad-3040df1a4de2",
+            "id": "github"
+          },
+          "username": "GitHub Actions"
+        },
+        "maintainers": [
+          {
+            "email": "ndelangen@me.com",
+            "username": "ndelangen"
+          },
+          {
+            "email": "shilman@gmail.com",
+            "username": "shilman"
+          },
+          {
+            "email": "tom@thesnail.org",
+            "username": "tmeasday"
+          },
+          {
+            "email": "varunvachhar@gmail.com",
+            "username": "winkervsbecks"
+          },
+          {
+            "email": "kyle.gach@gmail.com",
+            "username": "kylegach"
+          },
+          {
+            "email": "jeppe@reinhold.is",
+            "username": "jreinhold"
+          },
+          {
+            "email": "kasperpeulen@gmail.com",
+            "username": "kasperpeulen"
+          },
+          {
+            "email": "dev@valentinpalkovic.dev",
+            "username": "valentinpalkovic"
+          },
+          {
+            "email": "dom@hichroma.com",
+            "username": "domyen"
+          },
+          {
+            "email": "storybookbot@gmail.com",
+            "username": "storybook-bot"
+          },
+          {
+            "email": "vanessa.yh.yuen@gmail.com",
+            "username": "vanessayuenn"
+          },
+          {
+            "email": "julien.h.dev@gmail.com",
+            "username": "huang-julien"
+          }
+        ],
+        "license": "MIT",
+        "date": "2026-11-20T08:15:51.886Z",
+        "links": {
+          "homepage": "https://github.com/storybookjs/storybook/tree/next/code/lib/mcp",
+          "repository": "https://github.com/storybookjs/storybook.git",
+          "bugs": "https://github.com/storybookjs/storybook/issues",
+          "npm": "https://www.npmjs.com/package/@storybook/mcp"
+        }
+      },
+      "score": {
+        "final": 222.57765,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 1256777,
+        "weekly": 297433
+      },
+      "dependents": "7",
+      "updated": "2026-11-19T18:04:37.395Z",
+      "searchScore": 221.84564,
+      "package": {
+        "name": "@notionhq/notion-mcp-server",
+        "keywords": [
+          "notion",
+          "api",
+          "mcp",
+          "server"
+        ],
+        "version": "2.6.1",
+        "description": "Official MCP server for Notion API",
+        "sanitized_name": "@notionhq/notion-mcp-server",
+        "publisher": {
+          "email": "npm-oidc-no-reply@github.com",
+          "trustedPublisher": {
+            "oidcConfigId": "a1d43e06-f5b4-440c-9c3a-6d3f62af553f",
+            "id": "github"
+          },
+          "username": "GitHub Actions"
+        },
+        "maintainers": [
+          {
+            "email": "jclem@makenotion.com",
+            "username": "jclem-ntn"
+          },
+          {
+            "email": "quan@makenotion.com",
+            "username": "quan-notion"
+          }
+        ],
+        "license": "MIT",
+        "date": "2026-10-29T16:13:01.969Z",
+        "links": {
+          "homepage": "https://github.com/makenotion/notion-mcp-server#readme",
+          "repository": "git+ssh://git@github.com/makenotion/notion-mcp-server.git",
+          "bugs": "https://github.com/makenotion/notion-mcp-server/issues",
+          "npm": "https://www.npmjs.com/package/@notionhq/notion-mcp-server"
+        }
+      },
+      "score": {
+        "final": 221.84564,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 1078484,
+        "weekly": 255035
+      },
+      "dependents": "2",
+      "updated": "2026-11-20T07:26:06.760Z",
+      "searchScore": 221.03885,
+      "package": {
+        "name": "@payloadcms/plugin-mcp",
+        "keywords": [
+          "plugin",
+          "mcp",
+          "model context protocol"
+        ],
+        "version": "3.94.0",
+        "description": "MCP (Model Context Protocol) capabilities with Payload",
+        "sanitized_name": "@payloadcms/plugin-mcp",
+        "publisher": {
+          "email": "npm-oidc-no-reply@github.com",
+          "trustedPublisher": {
+            "oidcConfigId": "f4c307c0-125b-49f8-a2c3-c807cc31543f",
+            "id": "github"
+          },
+          "username": "GitHub Actions"
+        },
+        "maintainers": [
+          {
+            "email": "dev@payloadcms.com",
+            "username": "payloadjs"
+          },
+          {
+            "email": "german.jablo@gmail.com",
+            "username": "german.jablo"
+          },
+          {
+            "email": "elliot@payloadcms.com",
+            "username": "elliotpayload"
+          },
+          {
+            "email": "dan.ribbens@gmail.com",
+            "username": "danribbens"
+          },
+          {
+            "email": "sean@payloadcms.com",
+            "username": "seanpayload"
+          },
+          {
+            "email": "james@payloadcms.com",
+            "username": "jmikrut"
+          },
+          {
+            "email": "jacobsfletch@gmail.com",
+            "username": "jacobsfletch"
+          },
+          {
+            "email": "jessica@payloadcms.com",
+            "username": "jesschow"
+          },
+          {
+            "email": "npm@gravili.net",
+            "username": "alessiogr"
+          },
+          {
+            "email": "patrik@payloadcms.com",
+            "username": "patrikkozak"
+          },
+          {
+            "email": "agarbutt@figma.com",
+            "username": "agarbutt-figma"
+          },
+          {
+            "email": "nlentz@figma.com",
+            "username": "fignate"
+          },
+          {
+            "email": "jarrodmflesch@gmail.com",
+            "username": "jarrodmflesch"
+          }
+        ],
+        "license": "MIT",
+        "date": "2026-11-17T18:06:53.588Z",
+        "links": {
+          "homepage": "https://github.com/payloadcms/payload#readme",
+          "repository": "https://github.com/payloadcms/payload.git",
+          "bugs": "https://github.com/payloadcms/payload/issues",
+          "npm": "https://www.npmjs.com/package/@payloadcms/plugin-mcp"
+        }
+      },
+      "score": {
+        "final": 221.03885,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 848081,
+        "weekly": 215791
+      },
+      "dependents": "57",
+      "updated": "2026-11-19T18:03:12.993Z",
+      "searchScore": 219.4921,
+      "package": {
+        "name": "@mcp-ui/server",
+        "keywords": [],
+        "version": "6.1.0",
+        "description": "mcp-ui Server SDK",
+        "sanitized_name": "@mcp-ui/server",
+        "publisher": {
+          "email": "idosalomon@gmail.com",
+          "actor": {
+            "name": "idosal",
+            "type": "user",
+            "email": "idosalomon@gmail.com"
+          },
+          "username": "idosal"
+        },
+        "maintainers": [
+          {
+            "email": "idosalomon@gmail.com",
+            "username": "idosal"
+          }
+        ],
+        "license": "Apache-2.0",
+        "date": "2026-02-13T00:56:47.232Z",
+        "links": {
+          "npm": "https://www.npmjs.com/package/@mcp-ui/server"
+        }
+      },
+      "score": {
+        "final": 219.4921,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    }
+  ],
+  "total": 142132,
+  "time": "2026-11-20T08:57:42.569Z"
+}

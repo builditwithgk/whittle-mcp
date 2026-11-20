@@ -1,0 +1,24 @@
+{
+ "kind": "diff",
+ "options": {},
+ "source": "git show c594da2 in mcpreportcard-repo",
+ "facts": {
+  "contains": [
+   "README.md",
+   "docs/demo.gif",
+   "scripts/make_demo_gif.py",
+   "+![mcp-reportcard grading a sloppy MCP server (D) and the same service written properly (A)](https://raw.githubusercontent.com/builditwithgk/mcp-reportcard/main/docs/demo.gif)",
+   "+\"\"\"Render docs/demo.gif: mcp-reportcard grading the bad example (D) and then the good one (A).",
+   "+The output is real: both example servers are checked (with --fuzz) in-process, the terminal",
+   "+report is captured from rich with its colours, and each frame is drawn with Pillow.",
+   "+    pip install -e \".[dev]\" pillow",
+   "+    python scripts/make_demo_gif.py            # writes docs/demo.gif",
+   "+from __future__ import annotations",
+   "+from pathlib import Path",
+   "+from PIL import Image, ImageDraw, ImageFont",
+   "+from rich.console import Console",
+   "+from rich.segment import Segment",
+   "+from rich.terminal_theme import TerminalTheme"
+  ]
+ }
+}

@@ -1,0 +1,16 @@
+{
+ "kind": "tests",
+ "options": {},
+ "source": "python -m unittest -v on a tiny module",
+ "facts": {
+  "contains": [
+   "test_0 (test_textkit.T.test_0)",
+   "test_1 (test_textkit.T.test_1)",
+   "test_2 (test_textkit.T.test_2)",
+   "ZeroDivisionError: division by zero",
+   "ValueError: dictionary update sequence element #0 has length 1; 2 is required",
+   "AttributeError: 'NoneType' object has no attribute 'lower'",
+   "FAILED (errors=3)"
+  ]
+ }
+}

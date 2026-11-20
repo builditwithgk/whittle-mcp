@@ -1,0 +1,29 @@
+{
+ "kind": "diff",
+ "options": {},
+ "source": "git show c7d7c3b in agentfirebreak-repo",
+ "facts": {
+  "contains": [
+   "src/agent_firebreak/bench.py",
+   "src/agent_firebreak/cli.py",
+   "src/agent_firebreak/guard.py",
+   "src/agent_firebreak/models.py",
+   "src/agent_firebreak/policy.py",
+   "src/agent_firebreak/runner.py",
+   "src/agent_firebreak/world.py",
+   "tests/test_guard.py",
+   "-                 f\"guard on {m['attacks_landed']['on_deny']} (human denies), {m['attacks_landed']['on_approve']} (human approves)\",",
+   "+                 f\"guard on {m['attacks_landed']['on_deny']} (human denies), \"",
+   "+                 f\"{m['attacks_landed']['on_approve']} (human approves)\",",
+   "-    regressed = m[\"attacks_landed\"][\"on_deny\"] or m[\"attacks_landed\"][\"on_approve\"]         or m[\"benign_completed\"][\"on_approve\"] != m[\"benign\"]",
+   "+    regressed = (m[\"attacks_landed\"][\"on_deny\"] or m[\"attacks_landed\"][\"on_approve\"]",
+   "+                 or m[\"benign_completed\"][\"on_approve\"] != m[\"benign\"])",
+   "-from agent_firebreak.models import (Decision, Effect, Finding, Origin, Risk, Segment, Signal, ToolCall, ToolSpec,",
+   "+from agent_firebreak.models import (Decision, Finding, Origin, Risk, Segment, Signal, ToolCall, ToolSpec,",
+   "+        else:  # a tool nobody declared cannot be judged, so a human decides",
+   "+            findings.append(Finding(\"UNKNOWN_TOOL\", f\"{call.name} is not a declared tool\", call.name))",
+   "-        return {\"label\": self.label, \"text\": self.text, \"trust\": self.trust.value,",
+   "-                \"tags\": list(self.tags), \"sensitive\": self.sensitive, **({\"poison\": self.meta[\"poison\"]} if self.meta.get(\"poison\") else {})}"
+  ]
+ }
+}

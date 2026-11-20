@@ -1,0 +1,11 @@
+{
+ "kind": "log",
+ "options": {},
+ "source": "node script run",
+ "facts": {
+  "contains": [
+   "TypeError: Cannot read properties of undefined (reading id)",
+   "FATAL timer failed"
+  ]
+ }
+}

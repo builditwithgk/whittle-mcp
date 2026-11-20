@@ -1,0 +1,27 @@
+{
+ "kind": "diff",
+ "options": {},
+ "source": "git show 8c23399 in agentfirebreak-repo",
+ "facts": {
+  "contains": [
+   ".github/ISSUE_TEMPLATE/bug_report.yml",
+   ".github/ISSUE_TEMPLATE/bypass_report.yml",
+   ".github/ISSUE_TEMPLATE/config.yml",
+   ".github/ISSUE_TEMPLATE/feature_request.yml",
+   ".github/ISSUE_TEMPLATE/first_run_feedback.yml",
+   "SECURITY.md",
+   "+name: Bug report",
+   "+description: agent-firebreak crashed or behaved incorrectly",
+   "+labels: [\"bug\"]",
+   "+  - type: textarea",
+   "+    id: what-happened",
+   "+      label: What happened?",
+   "+      description: What did you run, what did you expect, and what happened instead?",
+   "+      required: true",
+   "+      label: Steps or code to reproduce",
+   "+      render: python",
+   "+  - type: input",
+   "+      label: Version"
+  ]
+ }
+}

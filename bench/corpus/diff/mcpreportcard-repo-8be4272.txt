@@ -1,0 +1,22 @@
+diff --git a/README.md b/README.md
+index 4a9b494..775251f 100644
+--- a/README.md
++++ b/README.md
+@@ -2,7 +2,7 @@
+ 
+ > **A health check for MCP servers.** Lint your tools, measure their token cost, fuzz their error handling — and get a graded report card with a concrete fix for every issue.
+ 
+-![Python](https://img.shields.io/badge/python-3.10%2B-blue) ![License](https://img.shields.io/badge/license-MIT-green) [![PyPI](https://img.shields.io/pypi/v/mcp-reportcard)](https://pypi.org/project/mcp-reportcard/) ![MCP](https://img.shields.io/badge/MCP-any%20server%2C%20any%20language-brightgreen) [![CI](https://github.com/builditwithgk/mcp-reportcard/actions/workflows/ci.yml/badge.svg)](https://github.com/builditwithgk/mcp-reportcard/actions/workflows/ci.yml) [![Hugging Face Space](https://img.shields.io/badge/%F0%9F%A4%97%20Space-live%20demo-yellow)](https://huggingface.co/spaces/builditwithgk/mcp-reportcard)
++![Python](https://img.shields.io/badge/python-3.10%2B-blue) ![License](https://img.shields.io/badge/license-MIT-green) [![PyPI](https://img.shields.io/pypi/v/mcp-reportcard)](https://pypi.org/project/mcp-reportcard/) ![MCP](https://img.shields.io/badge/MCP-any%20server%2C%20any%20language-brightgreen) [![GitHub Marketplace](https://img.shields.io/badge/Marketplace-mcp--reportcard-blue?logo=github)](https://github.com/marketplace/actions/mcp-reportcard) [![CI](https://github.com/builditwithgk/mcp-reportcard/actions/workflows/ci.yml/badge.svg)](https://github.com/builditwithgk/mcp-reportcard/actions/workflows/ci.yml) [![Hugging Face Space](https://img.shields.io/badge/%F0%9F%A4%97%20Space-live%20demo-yellow)](https://huggingface.co/spaces/builditwithgk/mcp-reportcard)
+ 
+ When an agent picks the wrong tool, sends malformed arguments, or burns context on bloated definitions, the cause is usually in the server — and the model only ever sees what your `tools/list` says. `mcp-reportcard` checks exactly that, in seconds, for any MCP server in any language.
+ 
+@@ -86,7 +86,7 @@ mcp-reportcard rules
+ 
+ ## GitHub Action
+ 
+-Grade your server on every pull request. The action writes the report card to the job summary, keeps one sticky PR comment up to date, and fails the check when the score drops below your bar:
++Grade your server on every pull request ([GitHub Marketplace listing](https://github.com/marketplace/actions/mcp-reportcard)). The action writes the report card to the job summary, keeps one sticky PR comment up to date, and fails the check when the score drops below your bar:
+ 
+ ```yaml
+ # .github/workflows/mcp-reportcard.yml

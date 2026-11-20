@@ -1,0 +1,10 @@
+{
+ "kind": "tests",
+ "options": {},
+ "source": "pytest run on a copy of agentfirebreak-repo (pass)",
+ "facts": {
+  "contains": [
+   "73 passed in 3.15s"
+  ]
+ }
+}

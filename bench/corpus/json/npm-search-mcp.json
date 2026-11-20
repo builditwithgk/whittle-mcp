@@ -1,0 +1,34 @@
+{
+ "kind": "json",
+ "options": {},
+ "source": "public API response",
+ "facts": {
+  "json_paths": [
+   "$.objects",
+   "$.objects[].dependents",
+   "$.objects[].downloads",
+   "$.objects[].downloads.monthly",
+   "$.objects[].downloads.weekly",
+   "$.objects[].flags",
+   "$.objects[].flags.insecure",
+   "$.objects[].package",
+   "$.objects[].package.date",
+   "$.objects[].package.description",
+   "$.objects[].package.keywords",
+   "$.objects[].package.license",
+   "$.objects[].package.links",
+   "$.objects[].package.maintainers",
+   "$.objects[].package.name",
+   "$.objects[].package.publisher",
+   "$.objects[].package.sanitized_name",
+   "$.objects[].package.version",
+   "$.objects[].score",
+   "$.objects[].score.detail",
+   "$.objects[].score.final",
+   "$.objects[].searchScore",
+   "$.objects[].updated",
+   "$.time",
+   "$.total"
+  ]
+ }
+}

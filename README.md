@@ -1,0 +1,109 @@
+# whittle-mcp
+
+**Trim what your agent reads, and measure what it kept.**
+
+Coding agents spend most of their tokens re-reading tool output: test runs, logs and stack traces, big JSON, diffs and API specs. Every result stays in the conversation and is re-sent on every later turn. whittle-mcp shrinks that output *without losing the facts*, and it proves what it kept.
+
+- **Five trimmers:** test output, logs, JSON, git diffs, OpenAPI documents.
+- **Nothing is lost.** What it removes is replaced by a short marker such as `[... 312 lines omitted: whittle expand a1b2c3d4 lines=45-356 ...]`, and `expand` returns exactly that part on request.
+- **Two ways to use it:** an MCP server (`uvx whittle-mcp`) and a pipe for any shell (`pytest 2>&1 | whittle tests`).
+- **Measured, not claimed:** every trimmer is scored on how many tokens it saves *and* how many must-keep facts survive, on a public corpus. See [docs/BENCHMARK.md](docs/BENCHMARK.md).
+
+**Try it in your browser, nothing to install or send anywhere:** https://huggingface.co/spaces/builditwithgk/whittle-mcp (paste a test log, JSON or diff and see what is kept).
+
+## Install and use
+
+```bash
+pip install whittle-mcp          # or: uvx whittle-mcp
+```
+
+**As a filter in any agent's shell** (the simplest way, and it works with every agent):
+
+```bash
+pytest 2>&1 | whittle tests          # failures and the summary, not 4,000 dots and passes
+npm test 2>&1 | whittle tests
+git diff | whittle diff              # lockfiles and generated files collapse to one line each
+curl -s https://api.example.com/items | whittle json
+whittle log build.log                # repeats counted, long tracebacks shortened, every distinct error kept
+whittle openapi spec.json --index    # one line per operation
+whittle openapi spec.json --path '/pets*' --method get
+whittle expand a1b2c3d4 --lines 45-356     # get back what a marker omitted
+whittle report                       # tokens saved so far, net of anything you expanded
+```
+The receipt (`[whittle tests] 12,431 -> 912 tokens (-92.7%) | full output: whittle expand a1b2c3d4`) goes to stderr, so pipes stay clean.
+
+**As an MCP server:**
+
+```bash
+claude mcp add whittle -- uvx whittle-mcp --tools tests,log      # Claude Code, with just two trimmers
+```
+```json
+{ "mcpServers": { "whittle": { "command": "uvx", "args": ["whittle-mcp"] } } }
+```
+The tools take a **file path** (or, if you start the server with `--allow-run`, a command), never the raw text, because sending a big text through a tool call would cost the tokens you meant to save. Typical use: the agent runs `pytest > out.log` and calls `trim_tests(path="out.log")`.
+
+| Tool | What it does |
+|---|---|
+| `trim_tests` | pytest, unittest, jest, go test, cargo test: failures with their assertions and locations, plus the summary |
+| `trim_log` | repeats collapsed, long tracebacks keep their last frames, every distinct error line stays |
+| `mask_json` | every key path stays; long arrays and strings are shortened; the result is still valid JSON |
+| `trim_diff` | lockfiles, generated files and whitespace-only changes collapse; context is cut to one line |
+| `slice_openapi` | an index of operations, or only the operations you ask for plus the schemas they use |
+| `expand` | returns what a marker omitted, by line range or JSON path |
+| `report` | tokens saved this session, net of anything re-expanded, and money saved at *your* prices |
+
+## What it costs, honestly
+
+The tool definitions themselves are sent every turn. Measured with [mcp-reportcard](https://github.com/builditwithgk/mcp-reportcard): all seven tools cost about **1,570 tokens** per turn; `--tools tests,log` (plus `expand`) costs about **610**. Expose only the trimmers you will use. On the benchmark corpus an average call saved several thousand tokens, so it pays for itself when the agent trims a long output every few turns; if your agent rarely produces long output, it will not.
+
+## Results (public corpus, [methodology and caveats](docs/BENCHMARK.md))
+
+Token counter: tiktoken `o200k_base`. "Naive" is head-and-tail truncation to the *same* token budget as whittle.
+
+| Corpus | Samples | Tokens saved (whittle) | Facts kept: whittle | Facts kept: naive truncation |
+|---|---:|---:|---:|---:|
+| Development corpus (tests, logs, JSON, diffs, OpenAPI) | 48 | 53.3% | 100% | 84.2% |
+| Held-out set (written after the trimmers) | 16 | 61.3% | 100% | 85.8% |
+
+Savings depend on the input and are token-weighted, so large outputs dominate: logs shrank about 96%, OpenAPI slices 84%, diffs 60%, test output 47%. **Short outputs save little**: half the diffs and most short `pytest -q` runs in the corpus saved under 15%, and on the held-out set's short test runs the saving was 7%. **Honest limits of these numbers:** the corpus is small and was built by the author; the "must-keep facts" were chosen by the author (failing test ids and assertion lines, error lines, changed files, JSON key paths, operation ids); the development corpus was in view while the trimmers were written, which is why the held-out set exists; and **end-to-end agent success with and without trimming has not been measured yet**. Treat the numbers as a regression suite and a starting point. Samples that break it are the most useful contribution you can make.
+
+## Cost, in dollars, with your prices
+
+Provider prices change, so the tool never bakes one in. `whittle report` and the benchmark use an editable price table (`whittle prices` prints the format) and a stated model: a token you keep out of the context is saved on the turn it would have arrived and on every later turn it would have been re-sent, at the cache-read rate if you use prompt caching. **The default table holds clearly labelled example numbers, not any provider's real prices.**
+
+## Limits
+
+- It uses **rules, not a model**: common formats are handled well, unknown formats pass through unchanged (never mangled).
+- Errors that differ **only in numbers** (order ids, codes) count as repeats after the third; the rest are one `expand` away.
+- `trim_diff` output is for reading, not for applying.
+- Token counts differ between providers; `tiktoken` is used when installed, otherwise an estimate (`chars/4`, labelled).
+- An agent only benefits if it calls the tool. The shell filter and a one-line instruction in your agent settings (below) help.
+- `whittle` keeps the full text you trim in a temp folder so `expand` works (24 hours). Logs can contain secrets: use `--no-store` to keep nothing.
+- The MCP tools read files only inside `--root` (default: the current folder) and run commands only with `--allow-run`.
+
+## How other tools relate
+
+Command-output compressors such as RTK, sqz, szr and ContextZip, and MCP servers such as TokenDiet MCP, solve a neighbouring problem; Claude Code and the Anthropic API also clear old tool results. They report large savings (their own figures). whittle-mcp has **not** been benchmarked against them yet; `whittle bench --tool NAME=COMMAND` runs any stdin-to-stdout trimmer through the same corpus and fact check, and a fair, reproducible comparison is a good first contribution.
+
+## Tell your agent to use it
+
+Add to `CLAUDE.md`, `AGENTS.md` or your agent's rules:
+```
+For long command output, pipe it through whittle first: `pytest 2>&1 | whittle tests`, `git diff | whittle diff`,
+`whittle log build.log`. Markers like "[... N lines omitted: whittle expand ID ...]" can be expanded with `whittle expand ID`.
+```
+
+## Benchmark and contribute
+
+```bash
+pip install -e ".[dev]"
+pytest -q
+whittle bench                              # the development corpus
+whittle bench --corpus bench/holdout       # the held-out set
+python bench/make_corpus.py --source-repo <a Python repo with tests and git history>   # rebuild the corpus
+```
+Add a sample by putting `name.txt` and `name.json` (kind, options, must-keep facts) in `bench/corpus/<kind>/`. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License
+
+MIT. Built by [Gopi K Aitham](https://github.com/builditwithgk) at [Scaleup Solutions](https://scaleup-solutions.in/).

@@ -1,0 +1,10 @@
+{
+ "kind": "log",
+ "options": {},
+ "source": "python script run (py-threads)",
+ "facts": {
+  "contains": [
+   "ValueError: bad shard 0"
+  ]
+ }
+}

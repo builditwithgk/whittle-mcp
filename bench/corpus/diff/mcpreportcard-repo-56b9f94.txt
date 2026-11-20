@@ -1,0 +1,74 @@
+diff --git a/README.md b/README.md
+index 775251f..cb1877d 100644
+--- a/README.md
++++ b/README.md
+@@ -163,6 +163,21 @@ This repo dogfoods both: CI runs the CLI and the action against [`examples/good_
+ 
+ ## Web demo
+ 
++### Test your own server in the browser
++
++The [browser demo](https://huggingface.co/spaces/builditwithgk/mcp-reportcard) can't launch your server, so save its tool list with the CLI and paste it in:
++
++1. Save the tool list (use whatever command starts your server, or an `http(s)://…/mcp` URL):
++   ```bash
++   mcp-reportcard dump "python server.py" -o tools.json
++   ```
++2. Open `tools.json`, copy everything, and paste it into the text box on the [demo page](https://huggingface.co/spaces/builditwithgk/mcp-reportcard).
++3. Click **Check tools**.
++
++You get the same lint findings as the CLI. Two differences: token counts are a characters ÷ 4 estimate (the CLI with `[tokens]` uses tiktoken), and there's no fuzzing, because the browser never calls your server. To try it without a server of your own, click **Load a bad example** first.
++
++### How the demo is built
++
+ The demo runs the static checks only — it never connects to servers, calls tools or contacts an LLM, and nothing pasted is stored. Because the core is pure standard-library Python, it ships two ways from the same code:
+ 
+ - **In the browser** — [`space/`](https://github.com/builditwithgk/mcp-reportcard/tree/main/space) is a static page that runs `src/mcp_reportcard` client-side with [Pyodide](https://pyodide.org). That's the [Hugging Face Space](https://huggingface.co/spaces/builditwithgk/mcp-reportcard): no server, free tier. `bash space/build.sh` assembles it into `space/_site/`; `bash space/deploy.sh` publishes it. The same folder works on GitHub Pages or any static host.
+diff --git a/space/README.md b/space/README.md
+index 4ddeb94..bb4b95c 100644
+--- a/space/README.md
++++ b/space/README.md
+@@ -25,4 +25,6 @@ tags:
+ - **Source & docs:** https://github.com/builditwithgk/mcp-reportcard
+ - **This Space** runs the static checks only: it never connects to servers, calls tools or contacts an LLM, and nothing you paste is stored. For live checks and fuzzing of a server's error handling, use the CLI.
+ 
++**Test your own server:** run `pip install mcp-reportcard`, then `mcp-reportcard dump "python server.py" -o tools.json` (use the command that starts your server, or its URL). Paste the contents of `tools.json` into the box and click **Check tools**. Token counts here are an estimate; the CLI gives exact counts and can also fuzz the server.
++
+ Built by [Gopi K devm (builditwithgk)](https://github.com/builditwithgk) — available for freelance and contract work on AI, agent, and MCP tooling.
+diff --git a/space/index.html b/space/index.html
+index 0b9b02f..1309a83 100644
+--- a/space/index.html
++++ b/space/index.html
+@@ -57,6 +57,10 @@
+   .sev-error { color: var(--err); } .sev-warning { color: var(--warn); } .sev-info { color: var(--info); }
+   .fix { color: var(--muted); font-size: 14px; margin-top: 2px; }
+   .tool { font-weight: 600; }
++  details.howto { margin-top: 14px; border-top: 1px solid var(--border); padding-top: 10px; font-size: 14px; }
++  details.howto summary { cursor: pointer; color: var(--accent); font-weight: 600; }
++  details.howto ol { margin: 10px 0 6px; padding-left: 20px; }
++  details.howto li { margin: 6px 0; }
+   footer { margin-top: 40px; color: var(--muted); font-size: 13px; }
+   footer a, .lede a, .hint a { color: var(--accent); }
+ </style>
+@@ -78,9 +82,18 @@
+       <button id="sample-good">Load a good example</button>
+       <span id="status" class="hint">Loading Python in your browser…</span>
+     </div>
+-    <p class="hint">Get the JSON from your own server with the CLI:
+-      <code>mcp-reportcard dump "python server.py"</code>. The CLI can also fuzz a live server's error handling —
+-      <a href="https://github.com/builditwithgk/mcp-reportcard">see GitHub</a>.</p>
++    <details class="howto">
++      <summary>How to test your own server</summary>
++      <ol>
++        <li>Install the CLI: <code>pip install mcp-reportcard</code></li>
++        <li>Save your server's tool list (use the command that starts your server, or an <code>http(s)://…/mcp</code> URL):<br>
++          <code>mcp-reportcard dump "python server.py" -o tools.json</code></li>
++        <li>Open <code>tools.json</code>, copy everything, paste it into the box above, and click <strong>Check tools</strong>.</li>
++      </ol>
++      <p class="hint">You get the same findings as the CLI. Token counts here are an estimate, and there's no fuzzing,
++        because this page never calls your server. For fuzzing and CI, use the CLI —
++        <a href="https://github.com/builditwithgk/mcp-reportcard">see GitHub</a>.</p>
++    </details>
+   </div>
+ 
+   <div id="out"></div>

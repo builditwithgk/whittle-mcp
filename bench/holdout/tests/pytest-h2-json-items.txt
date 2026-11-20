@@ -1,0 +1,30 @@
+......................F......F.......                                                                            [100%]
+====================================================== FAILURES =======================================================
+_______________________________ test_retention_on_the_corpus_and_beats_naive_truncation _______________________________
+
+    @pytest.mark.skipif(not CORPUS.exists(), reason="corpus not built (bench/make_corpus.py)")
+    def test_retention_on_the_corpus_and_beats_naive_truncation():
+        samples = load_corpus(CORPUS)
+>       assert len(samples) >= 40
+E       assert 0 >= 40
+E        +  where 0 = len([])
+
+tests\test_engine.py:79: AssertionError
+________________________________________ test_json_keeps_shape_and_stays_valid ________________________________________
+
+    def test_json_keeps_shape_and_stays_valid():
+        doc = {"items": [{"id": i, "name": "x" * 300, "tags": list(range(20))} for i in range(50)], "total": 50}
+        out = jsonmask.trim(json.dumps(doc, indent=2), handle="abc12345")
+        data = json.loads(out.text)
+>       assert set(data) == {"items", "total"} and len(data["items"]) == 4   # 3 items plus the marker
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert ({'items', 'total'} == {'items', 'total'}
+E         
+E         Use -v to get more diff and 2 == 4)
+E        +  where 2 = len([{'id': 0, 'name': 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...e items (whittle expand abc12345 path=$.items[0].tags)']}, '... +49 more items (whittle expand abc12345 path=$.items)'])
+
+tests\test_trimmers.py:56: AssertionError
+=============================================== short test summary info ===============================================
+FAILED tests/test_engine.py::test_retention_on_the_corpus_and_beats_naive_truncation - assert 0 >= 40
+FAILED tests/test_trimmers.py::test_json_keeps_shape_and_stays_valid - AssertionError: assert ({'items', 'total'} == ...
+2 failed, 35 passed in 4.97s

@@ -1,0 +1,11 @@
+{
+ "kind": "log",
+ "options": {},
+ "source": "pip install of a package that does not exist",
+ "facts": {
+  "contains": [
+   "ERROR: Could not find a version that satisfies the requirement nonexistent-package-zzz-9137==99.1 (from versions: none)",
+   "ERROR: No matching distribution found for nonexistent-package-zzz-9137==99.1"
+  ]
+ }
+}

@@ -1,0 +1,33 @@
+F.....................F..............                                                                            [100%]
+====================================================== FAILURES =======================================================
+____________________________________ test_log_never_drops_a_distinct_error_message ____________________________________
+
+    def test_log_never_drops_a_distinct_error_message():
+        rng = random.Random(1234)
+        for i in range(150):
+            lines = noise(rng, rng.randint(40, 400))
+            words = rng.sample(["gateway", "ledger", "queue", "cache", "mailer", "auth", "billing", "search"], rng.randint(1, 4))
+            errors = [f"ERROR {w} failure: code {rng.randint(1000, 9999)}" for w in words]   # distinct messages, varying numbers
+            for e in errors:
+                lines.insert(rng.randint(0, len(lines)), e)
+            text = logs.trim("\n".join(lines)).text
+            for e in errors:
+>               assert e in text, (i, e)
+E               AssertionError: (0, 'ERROR billing failure: code 8748')
+E               assert 'ERROR billing failure: code 8748' in 'DEBUG cache hit key=0 (x2)\nINFO request ok 85\n   Downloading wheel-10.whl\nDEBUG cache hit key=98\n  File "a.py", l...> (file.js:30:10)\n   Downloading wheel-9.whl\n  File "a.py", line 50, in f\n    at Object.<anonymous> (file.js:91:10)'
+
+tests\test_adversarial.py:29: AssertionError
+_______________________________ test_retention_on_the_corpus_and_beats_naive_truncation _______________________________
+
+    @pytest.mark.skipif(not CORPUS.exists(), reason="corpus not built (bench/make_corpus.py)")
+    def test_retention_on_the_corpus_and_beats_naive_truncation():
+        samples = load_corpus(CORPUS)
+>       assert len(samples) >= 40
+E       assert 0 >= 40
+E        +  where 0 = len([])
+
+tests\test_engine.py:79: AssertionError
+=============================================== short test summary info ===============================================
+FAILED tests/test_adversarial.py::test_log_never_drops_a_distinct_error_message - AssertionError: (0, 'ERROR billing ...
+FAILED tests/test_engine.py::test_retention_on_the_corpus_and_beats_naive_truncation - assert 0 >= 40
+2 failed, 35 passed in 4.09s

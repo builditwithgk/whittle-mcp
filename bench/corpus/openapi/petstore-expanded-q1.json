@@ -1,0 +1,25 @@
+{
+ "kind": "openapi",
+ "options": {
+  "paths": [
+   "/pets*"
+  ],
+  "methods": [
+   "get"
+  ]
+ },
+ "source": "https://raw.githubusercontent.com/OAI/learn.openapis.org/main/examples/v3.0/petstore-expanded.json (query {\"paths\": [\"/pets*\"], \"methods\": [\"get\"]})",
+ "facts": {
+  "contains": [
+   "findPets",
+   "find pet by id",
+   "tags",
+   "limit",
+   "id",
+   "200",
+   "default",
+   "/pets",
+   "/pets/{id}"
+  ]
+ }
+}

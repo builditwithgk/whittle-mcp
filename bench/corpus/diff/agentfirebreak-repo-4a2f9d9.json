@@ -1,0 +1,30 @@
+{
+ "kind": "diff",
+ "options": {},
+ "source": "git show 4a2f9d9 in agentfirebreak-repo",
+ "facts": {
+  "contains": [
+   "CHANGELOG.md",
+   "README.md",
+   "examples/agent_loop.py",
+   "pyproject.toml",
+   "src/agent_firebreak/__init__.py",
+   "src/agent_firebreak/guard.py",
+   "src/agent_firebreak/normalize.py",
+   "src/agent_firebreak/provenance.py",
+   "tests/test_hardening.py",
+   "+- Fix (availability): one very long unbroken token in untrusted content could stall indexing for minutes (quadratic regex work). Indexing is now linear; a 400 KB token takes about 0.1 s.",
+   "+- Fix: a backslash or tab inside a URL (`https://evil.example\\@good.example/`) is read the way browsers read it, so the real host is judged.",
+   "+- New sink kinds `handle`, `path`, `command` and `literal`: chat handles, file paths and shell commands must come from the user. Previously `handle` was documented but only email-shaped values were traced.",
+   "+- Fix: parameters listed in `params` but not declared as sinks are now scanned like undeclared ones (declaring a parameter no longer weakens protection); bare account ids in them are checked.",
+   "+- Fix: `[at]`/`[dot]` spellings in call arguments are normalised before checking.",
+   "+- Docs: tags are trusted blindly; what is out of scope; fail closed on timeouts.",
+   "+- Found by a second fresh-agent walkthrough.",
+   "-| `\"recipient\"` | email addresses, chat handles | the address, case-insensitive, after de-obfuscation |",
+   "+| `\"recipient\"` | email addresses | the address, case-insensitive, after de-obfuscation |",
+   "+| `\"handle\"` | chat handles (`@name`, Slack ids) | the exact word, as typed by the user |",
+   "+| `\"path\"` | file paths | the exact path, as typed by the user |",
+   "+| `\"command\"` | shell commands | the whole command, as typed by the user (so a shell tool will usually `ask`; that is intended) |"
+  ]
+ }
+}

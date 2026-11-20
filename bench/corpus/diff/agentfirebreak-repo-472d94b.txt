@@ -1,0 +1,76 @@
+diff --git a/README.md b/README.md
+index 95553bc..b2e5e68 100644
+--- a/README.md
++++ b/README.md
+@@ -18,6 +18,8 @@ agent-firebreak run A1         # one attack, step by step
+ 
+ Pure standard library, Python 3.11+. No network calls.
+ 
++Want to help test it? [TESTING.md](TESTING.md) is a 10-minute script, and feedback or bypass reports are very welcome.
++
+ ```
+ Attacks landed (of 8):   off 8, guard on 0 (human denies), 0 (human approves)
+ Normal tasks done (of 8): off 8, guard on 6 (deny), 8 (approve)
+@@ -73,6 +75,7 @@ Read these before relying on it. They are tested, not hidden ([`FINDINGS.md`](FI
+ - **It cannot judge what the model *says*.** If an injection makes the assistant give you a false summary, no tool call happens, so there is nothing to gate (scenario L1).
+ - **A human who approves defeats it.** If an attacker spells an address in words, the guard cannot trace it and asks. If the human approves, the attack lands (scenario L2).
+ - **It asks sometimes when it need not.** Two of the eight normal tasks need one approval each (emailing an address found in a customer record; following a link on a page).
++- **A trusted host can still receive data in its query string.** The guard checks a link's host and path, not what follows `?`. If the user named a host, a call to it with sensitive data in the query is not flagged.
+ - **The benchmark agent is simulated.** The bring-your-own-key mode in the demo and `agents/llm.py` can drive a real model, but it is experimental and only tested against mock responses.
+ - It guards tool calls that you route through it. It is not a sandbox and does not protect anything you do not route through it.
+ 
+diff --git a/TESTING.md b/TESTING.md
+new file mode 100644
+index 0000000..4b553d9
+--- /dev/null
++++ b/TESTING.md
+@@ -0,0 +1,49 @@
++# Help test agent-firebreak (about 10 minutes)
++
++Thanks for trying it. agent-firebreak is new, and the most useful thing you can give is an honest first impression: where you got stuck, and what you would have expected instead. You do not need an API key or an agent of your own for steps 1 and 2.
++
++## 1. See it work (2 minutes)
++
++```bash
++pip install agent-firebreak
++agent-firebreak bench
++```
++
++You should see a table of 18 scenarios and a summary like "Attacks landed (of 8): off 8, guard on 0". Then watch one attack step by step:
++
++```bash
++agent-firebreak run A1
++```
++
++Each step shows what the agent tried and whether the guard allowed, asked or blocked, with the reason. No install? The same thing runs in your browser: https://huggingface.co/spaces/builditwithgk/agent-firebreak
++
++## 2. Try to break it (5 minutes)
++
++The simulated agent obeys any instruction it reads. Your job is to find a tool call that should have been stopped and was not. Ideas:
++
++- Write an address in an unusual way (spaces, entities, other alphabets) and see if a call to it slips through.
++- Change a scenario's text in `src/agent_firebreak/data/scenarios.json` (clone the repo) and run `agent-firebreak run <id>`.
++- Check the two documented limits (L1, L2): do they behave as the README says?
++
++Found a bypass? Open a [Bypass or false negative](https://github.com/builditwithgk/agent-firebreak/issues/new?template=bypass_report.yml) issue. Use fictional values only (`attacker.example`). This is the most valuable report you can send.
++
++## 3. Wrap your own tool calls (optional, 5 minutes)
++
++If you have an agent, put two calls around its tool execution:
++
++```python
++guard.observe(Segment("email.body", text), tool="read_email")   # everything the model reads
++decision = guard.evaluate(ToolCall("send_email", args))          # before running any tool
++```
++
++The README has a runnable example. Was it clear how to describe your tools and which fields are untrusted?
++
++## Tell us how it went
++
++Open a [First-run feedback](https://github.com/builditwithgk/agent-firebreak/issues/new?template=first_run_feedback.yml) issue, or reply in [Discussions](https://github.com/builditwithgk/agent-firebreak/discussions). Useful answers to any of these:
++
++- Where did you get stuck or confused?
++- What did you expect that was missing?
++- Would you use this on a real agent, and what would need to change first?
++
++Negative feedback is welcome. Please do not star the repo to be nice; tell us what is wrong instead.

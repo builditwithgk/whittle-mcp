@@ -1,0 +1,26 @@
+{
+ "kind": "openapi",
+ "options": {
+  "tags": [
+   "store"
+  ]
+ },
+ "source": "https://petstore3.swagger.io/api/v3/openapi.json (query {\"tags\": [\"store\"]})",
+ "facts": {
+  "contains": [
+   "getInventory",
+   "placeOrder",
+   "getOrderById",
+   "deleteOrder",
+   "orderId",
+   "200",
+   "default",
+   "400",
+   "422",
+   "404",
+   "/store/inventory",
+   "/store/order",
+   "/store/order/{orderId}"
+  ]
+ }
+}

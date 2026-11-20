@@ -1,0 +1,14 @@
+{
+ "kind": "diff",
+ "options": {},
+ "source": "trailing spaces added to every line of one file",
+ "facts": {
+  "contains": [
+   "space/SPACE_README.md",
+   "space/build.sh",
+   "space/deploy.sh",
+   "space/index.html",
+   "src/agent_firebreak/guard.py"
+  ]
+ }
+}

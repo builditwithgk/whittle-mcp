@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions and ideas
+    url: https://github.com/builditwithgk/whittle-mcp/discussions
+    about: Ask how to use whittle-mcp, share results, or discuss ideas before opening an issue.
+  - name: Try it in the browser
+    url: https://huggingface.co/spaces/builditwithgk/whittle-mcp
+    about: Paste a test log, JSON or diff and see what is kept, with nothing to install.

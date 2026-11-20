@@ -1,0 +1,30 @@
+{
+ "kind": "diff",
+ "options": {},
+ "source": "git show 848aca5 in agentfirebreak-repo",
+ "facts": {
+  "contains": [
+   "CHANGELOG.md",
+   "README.md",
+   "TESTING.md",
+   "examples/agent_loop.py",
+   "pyproject.toml",
+   "src/agent_firebreak/__init__.py",
+   "src/agent_firebreak/cli.py",
+   "src/agent_firebreak/guard.py",
+   "tests/test_guard.py",
+   "+- Fix: an address such as `me@corp.example@attacker.example` no longer inherits trust from its trusted-looking prefix; look-alike (non-ASCII) characters inside an address are treated as a new value.",
+   "+- Fix: arguments a tool spec did not declare (for example a model-invented `bcc`) are now checked for untrusted addresses and links.",
+   "+- Fix: guard reasons escape non-ASCII characters, so look-alikes are visible and a narrow Windows console cannot crash on them; the CLI no longer raises on non-ASCII output.",
+   "+- Docs: how to declare sinks, tags and risk; what to do with `ask`; a runnable agent loop; a note that hosts are matched by host and path only.",
+   "+- Found by a fresh-agent walkthrough of the 0.1.0 README.",
+   "+- First release.",
+   "+## Declaring your tools",
+   "+The declarations are the security boundary, so it is worth getting them right. A complete, runnable agent loop is in [`examples/agent_loop.py`](examples/agent_loop.py).",
+   "+**Risk** (what the tool can do): `Risk.READ` (reads data), `Risk.WRITE` (a reversible change), `Risk.EXTERNAL` (sends data out or acts irreversibly: email, payment, delete) and `Risk.OUTPUT` (the reply to the user). A tool with no hints is treated as external.",
+   "+**Sinks** (parameters that decide where data goes or what an action targets) are declared per parameter with a `SinkSpec(kind, allow_tags=())`:",
+   "+| kind | use it for | how the value is matched |",
+   "+|---|---|---|"
+  ]
+ }
+}

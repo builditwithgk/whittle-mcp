@@ -1,0 +1,94 @@
+Traceback (most recent call last):
+  File "/work/project\app.py", line 125, in <module>
+    f39()
+    ~~~^^
+  File "/work/project\app.py", line 122, in f39
+    return f38()
+  File "/work/project\app.py", line 119, in f38
+    return f37()
+  File "/work/project\app.py", line 116, in f37
+    return f36()
+  File "/work/project\app.py", line 113, in f36
+    return f35()
+  File "/work/project\app.py", line 110, in f35
+    return f34()
+  File "/work/project\app.py", line 107, in f34
+    return f33()
+  File "/work/project\app.py", line 104, in f33
+    return f32()
+  File "/work/project\app.py", line 101, in f32
+    return f31()
+  File "/work/project\app.py", line 98, in f31
+    return f30()
+  File "/work/project\app.py", line 95, in f30
+    return f29()
+  File "/work/project\app.py", line 92, in f29
+    return f28()
+  File "/work/project\app.py", line 89, in f28
+    return f27()
+  File "/work/project\app.py", line 86, in f27
+    return f26()
+  File "/work/project\app.py", line 83, in f26
+    return f25()
+  File "/work/project\app.py", line 80, in f25
+    return f24()
+  File "/work/project\app.py", line 77, in f24
+    return f23()
+  File "/work/project\app.py", line 74, in f23
+    return f22()
+  File "/work/project\app.py", line 71, in f22
+    return f21()
+  File "/work/project\app.py", line 68, in f21
+    return f20()
+  File "/work/project\app.py", line 65, in f20
+    return f19()
+  File "/work/project\app.py", line 62, in f19
+    return f18()
+  File "/work/project\app.py", line 59, in f18
+    return f17()
+  File "/work/project\app.py", line 56, in f17
+    return f16()
+  File "/work/project\app.py", line 53, in f16
+    return f15()
+  File "/work/project\app.py", line 50, in f15
+    return f14()
+  File "/work/project\app.py", line 47, in f14
+    return f13()
+  File "/work/project\app.py", line 44, in f13
+    return f12()
+  File "/work/project\app.py", line 41, in f12
+    return f11()
+  File "/work/project\app.py", line 38, in f11
+    return f10()
+  File "/work/project\app.py", line 35, in f10
+    return f9()
+  File "/work/project\app.py", line 32, in f9
+    return f8()
+  File "/work/project\app.py", line 29, in f8
+    return f7()
+  File "/work/project\app.py", line 26, in f7
+    return f6()
+  File "/work/project\app.py", line 23, in f6
+    return f5()
+  File "/work/project\app.py", line 20, in f5
+    return f4()
+  File "/work/project\app.py", line 17, in f4
+    return f3()
+  File "/work/project\app.py", line 14, in f3
+    return f2()
+  File "/work/project\app.py", line 11, in f2
+    return f1()
+  File "/work/project\app.py", line 8, in f1
+    return f0()
+  File "/work/project\app.py", line 5, in f0
+    return a()
+  File "/work/project\app.py", line 2, in a
+    raise KeyError('user_id')
+KeyError: 'user_id'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/work/project\app.py", line 127, in <module>
+    raise RuntimeError('lookup failed') from e
+RuntimeError: lookup failed

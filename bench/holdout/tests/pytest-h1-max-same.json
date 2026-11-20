@@ -1,0 +1,20 @@
+{
+ "kind": "tests",
+ "options": {},
+ "source": "pytest on a mutated copy of whittle-mcp (h1-max-same)",
+ "facts": {
+  "contains": [
+   "tests/test_adversarial.py::test_log_never_drops_a_distinct_error_message",
+   "tests/test_engine.py::test_retention_on_the_corpus_and_beats_naive_truncation",
+   "AssertionError: (0, 'ERROR billing failure: code 8748')",
+   "assert 'ERROR billing failure: code 8748' in 'DEBUG cache hit key=0 (x2)\\nINFO request ok 85\\n   Downloading wheel-10.whl\\nDEBUG cache hit key=98\\n  File \"a.py\", l...> (file.js:30:10)\\n   Downloading wheel-9.whl\\n  File \"a.py\", line 50, in f\\n    at Object.<anonymous> (file.js:91:10)'",
+   "assert 0 >= 40",
+   "+  where 0 = len([])",
+   "assert e in text, (i, e)",
+   "assert len(samples) >= 40",
+   "tests\\test_adversarial.py:29",
+   "tests\\test_engine.py:79",
+   "2 failed, 35 passed in 4.09s"
+  ]
+ }
+}

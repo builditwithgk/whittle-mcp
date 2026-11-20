@@ -1,0 +1,10 @@
+{
+ "kind": "log",
+ "options": {},
+ "source": "script run (py-asyncio, held out)",
+ "facts": {
+  "contains": [
+   "ConnectionError: peer reset on shard 3"
+  ]
+ }
+}

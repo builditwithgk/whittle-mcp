@@ -1,0 +1,15 @@
+{
+ "kind": "tests",
+ "options": {},
+ "source": "pytest on a mutated copy of whittle-mcp (h3-new-file-head)",
+ "facts": {
+  "contains": [
+   "tests/test_engine.py::test_retention_on_the_corpus_and_beats_naive_truncation",
+   "assert 0 >= 40",
+   "+  where 0 = len([])",
+   "assert len(samples) >= 40",
+   "tests\\test_engine.py:79",
+   "1 failed, 36 passed in 4.54s"
+  ]
+ }
+}

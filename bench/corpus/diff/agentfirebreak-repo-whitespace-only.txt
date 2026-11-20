@@ -1,0 +1,699 @@
+diff --git a/space/SPACE_README.md b/space/SPACE_README.md
+deleted file mode 100644
+index e5880be..0000000
+--- a/space/SPACE_README.md
++++ /dev/null
+@@ -1,28 +0,0 @@
+----
+-title: agent-firebreak
+-emoji: 🔥
+-colorFrom: red
+-colorTo: yellow
+-sdk: static
+-pinned: false
+-license: mit
+-short_description: Limit the damage when an AI agent is prompt-injected
+-tags:
+-  - prompt-injection
+-  - ai-agents
+-  - ai-security
+-  - guardrails
+-  - llm
+-  - pyodide
+----
+-
+-# 🔥 agent-firebreak
+-
+-**Assume the model will be fooled. Limit what a fooled model can do.**
+-
+-Pick an attack, and watch the same simulated worst-case agent run with and without the guard. Everything runs in your browser (Python via Pyodide); nothing is sent anywhere unless you opt in to the experimental bring-your-own-key mode.
+-
+-- **Source & docs:** https://github.com/builditwithgk/agent-firebreak
+-- `pip install agent-firebreak`
+-
+-Built by [Gopi K devm (builditwithgk)](https://github.com/builditwithgk) at [Scaleup Solutions](https://scaleup-solutions.in/).
+diff --git a/space/build.sh b/space/build.sh
+deleted file mode 100644
+index bb32893..0000000
+--- a/space/build.sh
++++ /dev/null
+@@ -1,17 +0,0 @@
+-#!/usr/bin/env bash
+-# Assemble the static Space into a folder: bash space/build.sh [OUT_DIR]   (default: space/_site)
+-set -euo pipefail
+-cd "$(dirname "$0")/.."
+-OUT="${1:-space/_site}"
+-mkdir -p "$OUT"
+-python - "$OUT" <<'PY'
+-import pathlib, shutil, sys, zipfile
+-out = pathlib.Path(sys.argv[1]); root = pathlib.Path("src")
+-with zipfile.ZipFile(out / "agent_firebreak.zip", "w", zipfile.ZIP_DEFLATED) as z:
+-    for p in sorted((root / "agent_firebreak").rglob("*")):
+-        if p.is_file() and "__pycache__" not in p.parts and p.suffix in {".py", ".json"}:
+-            z.write(p, p.relative_to(root).as_posix())
+-shutil.copy("space/index.html", out / "index.html")
+-shutil.copy("space/SPACE_README.md", out / "README.md")
+-PY
+-echo "built $OUT"
+diff --git a/space/deploy.sh b/space/deploy.sh
+deleted file mode 100644
+index d970712..0000000
+--- a/space/deploy.sh
++++ /dev/null
+@@ -1,11 +0,0 @@
+-#!/usr/bin/env bash
+-# Deploy the static demo to the Hugging Face Space builditwithgk/agent-firebreak (free tier).
+-# Needs: `hf auth login` done once. Run from the repo root:  bash space/deploy.sh
+-set -euo pipefail
+-SPACE="${SPACE:-builditwithgk/agent-firebreak}"
+-STAGE="$(mktemp -d)"
+-trap 'rm -rf "$STAGE"' EXIT
+-bash space/build.sh "$STAGE"
+-hf repos create "$SPACE" --repo-type space --space-sdk static --exist-ok
+-hf upload "$SPACE" "$STAGE" . --repo-type space --commit-message "Deploy from $(git rev-parse --short HEAD)"
+-echo "Deployed: https://huggingface.co/spaces/$SPACE"
+diff --git a/space/index.html b/space/index.html
+deleted file mode 100644
+index 38a760e..0000000
+--- a/space/index.html
++++ /dev/null
+@@ -1,181 +0,0 @@
+-<!doctype html>
+-<html lang="en">
+-<head>
+-<meta charset="utf-8">
+-<meta name="viewport" content="width=device-width, initial-scale=1">
+-<title>agent-firebreak demo</title>
+-<style>
+-  :root { --bg:#f7f8fa; --card:#fff; --ink:#1b1f27; --mute:#5d6676; --line:#dfe3ea; --accent:#1f5eff;
+-          --ok:#14803c; --okbg:#e6f6ec; --ask:#9a6700; --askbg:#fff4d6; --bad:#b42318; --badbg:#fde8e6; --inj:#7a2fd0; }
+-  @media (prefers-color-scheme: dark) { :root { --bg:#0f1218; --card:#171b23; --ink:#e8ebf1; --mute:#9aa3b2; --line:#2a313d;
+-          --accent:#6b94ff; --ok:#5fd18b; --okbg:#12301f; --ask:#f0c35a; --askbg:#3a2f10; --bad:#ff8a80; --badbg:#3b1815; --inj:#c39bff; } }
+-  * { box-sizing:border-box; }
+-  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif; }
+-  main { max-width:1100px; margin:0 auto; padding:24px 16px 48px; }
+-  h1 { font-size:1.6rem; margin:0 0 4px; } h2 { font-size:1rem; margin:0 0 8px; }
+-  p.lead { color:var(--mute); margin:0 0 16px; }
+-  .note { background:var(--card); border:1px solid var(--line); border-left:4px solid var(--accent); padding:10px 12px; border-radius:8px; margin:0 0 16px; font-size:.9rem; }
+-  .bar { display:flex; flex-wrap:wrap; gap:12px; align-items:end; margin-bottom:12px; }
+-  label { display:flex; flex-direction:column; gap:4px; font-size:.8rem; color:var(--mute); }
+-  select, input, button { font:inherit; padding:8px 10px; border-radius:8px; border:1px solid var(--line); background:var(--card); color:var(--ink); }
+-  button { cursor:pointer; } button.primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+-  button:disabled { opacity:.5; cursor:default; }
+-  .task { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:12px; margin-bottom:12px; }
+-  .task b { display:block; margin-bottom:2px; }
+-  .cols { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+-  @media (max-width:760px) { .cols { grid-template-columns:1fr; } }
+-  .col { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:12px; min-height:120px; }
+-  .step { border:1px solid var(--line); border-radius:8px; padding:8px 10px; margin-bottom:8px; font-size:.88rem; }
+-  .step code { font:12.5px ui-monospace,Consolas,monospace; word-break:break-word; }
+-  .badge { display:inline-block; font-size:.72rem; font-weight:600; padding:1px 8px; border-radius:99px; margin-right:6px; }
+-  .allow { background:var(--okbg); color:var(--ok); } .ask { background:var(--askbg); color:var(--ask); } .block { background:var(--badbg); color:var(--bad); }
+-  .none { background:var(--line); color:var(--mute); } .inj { color:var(--inj); font-weight:600; font-size:.75rem; margin-left:4px; }
+-  .why { color:var(--mute); margin-top:4px; } .res { color:var(--mute); margin-top:4px; font-size:.8rem; white-space:pre-wrap; max-height:4.5em; overflow:hidden; }
+-  .out { margin-top:8px; padding:8px 10px; border-radius:8px; font-weight:600; }
+-  .out.good { background:var(--okbg); color:var(--ok); } .out.bad { background:var(--badbg); color:var(--bad); } .out.mid { background:var(--askbg); color:var(--ask); }
+-  table { width:100%; border-collapse:collapse; font-size:.85rem; } td, th { text-align:left; padding:4px 8px; border-bottom:1px solid var(--line); }
+-  details { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:10px 12px; margin-top:16px; }
+-  summary { cursor:pointer; font-weight:600; } .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin:10px 0; }
+-  footer { margin-top:28px; color:var(--mute); font-size:.85rem; } a { color:var(--accent); }
+-  #status { color:var(--mute); font-size:.85rem; }
+-</style>
+-</head>
+-<body>
+-<main>
+-  <h1>agent-firebreak</h1>
+-  <p class="lead">Assume the model will be fooled by prompt injection. Limit what a fooled model can do.</p>
+-  <div class="note"><b>What you are watching:</b> a <i>simulated</i> worst-case agent that always obeys any instruction it reads, run twice on the same task: once with no guard, once behind agent-firebreak. It is not a real model. Everything runs in your browser; no data leaves this page.</div>
+-
+-  <div class="bar">
+-    <label>Scenario <select id="scenario"></select></label>
+-    <label>If the guard asks, the human <select id="approver"><option value="deny">denies</option><option value="approve">approves</option></select></label>
+-    <button class="primary" id="run" disabled>Run</button>
+-    <button id="bench" disabled>Run all scenarios</button>
+-    <span id="status">Loading Python in your browser…</span>
+-  </div>
+-
+-  <div class="task" id="task" hidden><b id="title"></b><div id="user"></div><div class="why" id="summary"></div></div>
+-  <div class="cols">
+-    <section class="col"><h2>Without a guard</h2><div id="off"></div></section>
+-    <section class="col"><h2>With agent-firebreak</h2><div id="on"></div></section>
+-  </div>
+-  <section class="col" id="benchbox" style="margin-top:12px" hidden><h2>All scenarios</h2><div id="benchout"></div></section>
+-
+-  <details>
+-    <summary>Try a real model (experimental, bring your own key)</summary>
+-    <p class="why">Runs the selected scenario with a real model driving the same fake tools. Your key stays in this tab and goes only to the provider you choose. Experimental: a real model may or may not follow the injection, which is the point of trying. Use a key you can revoke.</p>
+-    <div class="grid">
+-      <label>Provider <select id="provider"><option value="anthropic">Anthropic</option><option value="openai">OpenAI-compatible</option></select></label>
+-      <label>Model <input id="model" placeholder="model name"></label>
+-      <label>API key <input id="key" type="password" autocomplete="off"></label>
+-      <label>Base URL (optional) <input id="base" placeholder="default for provider"></label>
+-    </div>
+-    <button id="runllm" disabled>Run with this model</button>
+-  </details>
+-
+-  <footer>Limits: agent-firebreak limits the damage of a successful injection; it does not stop injections, and it cannot judge a false answer given to you. See the README. · <a href="https://github.com/builditwithgk/agent-firebreak">Source on GitHub</a> · Built by <a href="https://scaleup-solutions.in/">Scaleup Solutions</a></footer>
+-</main>
+-<script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
+-<script>
+-const $ = id => document.getElementById(id);
+-let py, runJson, benchJson, runLlm, scenarios = [];
+-
+-const GLUE = `
+-import json
+-from agent_firebreak.scenarios import load_scenarios, get_scenario
+-from agent_firebreak.agents import ObedientAgent
+-from agent_firebreak.agents.llm import LLMAgent, PyodideClient
+-from agent_firebreak.runner import run_scenario
+-from agent_firebreak.bench import run_bench
+-
+-def list_scenarios():
+-    return json.dumps([dict(id=s.id, kind=s.kind, title=s.title, user_task=s.user_task, summary=s.summary) for s in load_scenarios()])
+-
+-async def run_json(sid, guard_on, approve):
+-    r = await run_scenario(get_scenario(sid), ObedientAgent(), guard_on=guard_on, approver="approve" if approve else "deny")
+-    return json.dumps(r.to_dict())
+-
+-async def run_llm(sid, guard_on, approve, provider, model, key, base):
+-    agent = LLMAgent(provider, model, key, base_url=base or None, client=PyodideClient())
+-    r = await run_scenario(get_scenario(sid), agent, guard_on=guard_on, approver="approve" if approve else "deny")
+-    return json.dumps(r.to_dict())
+-
+-async def bench_json():
+-    out = await run_bench()
+-    return json.dumps({sid: {m: dict(outcome=r.outcome, asks=r.asks, completed=r.completed, landed=r.landed) for m, r in modes.items()} for sid, modes in out["runs"].items()})
+-`;
+-
+-function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+-
+-function renderRun(box, run) {
+-  box.replaceChildren();
+-  run.trace.forEach(t => {
+-    const s = el('div', 'step');
+-    const d = t.decision;
+-    const kind = !d ? 'none' : d.effect;
+-    const label = !d ? 'NO CHECK' : d.effect.toUpperCase() + (t.approved === true ? ' · approved' : t.approved === false ? ' · denied' : '');
+-    const head = el('div'); head.append(el('span', 'badge ' + kind, label));
+-    const code = el('code', null, t.tool + '(' + JSON.stringify(t.args).slice(0, 110) + ')'); head.append(code);
+-    if (t.injected) head.append(el('span', 'inj', 'caused by injected text'));
+-    s.append(head);
+-    if (d && d.effect !== 'allow') s.append(el('div', 'why', d.reason));
+-    s.append(el('div', 'res', (t.result || '').slice(0, 220)));
+-    box.append(s);
+-  });
+-  let msg, cls;
+-  if (run.kind === 'benign') { msg = run.completed ? 'Task completed' + (run.asks ? ` (${run.asks} approval prompt)` : '') : 'Task NOT completed (human denied a needed step)'; cls = run.completed ? 'good' : 'mid'; }
+-  else if (run.landed) { msg = 'Attack succeeded: the attacker got what they wanted'; cls = 'bad'; }
+-  else { msg = run.outcome === 'held' ? 'Attack held for a human, who said no' : 'Attack blocked'; cls = 'good'; }
+-  box.append(el('div', 'out ' + cls, msg));
+-}
+-
+-async function show(fn) {
+-  $('run').disabled = true; $('runllm').disabled = true; $('status').textContent = 'Running…';
+-  try {
+-    const sid = $('scenario').value, approve = $('approver').value === 'approve';
+-    const sc = scenarios.find(s => s.id === sid);
+-    $('task').hidden = false; $('title').textContent = sc.title; $('user').textContent = 'User asks: ' + sc.user_task; $('summary').textContent = sc.summary;
+-    const [off, on] = await Promise.all([fn(sid, false, approve), fn(sid, true, approve)]);
+-    renderRun($('off'), JSON.parse(off)); renderRun($('on'), JSON.parse(on));
+-    $('status').textContent = '';
+-  } catch (e) { $('status').textContent = 'Error: ' + e; }
+-  $('run').disabled = false; $('runllm').disabled = false;
+-}
+-
+-async function main() {
+-  py = await loadPyodide();
+-  const buf = await (await fetch('agent_firebreak.zip')).arrayBuffer();
+-  py.unpackArchive(buf, 'zip');
+-  await py.runPythonAsync(GLUE);
+-  runJson = py.globals.get('run_json'); runLlm = py.globals.get('run_llm'); benchJson = py.globals.get('bench_json');
+-  scenarios = JSON.parse(py.globals.get('list_scenarios')());
+-  const groups = { attack: 'Attacks', limit: 'Known limits', benign: 'Normal tasks' };
+-  for (const [k, name] of Object.entries(groups)) {
+-    const g = document.createElement('optgroup'); g.label = name;
+-    scenarios.filter(s => s.kind === k).forEach(s => { const o = el('option', null, s.id.split('-')[0] + ' · ' + s.title); o.value = s.id; g.append(o); });
+-    $('scenario').append(g);
+-  }
+-  $('run').disabled = false; $('bench').disabled = false; $('runllm').disabled = false; $('status').textContent = '';
+-  $('run').onclick = () => show((sid, on, ap) => runJson(sid, on, ap));
+-  $('runllm').onclick = () => {
+-    if (!$('key').value || !$('model').value) { $('status').textContent = 'Enter a model and key first.'; return; }
+-    show((sid, on, ap) => runLlm(sid, on, ap, $('provider').value, $('model').value, $('key').value, $('base').value));
+-  };
+-  $('bench').onclick = async () => {
+-    $('status').textContent = 'Running all…';
+-    const data = JSON.parse(await benchJson());
+-    const t = document.createElement('table');
+-    t.innerHTML = '<tr><th>Scenario</th><th>No guard</th><th>Guard, human denies</th><th>Guard, human approves</th></tr>';
+-    for (const sc of scenarios) {
+-      const r = data[sc.id], tr = document.createElement('tr');
+-      const cell = m => sc.kind === 'benign' ? (m.completed ? 'done' : 'not done') + (m.asks ? ` (${m.asks} ask)` : '') : m.outcome + (m.asks ? ` (${m.asks} ask)` : '');
+-      tr.append(el('td', null, sc.id), el('td', null, cell(r.off)), el('td', null, cell(r.on_deny)), el('td', null, cell(r.on_approve)));
+-      t.append(tr);
+-    }
+-    $('benchout').replaceChildren(t); $('benchbox').hidden = false; $('status').textContent = '';
+-  };
+-}
+-main().catch(e => { $('status').textContent = 'Could not start: ' + e; });
+-</script>
+-</body>
+-</html>
+diff --git a/src/agent_firebreak/guard.py b/src/agent_firebreak/guard.py
+index 7759386..7714459 100644
+--- a/src/agent_firebreak/guard.py
++++ b/src/agent_firebreak/guard.py
+@@ -1,200 +1,200 @@
+-"""The guard: observe what the agent sees, then decide each tool call it proposes."""
+-
+-from __future__ import annotations
+-
+-import re
+-from dataclasses import replace
+-from typing import Any
+-
+-from agent_firebreak.audit import AuditLog
+-from agent_firebreak.detectors import scan
+-from agent_firebreak.models import (Decision, Finding, Origin, Risk, Segment, Signal, SinkSpec, ToolCall,
+-                                    ToolSpec, Trust)
+-from agent_firebreak.normalize import (Entity, deobfuscate, extract_entities, flatten_strings, normalise_text,
+-                                       normalise_url)
+-from agent_firebreak.policy import Facts, Policy, Rule
+-from agent_firebreak.provenance import OriginIndex
+-
+-_ENTITY_KIND = {"recipient": "email", "url": "url", "account": "id", "amount": "amount"}
+-# Kinds matched as a whole word or phrase: chat handles, file paths, shell commands, and any other literal value.
+-_LITERAL_KINDS = {"handle", "path", "command", "literal"}
+-_FINDING_FOR_ORIGIN = {Origin.UNTRUSTED_ONLY: "UNTRUSTED_SINK", Origin.NEW: "NEW_SINK", Origin.TAGGED: "TAGGED_SINK"}
+-_IMAGE_MARKDOWN = re.compile(r"!\[[^\]]*\]\(\s*<?(https?://[^)\s>]+)")
+-_IMAGE_HTML = re.compile(r"<img[^>]+src\s*=\s*[\"']?(https?://[^\"'\s>]+)", re.I)
+-
+-
+-def _prepare(text: str) -> str:
+-    """Normalise a value from a tool call the same way indexed content is, including [at]/[dot] spellings."""
+-    return deobfuscate(normalise_text(text))
+-
+-
+-def _has_stray_characters(text: str, entities: list[Entity]) -> bool:
+-    """True if, after removing the recognised addresses, an '@' or a non-ASCII character is left over."""
+-    rest = text
+-    for entity in entities:
+-        rest = rest.replace(entity.raw.lower(), " ").replace(entity.raw, " ")
+-    return "@" in rest or not rest.isascii()
+-
+-
+-class _SafeDict(dict):
+-    def __missing__(self, key: str) -> str:
+-        return "{" + key + "}"
+-
+-
+-class Guard:
+-    """Tracks provenance and session taint, and turns each proposed tool call into allow / ask / block."""
+-
+-    def __init__(self, tools: list[ToolSpec], policy: Policy | None = None, *, detectors: bool = True,
+-                 audit: AuditLog | None = None) -> None:
+-        self.tools = {t.name: t for t in tools}
+-        self.policy = policy or Policy.default()
+-        self.use_detectors = detectors
+-        self.audit = audit
+-        self.index = OriginIndex()
+-        self.tainted = False      # the agent has read content someone else controls
+-        self.sensitive = False    # the agent has read confidential records
+-        self.signals: list[Signal] = []
+-
+-    # ------------------------------------------------------------------ observing
+-    def observe(self, segments: Segment | list[Segment], *, tool: str | None = None) -> list[Signal]:
+-        """Index content the agent has seen. Returns any new advisory signals."""
+-        if isinstance(segments, Segment):
+-            segments = [segments]
+-        spec = self.tools.get(tool) if tool else None
+-        fresh: list[Signal] = []
+-        for seg in segments:
+-            if spec and spec.returns_sensitive and not seg.sensitive:
+-                seg = replace(seg, sensitive=True)
+-            self.index.add(seg)
+-            if seg.trust is Trust.UNTRUSTED:
+-                self.tainted = True
+-                if self.use_detectors:
+-                    fresh.extend(scan(seg.text, seg.label))
+-            if seg.sensitive:
+-                self.sensitive = True
+-        known = {(s.id, s.segment) for s in self.signals}
+-        fresh = [s for s in fresh if (s.id, s.segment) not in known]
+-        self.signals.extend(fresh)
+-        if self.audit:
+-            self.audit.append("observe", {"segments": [s.label for s in segments],
+-                                          "trust": sorted({s.trust.value for s in segments}),
+-                                          "signals": [s.id for s in fresh]})
+-        return fresh
+-
+-    # ------------------------------------------------------------------ deciding
+-    def evaluate(self, call: ToolCall) -> Decision:
+-        spec = self.tools.get(call.name)
+-        risk = spec.risk if spec else Risk.EXTERNAL  # an unknown tool is treated cautiously
+-        findings: list[Finding] = []
+-        if spec:
+-            findings += self._check_sinks(spec, call)
+-            findings += self._check_payload(spec, call)
+-            findings += self._check_undeclared(spec, call)
+-        else:  # a tool nobody declared cannot be judged, so a human decides
+-            findings.append(Finding("UNKNOWN_TOOL", f"{call.name} is not a declared tool", call.name))
+-        facts = Facts(risk.value, self.tainted, self.sensitive, frozenset(f.id for f in findings),
+-                      frozenset(s.id for s in self.signals))
+-        rule, effect = self.policy.decide(facts)
+-        decision = Decision(effect, rule.id if rule else "default", self._reason(rule, call, risk, findings),
+-                            risk, self.tainted, self.sensitive, findings, list(self.signals))
+-        if self.audit:
+-            self.audit.append("decision", {"tool": call.name, "args": call.args, **decision.to_dict()})
+-        return decision
+-
+-    def _check_sinks(self, spec: ToolSpec, call: ToolCall) -> list[Finding]:
+-        findings: list[Finding] = []
+-        for param, sink in spec.sinks.items():
+-            if param not in call.args:
+-                continue
+-            literal = sink.kind in _LITERAL_KINDS
+-            kinds = ("email", "url") if literal else (_ENTITY_KIND.get(sink.kind, sink.kind),)
+-            seen: set[tuple[str, str]] = set()
+-            for text in flatten_strings(call.args[param]):
+-                norm = _prepare(text)
+-                entities = [e for e in extract_entities(norm) if e.kind in kinds]
+-                if literal:
+-                    findings += self._check_literal(param, sink, text, norm)  # plus any address or link inside it
+-                elif not entities and norm.strip():
+-                    entities = [Entity(kinds[0], norm.strip(), text.strip())]  # unusual format: treat the whole value
+-                elif kinds[0] == "email" and _has_stray_characters(norm, entities):
+-                    # e.g. "me@corp.example@attacker.example" or "dr<cyrillic o>p@attacker.example": an address-looking
+-                    # fragment must not vouch for the whole value
+-                    entities.insert(0, Entity("email", norm.strip(), text.strip()))
+-                for entity in entities:
+-                    if (entity.kind, entity.norm) in seen:
+-                        continue
+-                    seen.add((entity.kind, entity.norm))
+-                    found = self.index.lookup(entity.kind, entity.norm, () if literal else sink.allow_tags)
+-                    finding_id = _FINDING_FOR_ORIGIN.get(found.origin)
+-                    if finding_id:
+-                        findings.append(Finding(finding_id, f"{param} = {entity.raw}", param, entity.raw,
+-                                                found.origin, found.evidence))
+-        return findings
+-
+-    def _check_literal(self, param: str, sink: SinkSpec, raw: str, norm: str) -> list[Finding]:
+-        """A handle, path or command must appear (as a whole word or phrase) in something the user wrote."""
+-        found = self.index.lookup_literal(norm.strip(), sink.allow_tags)
+-        finding_id = _FINDING_FOR_ORIGIN.get(found.origin)
+-        if not finding_id:
+-            return []
+-        return [Finding(finding_id, f"{param} = {raw.strip()[:120]}", param, raw.strip()[:120], found.origin, found.evidence)]
+-
+-    def _check_undeclared(self, spec: ToolSpec, call: ToolCall) -> list[Finding]:
+-        """Anything that is not a declared sink or payload (a model-invented `bcc`, or a `command` listed only in `params`)
+-        must not carry an address, link or identifier that appears only in untrusted content."""
+-        findings: list[Finding] = []
+-        skip = set(spec.sinks) | set(spec.payload)
+-        for param, value in call.args.items():
+-            if param in skip:
+-                continue
+-            for text in flatten_strings(value):
+-                for entity in extract_entities(_prepare(text)):
+-                    if entity.kind not in ("email", "url", "id"):
+-                        continue
+-                    found = self.index.lookup(entity.kind, entity.norm)
+-                    wanted = (Origin.UNTRUSTED_ONLY,) if entity.kind == "id" else (Origin.UNTRUSTED_ONLY, Origin.NEW)
+-                    if found.origin in wanted:
+-                        finding_id = "UNTRUSTED_SINK" if found.origin is Origin.UNTRUSTED_ONLY else "NEW_SINK"
+-                        findings.append(Finding(finding_id, f"undeclared argument {param} = {entity.raw}", param,
+-                                                entity.raw, found.origin, found.evidence))
+-        return findings
+-
+-    def _check_payload(self, spec: ToolSpec, call: ToolCall) -> list[Finding]:
+-        """Look for links in outgoing content that smuggle data out or auto-load from an untrusted address."""
+-        findings: list[Finding] = []
+-        for param in spec.payload:
+-            if param not in call.args:
+-                continue
+-            for text in flatten_strings(call.args[param]):
+-                norm = normalise_text(text)
+-                images = {normalise_url(u)[0] for u in _IMAGE_MARKDOWN.findall(norm) + _IMAGE_HTML.findall(norm)}
+-                for entity in (e for e in extract_entities(norm) if e.kind == "url"):
+-                    found = self.index.lookup("url", entity.norm)
+-                    if found.origin is Origin.TRUSTED:
+-                        continue
+-                    leaked = self.index.sensitive_hits(entity.raw)
+-                    if leaked:
+-                        evidence = found.evidence + [{"label": "sensitive data", "derived": None,
+-                                                      "snippet": "the link contains: " + ", ".join(leaked[:3])}]
+-                        findings.append(Finding("EXFIL_LINK", f"{param} links to {entity.raw}", param, entity.raw,
+-                                                found.origin, evidence))
+-                    elif entity.norm in images:
+-                        findings.append(Finding("AUTOFETCH_IMAGE", f"{param} loads an image from {entity.raw}", param,
+-                                                entity.raw, found.origin, found.evidence))
+-        return findings
+-
+-    def _reason(self, rule: Rule | None, call: ToolCall, risk: Risk, findings: list[Finding]) -> str:
+-        if rule is None:
+-            return f"{call.name}: no rule matched, so the default ({self.policy.default_effect.value}) applies."
+-        wanted = set(rule.when.get("findings_any", []))
+-        primary = next((f for f in findings if f.id in wanted), findings[0] if findings else None)
+-        where: Any = "nowhere the agent has seen"
+-        if primary and primary.evidence:
+-            where = ", ".join(sorted({e["label"] + (f" ({e['derived']})" if e.get("derived") else "")
+-                                      for e in primary.evidence}))
+-        shown = (primary.value or "") if primary else ""
+-        shown = shown.encode("ascii", "backslashreplace").decode("ascii")  # make look-alike characters visible, keep logs safe
+-        context = _SafeDict(tool=call.name, risk=risk.value, param=primary.param if primary else "",
+-                            value=shown, where=where,
+-                            signals=", ".join(sorted({s.id for s in self.signals})))
+-        return rule.reason.format_map(context)
++"""The guard: observe what the agent sees, then decide each tool call it proposes."""  
++
++from __future__ import annotations  
++
++import re  
++from dataclasses import replace  
++from typing import Any  
++
++from agent_firebreak.audit import AuditLog  
++from agent_firebreak.detectors import scan  
++from agent_firebreak.models import (Decision, Finding, Origin, Risk, Segment, Signal, SinkSpec, ToolCall,  
++                                    ToolSpec, Trust)  
++from agent_firebreak.normalize import (Entity, deobfuscate, extract_entities, flatten_strings, normalise_text,  
++                                       normalise_url)  
++from agent_firebreak.policy import Facts, Policy, Rule  
++from agent_firebreak.provenance import OriginIndex  
++
++_ENTITY_KIND = {"recipient": "email", "url": "url", "account": "id", "amount": "amount"}  
++# Kinds matched as a whole word or phrase: chat handles, file paths, shell commands, and any other literal value.  
++_LITERAL_KINDS = {"handle", "path", "command", "literal"}  
++_FINDING_FOR_ORIGIN = {Origin.UNTRUSTED_ONLY: "UNTRUSTED_SINK", Origin.NEW: "NEW_SINK", Origin.TAGGED: "TAGGED_SINK"}  
++_IMAGE_MARKDOWN = re.compile(r"!\[[^\]]*\]\(\s*<?(https?://[^)\s>]+)")  
++_IMAGE_HTML = re.compile(r"<img[^>]+src\s*=\s*[\"']?(https?://[^\"'\s>]+)", re.I)  
++
++
++def _prepare(text: str) -> str:  
++    """Normalise a value from a tool call the same way indexed content is, including [at]/[dot] spellings."""  
++    return deobfuscate(normalise_text(text))  
++
++
++def _has_stray_characters(text: str, entities: list[Entity]) -> bool:  
++    """True if, after removing the recognised addresses, an '@' or a non-ASCII character is left over."""  
++    rest = text  
++    for entity in entities:  
++        rest = rest.replace(entity.raw.lower(), " ").replace(entity.raw, " ")  
++    return "@" in rest or not rest.isascii()  
++
++
++class _SafeDict(dict):  
++    def __missing__(self, key: str) -> str:  
++        return "{" + key + "}"  
++
++
++class Guard:  
++    """Tracks provenance and session taint, and turns each proposed tool call into allow / ask / block."""  
++
++    def __init__(self, tools: list[ToolSpec], policy: Policy | None = None, *, detectors: bool = True,  
++                 audit: AuditLog | None = None) -> None:  
++        self.tools = {t.name: t for t in tools}  
++        self.policy = policy or Policy.default()  
++        self.use_detectors = detectors  
++        self.audit = audit  
++        self.index = OriginIndex()  
++        self.tainted = False      # the agent has read content someone else controls  
++        self.sensitive = False    # the agent has read confidential records  
++        self.signals: list[Signal] = []  
++
++    # ------------------------------------------------------------------ observing  
++    def observe(self, segments: Segment | list[Segment], *, tool: str | None = None) -> list[Signal]:  
++        """Index content the agent has seen. Returns any new advisory signals."""  
++        if isinstance(segments, Segment):  
++            segments = [segments]  
++        spec = self.tools.get(tool) if tool else None  
++        fresh: list[Signal] = []  
++        for seg in segments:  
++            if spec and spec.returns_sensitive and not seg.sensitive:  
++                seg = replace(seg, sensitive=True)  
++            self.index.add(seg)  
++            if seg.trust is Trust.UNTRUSTED:  
++                self.tainted = True  
++                if self.use_detectors:  
++                    fresh.extend(scan(seg.text, seg.label))  
++            if seg.sensitive:  
++                self.sensitive = True  
++        known = {(s.id, s.segment) for s in self.signals}  
++        fresh = [s for s in fresh if (s.id, s.segment) not in known]  
++        self.signals.extend(fresh)  
++        if self.audit:  
++            self.audit.append("observe", {"segments": [s.label for s in segments],  
++                                          "trust": sorted({s.trust.value for s in segments}),  
++                                          "signals": [s.id for s in fresh]})  
++        return fresh  
++
++    # ------------------------------------------------------------------ deciding  
++    def evaluate(self, call: ToolCall) -> Decision:  
++        spec = self.tools.get(call.name)  
++        risk = spec.risk if spec else Risk.EXTERNAL  # an unknown tool is treated cautiously  
++        findings: list[Finding] = []  
++        if spec:  
++            findings += self._check_sinks(spec, call)  
++            findings += self._check_payload(spec, call)  
++            findings += self._check_undeclared(spec, call)  
++        else:  # a tool nobody declared cannot be judged, so a human decides  
++            findings.append(Finding("UNKNOWN_TOOL", f"{call.name} is not a declared tool", call.name))  
++        facts = Facts(risk.value, self.tainted, self.sensitive, frozenset(f.id for f in findings),  
++                      frozenset(s.id for s in self.signals))  
++        rule, effect = self.policy.decide(facts)  
++        decision = Decision(effect, rule.id if rule else "default", self._reason(rule, call, risk, findings),  
++                            risk, self.tainted, self.sensitive, findings, list(self.signals))  
++        if self.audit:  
++            self.audit.append("decision", {"tool": call.name, "args": call.args, **decision.to_dict()})  
++        return decision  
++
++    def _check_sinks(self, spec: ToolSpec, call: ToolCall) -> list[Finding]:  
++        findings: list[Finding] = []  
++        for param, sink in spec.sinks.items():  
++            if param not in call.args:  
++                continue  
++            literal = sink.kind in _LITERAL_KINDS  
++            kinds = ("email", "url") if literal else (_ENTITY_KIND.get(sink.kind, sink.kind),)  
++            seen: set[tuple[str, str]] = set()  
++            for text in flatten_strings(call.args[param]):  
++                norm = _prepare(text)  
++                entities = [e for e in extract_entities(norm) if e.kind in kinds]  
++                if literal:  
++                    findings += self._check_literal(param, sink, text, norm)  # plus any address or link inside it  
++                elif not entities and norm.strip():  
++                    entities = [Entity(kinds[0], norm.strip(), text.strip())]  # unusual format: treat the whole value  
++                elif kinds[0] == "email" and _has_stray_characters(norm, entities):  
++                    # e.g. "me@corp.example@attacker.example" or "dr<cyrillic o>p@attacker.example": an address-looking  
++                    # fragment must not vouch for the whole value  
++                    entities.insert(0, Entity("email", norm.strip(), text.strip()))  
++                for entity in entities:  
++                    if (entity.kind, entity.norm) in seen:  
++                        continue  
++                    seen.add((entity.kind, entity.norm))  
++                    found = self.index.lookup(entity.kind, entity.norm, () if literal else sink.allow_tags)  
++                    finding_id = _FINDING_FOR_ORIGIN.get(found.origin)  
++                    if finding_id:  
++                        findings.append(Finding(finding_id, f"{param} = {entity.raw}", param, entity.raw,  
++                                                found.origin, found.evidence))  
++        return findings  
++
++    def _check_literal(self, param: str, sink: SinkSpec, raw: str, norm: str) -> list[Finding]:  
++        """A handle, path or command must appear (as a whole word or phrase) in something the user wrote."""  
++        found = self.index.lookup_literal(norm.strip(), sink.allow_tags)  
++        finding_id = _FINDING_FOR_ORIGIN.get(found.origin)  
++        if not finding_id:  
++            return []  
++        return [Finding(finding_id, f"{param} = {raw.strip()[:120]}", param, raw.strip()[:120], found.origin, found.evidence)]  
++
++    def _check_undeclared(self, spec: ToolSpec, call: ToolCall) -> list[Finding]:  
++        """Anything that is not a declared sink or payload (a model-invented `bcc`, or a `command` listed only in `params`)  
++        must not carry an address, link or identifier that appears only in untrusted content."""  
++        findings: list[Finding] = []  
++        skip = set(spec.sinks) | set(spec.payload)  
++        for param, value in call.args.items():  
++            if param in skip:  
++                continue  
++            for text in flatten_strings(value):  
++                for entity in extract_entities(_prepare(text)):  
++                    if entity.kind not in ("email", "url", "id"):  
++                        continue  
++                    found = self.index.lookup(entity.kind, entity.norm)  
++                    wanted = (Origin.UNTRUSTED_ONLY,) if entity.kind == "id" else (Origin.UNTRUSTED_ONLY, Origin.NEW)  
++                    if found.origin in wanted:  
++                        finding_id = "UNTRUSTED_SINK" if found.origin is Origin.UNTRUSTED_ONLY else "NEW_SINK"  
++                        findings.append(Finding(finding_id, f"undeclared argument {param} = {entity.raw}", param,  
++                                                entity.raw, found.origin, found.evidence))  
++        return findings  
++
++    def _check_payload(self, spec: ToolSpec, call: ToolCall) -> list[Finding]:  
++        """Look for links in outgoing content that smuggle data out or auto-load from an untrusted address."""  
++        findings: list[Finding] = []  
++        for param in spec.payload:  
++            if param not in call.args:  
++                continue  
++            for text in flatten_strings(call.args[param]):  
++                norm = normalise_text(text)  
++                images = {normalise_url(u)[0] for u in _IMAGE_MARKDOWN.findall(norm) + _IMAGE_HTML.findall(norm)}  
++                for entity in (e for e in extract_entities(norm) if e.kind == "url"):  
++                    found = self.index.lookup("url", entity.norm)  
++                    if found.origin is Origin.TRUSTED:  
++                        continue  
++                    leaked = self.index.sensitive_hits(entity.raw)  
++                    if leaked:  
++                        evidence = found.evidence + [{"label": "sensitive data", "derived": None,  
++                                                      "snippet": "the link contains: " + ", ".join(leaked[:3])}]  
++                        findings.append(Finding("EXFIL_LINK", f"{param} links to {entity.raw}", param, entity.raw,  
++                                                found.origin, evidence))  
++                    elif entity.norm in images:  
++                        findings.append(Finding("AUTOFETCH_IMAGE", f"{param} loads an image from {entity.raw}", param,  
++                                                entity.raw, found.origin, found.evidence))  
++        return findings  
++
++    def _reason(self, rule: Rule | None, call: ToolCall, risk: Risk, findings: list[Finding]) -> str:  
++        if rule is None:  
++            return f"{call.name}: no rule matched, so the default ({self.policy.default_effect.value}) applies."  
++        wanted = set(rule.when.get("findings_any", []))  
++        primary = next((f for f in findings if f.id in wanted), findings[0] if findings else None)  
++        where: Any = "nowhere the agent has seen"  
++        if primary and primary.evidence:  
++            where = ", ".join(sorted({e["label"] + (f" ({e['derived']})" if e.get("derived") else "")  
++                                      for e in primary.evidence}))  
++        shown = (primary.value or "") if primary else ""  
++        shown = shown.encode("ascii", "backslashreplace").decode("ascii")  # make look-alike characters visible, keep logs safe  
++        context = _SafeDict(tool=call.name, risk=risk.value, param=primary.param if primary else "",  
++                            value=shown, where=where,  
++                            signals=", ".join(sorted({s.id for s in self.signals})))  
++        return rule.reason.format_map(context)  
+warning: in the working copy of '.github/ISSUE_TEMPLATE/bug_report.yml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.github/ISSUE_TEMPLATE/bypass_report.yml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.github/ISSUE_TEMPLATE/config.yml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.github/ISSUE_TEMPLATE/feature_request.yml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.github/ISSUE_TEMPLATE/first_run_feedback.yml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.github/pull_request_template.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.github/workflows/ci.yml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.github/workflows/release.yml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.gitignore', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'CHANGELOG.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'CODE_OF_CONDUCT.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'CONTRIBUTING.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'FINDINGS.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'LICENSE', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'SECURITY.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'TESTING.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'examples/agent_loop.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'pyproject.toml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/agent_firebreak/__init__.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/agent_firebreak/agents/__init__.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/agent_firebreak/agents/base.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/agent_firebreak/agents/llm.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/agent_firebreak/agents/obedient.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/agent_firebreak/agents/replay.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/agent_firebreak/audit.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/agent_firebreak/data/scenarios.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/agent_firebreak/detectors.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/agent_firebreak/normalize.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/agent_firebreak/provenance.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/agent_firebreak/scenarios.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_guard.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_llm_agent.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_scenarios.py', LF will be replaced by CRLF the next time Git touches it

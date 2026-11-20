@@ -1,0 +1,14 @@
+{
+ "kind": "diff",
+ "options": {},
+ "source": "git show 8be4272 in mcpreportcard-repo",
+ "facts": {
+  "contains": [
+   "README.md",
+   "-![Python](https://img.shields.io/badge/python-3.10%2B-blue) ![License](https://img.shields.io/badge/license-MIT-green) [![PyPI](https://img.shields.io/pypi/v/mcp-reportcard)](https://pypi.org/project/mcp-reportcard/) ![MCP](https://img.shields.io/badge/MCP-any%20server%2C%20any%20language-brightgreen) [![CI](https://github.com/builditwithgk/mcp-reportcard/actions/workflows/ci.yml/badge.svg)](https://github.com/builditwithgk/mcp-reportcard/actions/workflows/ci.yml) [![Hugging Face Space](https://img.shields.io/badge/%F0%9F%A4%97%20Space-live%20demo-yellow)](https://huggingface.co/spaces/builditwithgk/mcp-reportcard)",
+   "+![Python](https://img.shields.io/badge/python-3.10%2B-blue) ![License](https://img.shields.io/badge/license-MIT-green) [![PyPI](https://img.shields.io/pypi/v/mcp-reportcard)](https://pypi.org/project/mcp-reportcard/) ![MCP](https://img.shields.io/badge/MCP-any%20server%2C%20any%20language-brightgreen) [![GitHub Marketplace](https://img.shields.io/badge/Marketplace-mcp--reportcard-blue?logo=github)](https://github.com/marketplace/actions/mcp-reportcard) [![CI](https://github.com/builditwithgk/mcp-reportcard/actions/workflows/ci.yml/badge.svg)](https://github.com/builditwithgk/mcp-reportcard/actions/workflows/ci.yml) [![Hugging Face Space](https://img.shields.io/badge/%F0%9F%A4%97%20Space-live%20demo-yellow)](https://huggingface.co/spaces/builditwithgk/mcp-reportcard)",
+   "-Grade your server on every pull request. The action writes the report card to the job summary, keeps one sticky PR comment up to date, and fails the check when the score drops below your bar:",
+   "+Grade your server on every pull request ([GitHub Marketplace listing](https://github.com/marketplace/actions/mcp-reportcard)). The action writes the report card to the job summary, keeps one sticky PR comment up to date, and fails the check when the score drops below your bar:"
+  ]
+ }
+}

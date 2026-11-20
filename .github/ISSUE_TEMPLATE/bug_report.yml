@@ -1,0 +1,31 @@
+name: Bug report
+description: whittle crashed, hung, or the MCP server misbehaved
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you run, what did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: Exact command or MCP client configuration
+      render: shell
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Output of `whittle --version`
+      placeholder: whittle-mcp 0.1.0
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: OS and Python version
+      placeholder: Windows 11, Python 3.12
+    validations:
+      required: true

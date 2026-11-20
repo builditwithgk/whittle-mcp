@@ -1,0 +1,23 @@
+{
+ "kind": "diff",
+ "options": {},
+ "source": "git show 472d94b in agentfirebreak-repo",
+ "facts": {
+  "contains": [
+   "README.md",
+   "TESTING.md",
+   "+Want to help test it? [TESTING.md](TESTING.md) is a 10-minute script, and feedback or bypass reports are very welcome.",
+   "+- **A trusted host can still receive data in its query string.** The guard checks a link's host and path, not what follows `?`. If the user named a host, a call to it with sensitive data in the query is not flagged.",
+   "+# Help test agent-firebreak (about 10 minutes)",
+   "+Thanks for trying it. agent-firebreak is new, and the most useful thing you can give is an honest first impression: where you got stuck, and what you would have expected instead. You do not need an API key or an agent of your own for steps 1 and 2.",
+   "+## 1. See it work (2 minutes)",
+   "+pip install agent-firebreak",
+   "+agent-firebreak bench",
+   "+You should see a table of 18 scenarios and a summary like \"Attacks landed (of 8): off 8, guard on 0\". Then watch one attack step by step:",
+   "+agent-firebreak run A1",
+   "+Each step shows what the agent tried and whether the guard allowed, asked or blocked, with the reason. No install? The same thing runs in your browser: https://huggingface.co/spaces/builditwithgk/agent-firebreak",
+   "+## 2. Try to break it (5 minutes)",
+   "+The simulated agent obeys any instruction it reads. Your job is to find a tool call that should have been stopped and was not. Ideas:"
+  ]
+ }
+}

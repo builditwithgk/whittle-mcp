@@ -1,0 +1,21 @@
+{
+ "kind": "tests",
+ "options": {},
+ "source": "pytest on a mutated copy of whittle-mcp (h2-json-items)",
+ "facts": {
+  "contains": [
+   "tests/test_engine.py::test_retention_on_the_corpus_and_beats_naive_truncation",
+   "tests/test_trimmers.py::test_json_keeps_shape_and_stays_valid",
+   "assert 0 >= 40",
+   "+  where 0 = len([])",
+   "AssertionError: assert ({'items', 'total'} == {'items', 'total'}",
+   "E         Use -v to get more diff and 2 == 4)",
+   "+  where 2 = len([{'id': 0, 'name': 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...e items (whittle expand abc12345 path=$.items[0].tags)']}, '... +49 more items (whittle expand abc12345 path=$.items)'])",
+   "assert len(samples) >= 40",
+   "assert set(data) == {\"items\", \"total\"} and len(data[\"items\"]) == 4   # 3 items plus the marker",
+   "tests\\test_engine.py:79",
+   "tests\\test_trimmers.py:56",
+   "2 failed, 35 passed in 4.97s"
+  ]
+ }
+}

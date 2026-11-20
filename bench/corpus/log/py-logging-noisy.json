@@ -1,0 +1,13 @@
+{
+ "kind": "log",
+ "options": {},
+ "source": "python script run (py-logging-noisy)",
+ "facts": {
+  "contains": [
+   "KeyError: 'missing'",
+   "2026-11-20 14:27:25,576 ERROR shop.orders cache miss storm on key product:5",
+   "2026-11-20 14:27:25,586 ERROR shop.orders payment gateway timeout for order 1200",
+   "2026-11-20 14:27:25,686 ERROR shop.orders unhandled lookup in checkout"
+  ]
+ }
+}

@@ -1,0 +1,25 @@
+......................F..........F...                                                                            [100%]
+====================================================== FAILURES =======================================================
+_______________________________ test_retention_on_the_corpus_and_beats_naive_truncation _______________________________
+
+    @pytest.mark.skipif(not CORPUS.exists(), reason="corpus not built (bench/make_corpus.py)")
+    def test_retention_on_the_corpus_and_beats_naive_truncation():
+        samples = load_corpus(CORPUS)
+>       assert len(samples) >= 40
+E       assert 0 >= 40
+E        +  where 0 = len([])
+
+tests\test_engine.py:79: AssertionError
+_________________________ test_diff_collapses_lockfiles_and_whitespace_only_and_keeps_changes _________________________
+
+    def test_diff_collapses_lockfiles_and_whitespace_only_and_keeps_changes():
+        text = diffs.trim(DIFF).text
+        assert "-old_value = 1" in text and "+new_value = 2" in text
+>       assert "generated or lock file" in text and "whitespace-only change" in text
+E       assert ('generated or lock file' in 'whittle diff: 3 files, +62 -62; collapsed: 1 whitespace-only change\ndiff --git a/src/app.py b/src/app.py\nindex 1..2...n-    "dep59": "1.0.0"\n+    "dep59": "1.0.1"\ndiff --git a/pad.py b/pad.py\n[whitespace-only change: +1 -1 collapsed]')
+
+tests\test_trimmers.py:114: AssertionError
+=============================================== short test summary info ===============================================
+FAILED tests/test_engine.py::test_retention_on_the_corpus_and_beats_naive_truncation - assert 0 >= 40
+FAILED tests/test_trimmers.py::test_diff_collapses_lockfiles_and_whitespace_only_and_keeps_changes - assert ('generat...
+2 failed, 35 passed in 4.52s

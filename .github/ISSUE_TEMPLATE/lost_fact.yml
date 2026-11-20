@@ -1,0 +1,43 @@
+name: A trimmer lost something I needed
+description: whittle shrank some output and a line you needed went missing (the most useful report)
+labels: ["lost-fact", "corpus"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you. Please remove secrets and personal data from anything you paste. A sample that breaks a trimmer becomes a regression test.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind of output
+      options: [test output, log or stack trace, JSON, git diff, OpenAPI document, other]
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: Exact command
+      render: shell
+      placeholder: pytest 2>&1 | whittle tests
+    validations:
+      required: true
+  - type: textarea
+    id: missing
+    attributes:
+      label: Which line or fact went missing?
+      description: Quote it exactly as it appears in the original output.
+    validations:
+      required: true
+  - type: textarea
+    id: sample
+    attributes:
+      label: A sample that shows it (optional but ideal)
+      description: Paste the raw output, or the smallest part that reproduces it.
+      render: text
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      placeholder: whittle-mcp 0.1.0
+    validations:
+      required: true

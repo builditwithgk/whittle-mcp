@@ -1,0 +1,23 @@
+{
+ "kind": "openapi",
+ "options": {
+  "paths": [
+   "/*"
+  ],
+  "methods": [
+   "get"
+  ]
+ },
+ "source": "https://raw.githubusercontent.com/OAI/learn.openapis.org/main/examples/v3.0/api-with-examples.json (query {\"paths\": [\"/*\"], \"methods\": [\"get\"]})",
+ "facts": {
+  "contains": [
+   "listVersionsv2",
+   "getVersionDetailsv2",
+   "200",
+   "300",
+   "203",
+   "/",
+   "/v2"
+  ]
+ }
+}

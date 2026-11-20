@@ -1,0 +1,77 @@
+diff --git a/.github/pull_request_template.md b/.github/pull_request_template.md
+new file mode 100644
+index 0000000..51f9f0f
+--- /dev/null
++++ b/.github/pull_request_template.md
+@@ -0,0 +1,9 @@
++## What does this change?
++
++## How was it tested?
++- [ ] `pytest -q` passes
++- [ ] `agent-firebreak bench` still shows 0 attacks landing with the guard on
++- [ ] Added or updated a test for the behaviour change
++
++## Limits
++Anything this change does not cover (also update the README's Limits section if so):
+diff --git a/CODE_OF_CONDUCT.md b/CODE_OF_CONDUCT.md
+new file mode 100644
+index 0000000..e8abc0e
+--- /dev/null
++++ b/CODE_OF_CONDUCT.md
+@@ -0,0 +1,7 @@
++# Code of Conduct
++
++This project follows the [Contributor Covenant, version 2.1](https://www.contributor-covenant.org/version/2/1/code_of_conduct/).
++
++In short: be respectful, assume good faith, give specific and kind feedback, and do not harass anyone. Critical feedback about the code and its security limits is welcome and encouraged.
++
++To report a conduct problem, open a GitHub issue titled "Conduct" without personal details and ask for a private channel, or use GitHub's private reporting on the repository's Security tab.
+diff --git a/CONTRIBUTING.md b/CONTRIBUTING.md
+new file mode 100644
+index 0000000..54fec62
+--- /dev/null
++++ b/CONTRIBUTING.md
+@@ -0,0 +1,26 @@
++# Contributing
++
++Thanks for helping. The most valuable contribution is a **bypass**: a tool call that should have been blocked or held and was allowed. Open a [Bypass or false negative](https://github.com/builditwithgk/agent-firebreak/issues/new?template=bypass_report.yml) issue with a fictional example (`attacker.example`), or send a failing test.
++
++## Set up
++
++```bash
++git clone https://github.com/builditwithgk/agent-firebreak
++cd agent-firebreak
++python -m venv .venv && . .venv/bin/activate     # Windows: .venv\Scripts\activate
++pip install -e ".[dev]"
++pytest -q
++agent-firebreak bench     # must show 0 attacks landing with the guard on
++```
++
++## Guidelines
++
++- The core stays **pure standard library** (it also runs in the browser through Pyodide). Please do not add runtime dependencies.
++- Add a test for every behaviour change. Bypass fixes need a regression test (see `tests/test_hardening.py`).
++- Keep `agent-firebreak bench` green: no attack may land with the guard on, and every normal task must still finish when the human approves.
++- New scenarios live in `src/agent_firebreak/data/scenarios.json` (attack, limit or benign). Say in the scenario why it matters.
++- Be honest about limits. If your change does not fully close a gap, say what remains in `README.md` under Limits.
++
++## Pull requests
++
++Small and focused is best. Describe what the change protects against or fixes, and how you tested it.
+diff --git a/README.md b/README.md
+index aa57f41..e038680 100644
+--- a/README.md
++++ b/README.md
+@@ -6,6 +6,8 @@ Most defences try to *detect* injected text. Detection fails some of the time, a
+ 
+ > It limits the damage of a successful injection. It does **not** stop injections, and it does not make an agent safe by itself. See [Limits](#limits).
+ 
++![Same email, same fooled agent. Without a guard the customer list is sent to the attacker's address; with agent-firebreak that send is blocked.](docs/before-after.png)
++
+ **Try it in your browser:** https://huggingface.co/spaces/builditwithgk/agent-firebreak (runs Python locally via Pyodide; no server, no key needed)
+ 
+ ## Install and try
+diff --git a/docs/before-after.png b/docs/before-after.png
+new file mode 100644
+index 0000000..7f29cee
+Binary files /dev/null and b/docs/before-after.png differ

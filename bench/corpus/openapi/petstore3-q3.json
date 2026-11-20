@@ -1,0 +1,24 @@
+{
+ "kind": "openapi",
+ "options": {
+  "operation_ids": [
+   "getUserByName",
+   "loginUser"
+  ]
+ },
+ "source": "https://petstore3.swagger.io/api/v3/openapi.json (query {\"operation_ids\": [\"getUserByName\", \"loginUser\"]})",
+ "facts": {
+  "contains": [
+   "loginUser",
+   "getUserByName",
+   "username",
+   "password",
+   "200",
+   "400",
+   "default",
+   "404",
+   "/user/login",
+   "/user/{username}"
+  ]
+ }
+}

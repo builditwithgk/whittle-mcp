@@ -1,0 +1,1342 @@
+{
+  "objects": [
+    {
+      "downloads": {
+        "monthly": 5305,
+        "weekly": 1458
+      },
+      "dependents": "1",
+      "updated": "2026-11-17T23:36:23.891Z",
+      "searchScore": 981.44995,
+      "package": {
+        "name": "llm",
+        "keywords": [],
+        "version": "1.0.7",
+        "description": "Manipulate any language model from the command line.",
+        "sanitized_name": "llm",
+        "publisher": {
+          "email": "snwfdhmp@gmail.com",
+          "username": "snwfdhmp"
+        },
+        "maintainers": [
+          {
+            "email": "snwfdhmp@gmail.com",
+            "username": "snwfdhmp"
+          }
+        ],
+        "license": "CC-BY-4.0",
+        "date": "2024-02-21T15:34:28.044Z",
+        "links": {
+          "npm": "https://www.npmjs.com/package/llm"
+        }
+      },
+      "score": {
+        "final": 981.44995,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 4758405,
+        "weekly": 1011016
+      },
+      "dependents": "213",
+      "updated": "2026-11-19T18:05:26.180Z",
+      "searchScore": 338.64673,
+      "package": {
+        "name": "@deepseek-ai/dsh-llm",
+        "keywords": [],
+        "version": "0.0.1-rc.1",
+        "description": "Provider-neutral LLM service interface for the DeepSeek Harness",
+        "sanitized_name": "@deepseek-ai/dsh-llm",
+        "publisher": {
+          "email": "imccyu@gmail.com",
+          "username": "imccyu"
+        },
+        "maintainers": [
+          {
+            "email": "imccyu@gmail.com",
+            "username": "imccyu"
+          },
+          {
+            "email": "tianyi@deepseek.com",
+            "username": "tianyicui-deepseek"
+          }
+        ],
+        "license": "BSD-3-Clause",
+        "date": "2026-08-10T19:35:21.727Z",
+        "links": {
+          "homepage": "https://github.com/deepseek-ai/deepseek-harness#readme",
+          "repository": "git+https://github.com/deepseek-ai/deepseek-harness.git",
+          "bugs": "https://github.com/deepseek-ai/deepseek-harness/issues",
+          "npm": "https://www.npmjs.com/package/@deepseek-ai/dsh-llm"
+        }
+      },
+      "score": {
+        "final": 338.64673,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 215416,
+        "weekly": 54292
+      },
+      "dependents": "7",
+      "updated": "2026-11-19T18:00:53.634Z",
+      "searchScore": 336.09747,
+      "package": {
+        "name": "@llm-ui/markdown",
+        "keywords": [],
+        "version": "0.13.3",
+        "description": "[llm-ui](https://llm-ui.com) markdown block.",
+        "sanitized_name": "@llm-ui/markdown",
+        "publisher": {
+          "email": "richard@rgill.co.uk",
+          "username": "richardgill"
+        },
+        "maintainers": [
+          {
+            "email": "richard@rgill.co.uk",
+            "username": "richardgill"
+          }
+        ],
+        "license": "MIT",
+        "date": "2024-06-01T12:13:12.218Z",
+        "links": {
+          "npm": "https://www.npmjs.com/package/@llm-ui/markdown"
+        }
+      },
+      "score": {
+        "final": 336.09747,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 142736,
+        "weekly": 29864
+      },
+      "dependents": "5",
+      "updated": "2026-11-19T18:06:18.708Z",
+      "searchScore": 322.618,
+      "package": {
+        "name": "@llm-ui/code",
+        "keywords": [],
+        "version": "0.13.3",
+        "description": "[llm-ui](https://llm-ui.com) code block.",
+        "sanitized_name": "@llm-ui/code",
+        "publisher": {
+          "email": "richard@rgill.co.uk",
+          "username": "richardgill"
+        },
+        "maintainers": [
+          {
+            "email": "richard@rgill.co.uk",
+            "username": "richardgill"
+          }
+        ],
+        "license": "MIT",
+        "date": "2024-06-01T12:13:12.205Z",
+        "links": {
+          "npm": "https://www.npmjs.com/package/@llm-ui/code"
+        }
+      },
+      "score": {
+        "final": 322.618,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 3142720,
+        "weekly": 684966
+      },
+      "dependents": "48",
+      "updated": "2026-11-19T17:54:29.829Z",
+      "searchScore": 317.92645,
+      "package": {
+        "name": "@deepseek-ai/dsh-llm-pi-ai",
+        "keywords": [],
+        "version": "0.0.1-rc.1",
+        "description": "pi-ai-backed DeepSeek adapter for the DeepSeek Harness LLM seam (design-verification twin of dsh-llm-deepseek)",
+        "sanitized_name": "@deepseek-ai/dsh-llm-pi-ai",
+        "publisher": {
+          "email": "imccyu@gmail.com",
+          "username": "imccyu"
+        },
+        "maintainers": [
+          {
+            "email": "imccyu@gmail.com",
+            "username": "imccyu"
+          },
+          {
+            "email": "tianyi@deepseek.com",
+            "username": "tianyicui-deepseek"
+          }
+        ],
+        "license": "BSD-3-Clause",
+        "date": "2026-08-10T19:35:26.974Z",
+        "links": {
+          "homepage": "https://github.com/deepseek-ai/deepseek-harness#readme",
+          "repository": "git+https://github.com/deepseek-ai/deepseek-harness.git",
+          "bugs": "https://github.com/deepseek-ai/deepseek-harness/issues",
+          "npm": "https://www.npmjs.com/package/@deepseek-ai/dsh-llm-pi-ai"
+        }
+      },
+      "score": {
+        "final": 317.92645,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 116684,
+        "weekly": 25078
+      },
+      "dependents": "1",
+      "updated": "2026-11-19T18:03:38.747Z",
+      "searchScore": 306.818,
+      "package": {
+        "name": "@llm-ui/json",
+        "keywords": [],
+        "version": "0.13.3",
+        "description": "[llm-ui](https://llm-ui.com) JSON blocks for building custom components.",
+        "sanitized_name": "@llm-ui/json",
+        "publisher": {
+          "email": "richard@rgill.co.uk",
+          "username": "richardgill"
+        },
+        "maintainers": [
+          {
+            "email": "richard@rgill.co.uk",
+            "username": "richardgill"
+          }
+        ],
+        "license": "MIT",
+        "date": "2024-06-01T12:13:12.305Z",
+        "links": {
+          "npm": "https://www.npmjs.com/package/@llm-ui/json"
+        }
+      },
+      "score": {
+        "final": 306.818,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 3255818,
+        "weekly": 715283
+      },
+      "dependents": "40",
+      "updated": "2026-11-19T17:56:59.011Z",
+      "searchScore": 306.41364,
+      "package": {
+        "name": "@deepseek-ai/dsh-llm-retry",
+        "keywords": [],
+        "version": "0.0.1-rc.1",
+        "description": "Provider-routed LLM request retry policy for the DeepSeek Harness",
+        "sanitized_name": "@deepseek-ai/dsh-llm-retry",
+        "publisher": {
+          "email": "imccyu@gmail.com",
+          "username": "imccyu"
+        },
+        "maintainers": [
+          {
+            "email": "imccyu@gmail.com",
+            "username": "imccyu"
+          },
+          {
+            "email": "tianyi@deepseek.com",
+            "username": "tianyicui-deepseek"
+          }
+        ],
+        "license": "BSD-3-Clause",
+        "date": "2026-08-10T19:35:29.752Z",
+        "links": {
+          "homepage": "https://github.com/deepseek-ai/deepseek-harness#readme",
+          "repository": "git+https://github.com/deepseek-ai/deepseek-harness.git",
+          "bugs": "https://github.com/deepseek-ai/deepseek-harness/issues",
+          "npm": "https://www.npmjs.com/package/@deepseek-ai/dsh-llm-retry"
+        }
+      },
+      "score": {
+        "final": 306.41364,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 61338524,
+        "weekly": 17130826
+      },
+      "dependents": "505",
+      "updated": "2026-11-19T17:59:51.026Z",
+      "searchScore": 298.43225,
+      "package": {
+        "name": "partial-json",
+        "keywords": [
+          "JSON",
+          "parser",
+          "LLM",
+          "nlp"
+        ],
+        "version": "0.1.7",
+        "description": "Parse partial JSON generated by LLM",
+        "sanitized_name": "partial-json",
+        "publisher": {
+          "email": "admin@muspimerol.site",
+          "username": "muspi-merol"
+        },
+        "maintainers": [
+          {
+            "email": "admin@muspimerol.site",
+            "username": "muspi-merol"
+          }
+        ],
+        "license": "MIT",
+        "date": "2024-05-14T12:18:04.850Z",
+        "links": {
+          "homepage": "https://promplate.dev/partial-json-parser",
+          "repository": "git+https://github.com/promplate/partial-json-parser-js.git",
+          "bugs": "https://github.com/promplate/partial-json-parser-js/issues",
+          "npm": "https://www.npmjs.com/package/partial-json"
+        }
+      },
+      "score": {
+        "final": 298.43225,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 3130562,
+        "weekly": 678270
+      },
+      "dependents": "51",
+      "updated": "2026-11-19T17:59:53.750Z",
+      "searchScore": 298.42825,
+      "package": {
+        "name": "@deepseek-ai/dsh-llm-deepseek",
+        "keywords": [],
+        "version": "0.0.1-rc.1",
+        "description": "DeepSeek chat-completions adapter for the DeepSeek Harness LLM seam",
+        "sanitized_name": "@deepseek-ai/dsh-llm-deepseek",
+        "publisher": {
+          "email": "imccyu@gmail.com",
+          "username": "imccyu"
+        },
+        "maintainers": [
+          {
+            "email": "imccyu@gmail.com",
+            "username": "imccyu"
+          },
+          {
+            "email": "tianyi@deepseek.com",
+            "username": "tianyicui-deepseek"
+          }
+        ],
+        "license": "BSD-3-Clause",
+        "date": "2026-08-10T19:35:24.271Z",
+        "links": {
+          "homepage": "https://github.com/deepseek-ai/deepseek-harness#readme",
+          "repository": "git+https://github.com/deepseek-ai/deepseek-harness.git",
+          "bugs": "https://github.com/deepseek-ai/deepseek-harness/issues",
+          "npm": "https://www.npmjs.com/package/@deepseek-ai/dsh-llm-deepseek"
+        }
+      },
+      "score": {
+        "final": 298.42825,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 5039018,
+        "weekly": 1245726
+      },
+      "dependents": "21",
+      "updated": "2026-11-19T17:55:47.163Z",
+      "searchScore": 296.04968,
+      "package": {
+        "name": "promptfoo",
+        "keywords": [],
+        "version": "0.126.0",
+        "description": "LLM eval & testing toolkit",
+        "sanitized_name": "promptfoo",
+        "publisher": {
+          "email": "npm-oidc-no-reply@github.com",
+          "actor": {
+            "name": "sklein12",
+            "type": "user",
+            "email": "sklein12@gmail.com"
+          },
+          "trustedPublisher": {
+            "oidcConfigId": "65fda267-241b-49a9-87ab-4acfa34625f1",
+            "id": "github"
+          },
+          "username": "GitHub Actions"
+        },
+        "maintainers": [
+          {
+            "email": "sklein12@gmail.com",
+            "username": "sklein12"
+          },
+          {
+            "email": "michael.l.dangelo@gmail.com",
+            "username": "mdangelo"
+          },
+          {
+            "email": "ianw_npm@ianww.com",
+            "username": "ianw"
+          },
+          {
+            "email": "justin.beckwith@gmail.com",
+            "username": "justinbeckwith"
+          },
+          {
+            "email": "faizan1030@gmail.com",
+            "username": "faizanminhas"
+          }
+        ],
+        "license": "MIT",
+        "date": "2026-11-18T19:05:22.152Z",
+        "links": {
+          "homepage": "https://promptfoo.dev",
+          "repository": "git+https://github.com/promptfoo/promptfoo.git",
+          "bugs": "https://github.com/promptfoo/promptfoo/issues",
+          "npm": "https://www.npmjs.com/package/promptfoo"
+        }
+      },
+      "score": {
+        "final": 296.04968,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 2992635,
+        "weekly": 646158
+      },
+      "dependents": "26",
+      "updated": "2026-11-19T17:57:49.830Z",
+      "searchScore": 289.87933,
+      "package": {
+        "name": "@deepseek-ai/dsh-session-title-llm",
+        "keywords": [],
+        "version": "0.0.1-rc.1",
+        "description": "Shared LLM generation policy for DeepSeek Harness session-title providers",
+        "sanitized_name": "@deepseek-ai/dsh-session-title-llm",
+        "publisher": {
+          "email": "imccyu@gmail.com",
+          "username": "imccyu"
+        },
+        "maintainers": [
+          {
+            "email": "imccyu@gmail.com",
+            "username": "imccyu"
+          },
+          {
+            "email": "tianyi@deepseek.com",
+            "username": "tianyicui-deepseek"
+          }
+        ],
+        "license": "BSD-3-Clause",
+        "date": "2026-08-10T19:42:50.885Z",
+        "links": {
+          "homepage": "https://github.com/deepseek-ai/deepseek-harness#readme",
+          "repository": "git+https://github.com/deepseek-ai/deepseek-harness.git",
+          "bugs": "https://github.com/deepseek-ai/deepseek-harness/issues",
+          "npm": "https://www.npmjs.com/package/@deepseek-ai/dsh-session-title-llm"
+        }
+      },
+      "score": {
+        "final": 289.87933,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 3023098,
+        "weekly": 658500
+      },
+      "dependents": "19",
+      "updated": "2026-11-19T17:59:54.193Z",
+      "searchScore": 283.84982,
+      "package": {
+        "name": "@deepseek-ai/dsh-deepseek-llm-api-extensions",
+        "keywords": [],
+        "version": "0.1.2-alpha.2",
+        "description": "Additive request-field registry for the official DeepSeek LLM API adapter",
+        "sanitized_name": "@deepseek-ai/dsh-deepseek-llm-api-extensions",
+        "publisher": {
+          "email": "imccyu@gmail.com",
+          "username": "imccyu"
+        },
+        "maintainers": [
+          {
+            "email": "imccyu@gmail.com",
+            "username": "imccyu"
+          },
+          {
+            "email": "tianyi@deepseek.com",
+            "username": "tianyicui-deepseek"
+          }
+        ],
+        "license": "MIT",
+        "date": "2026-08-30T13:59:53.913Z",
+        "links": {
+          "homepage": "https://github.com/deepseek-ai/deepseek-harness#readme",
+          "repository": "git+https://github.com/deepseek-ai/deepseek-harness.git",
+          "bugs": "https://github.com/deepseek-ai/deepseek-harness/issues",
+          "npm": "https://www.npmjs.com/package/@deepseek-ai/dsh-deepseek-llm-api-extensions"
+        }
+      },
+      "score": {
+        "final": 283.84982,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 2997123,
+        "weekly": 647708
+      },
+      "dependents": "19",
+      "updated": "2026-11-19T17:57:05.398Z",
+      "searchScore": 279.38074,
+      "package": {
+        "name": "@deepseek-ai/dsh-session-title-first-prompt-llm",
+        "keywords": [],
+        "version": "0.0.1-rc.3",
+        "description": "First-message LLM provider plugin for DeepSeek Harness session titles",
+        "sanitized_name": "@deepseek-ai/dsh-session-title-first-prompt-llm",
+        "publisher": {
+          "email": "imccyu@gmail.com",
+          "username": "imccyu"
+        },
+        "maintainers": [
+          {
+            "email": "imccyu@gmail.com",
+            "username": "imccyu"
+          },
+          {
+            "email": "tianyi@deepseek.com",
+            "username": "tianyicui-deepseek"
+          }
+        ],
+        "license": "BSD-3-Clause",
+        "date": "2026-08-12T20:32:50.964Z",
+        "links": {
+          "homepage": "https://github.com/deepseek-ai/deepseek-harness#readme",
+          "repository": "git+https://github.com/deepseek-ai/deepseek-harness.git",
+          "bugs": "https://github.com/deepseek-ai/deepseek-harness/issues",
+          "npm": "https://www.npmjs.com/package/@deepseek-ai/dsh-session-title-first-prompt-llm"
+        }
+      },
+      "score": {
+        "final": 279.38074,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 1931436,
+        "weekly": 408121
+      },
+      "dependents": "9",
+      "updated": "2026-11-19T11:09:51.716Z",
+      "searchScore": 269.13187,
+      "package": {
+        "name": "@deepseek-ai/dsh-session-title-all-prompts-llm",
+        "keywords": [],
+        "version": "0.0.1-rc.5",
+        "description": "All-user-messages LLM provider plugin for DeepSeek Harness session titles",
+        "sanitized_name": "@deepseek-ai/dsh-session-title-all-prompts-llm",
+        "publisher": {
+          "email": "imccyu@gmail.com",
+          "username": "imccyu"
+        },
+        "maintainers": [
+          {
+            "email": "imccyu@gmail.com",
+            "username": "imccyu"
+          },
+          {
+            "email": "tianyi@deepseek.com",
+            "username": "tianyicui-deepseek"
+          }
+        ],
+        "license": "BSD-3-Clause",
+        "date": "2026-08-12T22:37:44.028Z",
+        "links": {
+          "homepage": "https://github.com/deepseek-ai/deepseek-harness#readme",
+          "repository": "git+https://github.com/deepseek-ai/deepseek-harness.git",
+          "bugs": "https://github.com/deepseek-ai/deepseek-harness/issues",
+          "npm": "https://www.npmjs.com/package/@deepseek-ai/dsh-session-title-all-prompts-llm"
+        }
+      },
+      "score": {
+        "final": 269.13187,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 45826744,
+        "weekly": 11625326
+      },
+      "dependents": "1200",
+      "updated": "2026-11-19T17:54:11.922Z",
+      "searchScore": 256.4286,
+      "package": {
+        "name": "@earendil-works/pi-ai",
+        "keywords": [
+          "ai",
+          "llm",
+          "openai",
+          "anthropic",
+          "gemini",
+          "bedrock",
+          "unified",
+          "api"
+        ],
+        "version": "1.5.2",
+        "description": "Unified LLM API with automatic model discovery and provider configuration",
+        "sanitized_name": "@earendil-works/pi-ai",
+        "publisher": {
+          "email": "npm-oidc-no-reply@github.com",
+          "trustedPublisher": {
+            "oidcConfigId": "975b2765-9d44-42ba-a322-c1cbbce03f36",
+            "id": "github"
+          },
+          "username": "GitHub Actions"
+        },
+        "maintainers": [
+          {
+            "email": "armin.ronacher@active-4.com",
+            "username": "mitsuhiko"
+          },
+          {
+            "email": "mario@badlogicgames.com",
+            "username": "badlogic"
+          },
+          {
+            "email": "r.wachtler@outlook.com",
+            "username": "rwachtler"
+          }
+        ],
+        "license": "MIT",
+        "date": "2026-11-10T12:20:46.480Z",
+        "links": {
+          "homepage": "https://github.com/earendil-works/pi#readme",
+          "repository": "git+https://github.com/earendil-works/pi.git",
+          "bugs": "https://github.com/earendil-works/pi/issues",
+          "npm": "https://www.npmjs.com/package/@earendil-works/pi-ai"
+        }
+      },
+      "score": {
+        "final": 256.4286,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 68062,
+        "weekly": 21049
+      },
+      "dependents": 0,
+      "updated": "2026-11-19T18:18:41.811Z",
+      "searchScore": 255.7612,
+      "package": {
+        "name": "@capgo/capacitor-llm",
+        "keywords": [
+          "capacitor",
+          "plugin",
+          "native",
+          "llm",
+          "local",
+          "gemma",
+          "gemma4",
+          "gemma3",
+          "gemma3-270m",
+          "gemma2-2b",
+          "litert",
+          "litert-lm",
+          "apple-intelligence",
+          "gpt"
+        ],
+        "version": "8.2.4",
+        "description": "Adds support for LLM locally runned for Capacitor",
+        "sanitized_name": "@capgo/capacitor-llm",
+        "publisher": {
+          "email": "tori@capgo.app",
+          "approver": {
+            "name": "torichancapgo",
+            "email": "tori@capgo.app"
+          },
+          "username": "torichancapgo"
+        },
+        "maintainers": [
+          {
+            "email": "martin.donadieu@hey.com",
+            "username": "riderx"
+          },
+          {
+            "email": "tori@capgo.app",
+            "username": "torichancapgo"
+          }
+        ],
+        "license": "MPL-2.0",
+        "date": "2026-11-19T18:18:10.619Z",
+        "links": {
+          "homepage": "https://capgo.app/docs/plugins/llm/",
+          "repository": "git+https://github.com/Cap-go/capacitor-llm.git",
+          "bugs": "https://github.com/Cap-go/capacitor-llm/issues",
+          "npm": "https://www.npmjs.com/package/@capgo/capacitor-llm"
+        }
+      },
+      "score": {
+        "final": 255.7612,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 111605,
+        "weekly": 18458
+      },
+      "dependents": "4",
+      "updated": "2026-11-20T00:12:02.804Z",
+      "searchScore": 252.97581,
+      "package": {
+        "name": "@sentropic/llm-mesh",
+        "keywords": [],
+        "version": "0.38.4",
+        "description": "Provider-agnostic LLM access runtime SDK for Sentropic.",
+        "sanitized_name": "@sentropic/llm-mesh",
+        "publisher": {
+          "email": "npm-oidc-no-reply@github.com",
+          "trustedPublisher": {
+            "oidcConfigId": "0e7685c4-36cc-40f9-a835-898b1a269b5f",
+            "id": "github"
+          },
+          "username": "GitHub Actions"
+        },
+        "maintainers": [
+          {
+            "email": "fabien.antoine@gmail.com",
+            "username": "rhk"
+          }
+        ],
+        "license": "MIT",
+        "date": "2026-11-20T00:11:31.469Z",
+        "links": {
+          "homepage": "https://github.com/rhanka/sentropic#readme",
+          "repository": "git+https://github.com/rhanka/sentropic.git",
+          "bugs": "https://github.com/rhanka/sentropic/issues",
+          "npm": "https://www.npmjs.com/package/@sentropic/llm-mesh"
+        }
+      },
+      "score": {
+        "final": 252.97581,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 35574,
+        "weekly": 10301
+      },
+      "dependents": "2",
+      "updated": "2026-11-19T18:06:12.281Z",
+      "searchScore": 250.9007,
+      "package": {
+        "name": "llm-chunk",
+        "keywords": [],
+        "version": "0.0.1",
+        "description": "A super simple text splitter for LLM",
+        "sanitized_name": "llm-chunk",
+        "publisher": {
+          "email": "golbin@gmail.com",
+          "username": "golbin"
+        },
+        "maintainers": [
+          {
+            "email": "golbin@gmail.com",
+            "username": "golbin"
+          }
+        ],
+        "license": "MIT",
+        "date": "2023-09-09T17:17:47.092Z",
+        "links": {
+          "homepage": "https://github.com/golbin/llm-chunk",
+          "npm": "https://www.npmjs.com/package/llm-chunk"
+        }
+      },
+      "score": {
+        "final": 250.9007,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 16104,
+        "weekly": 4146
+      },
+      "dependents": "0",
+      "updated": "2026-11-20T02:08:27.338Z",
+      "searchScore": 250.80971,
+      "package": {
+        "name": "@forge/llm",
+        "keywords": [],
+        "version": "1.0.10",
+        "description": "Forge LLM SDK",
+        "sanitized_name": "@forge/llm",
+        "publisher": {
+          "email": "eng-development-tooling-artifacts@atlassian.com",
+          "username": "atlassianartifactteam"
+        },
+        "maintainers": [
+          {
+            "email": "eng-development-tooling-artifacts@atlassian.com",
+            "username": "atlassianartifactteam"
+          }
+        ],
+        "license": "SEE LICENSE IN LICENSE.txt",
+        "date": "2026-11-09T07:45:06.881Z",
+        "links": {
+          "npm": "https://www.npmjs.com/package/@forge/llm"
+        }
+      },
+      "score": {
+        "final": 250.80971,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 48073,
+        "weekly": 13376
+      },
+      "dependents": "2",
+      "updated": "2026-11-19T18:04:09.965Z",
+      "searchScore": 243.83044,
+      "package": {
+        "name": "@constructive-io/llm-env",
+        "keywords": [
+          "llm",
+          "env",
+          "environment",
+          "config",
+          "constructive",
+          "ollama",
+          "openai",
+          "embedding"
+        ],
+        "version": "0.17.0",
+        "description": "LLM environment configuration — single source of truth for all LLM-related env vars and defaults",
+        "sanitized_name": "@constructive-io/llm-env",
+        "publisher": {
+          "email": "pyramation@gmail.com",
+          "username": "pyramation"
+        },
+        "maintainers": [
+          {
+            "email": "zetazhenzhi@gmail.com",
+            "username": "zetazz"
+          },
+          {
+            "email": "pyramation@gmail.com",
+            "username": "pyramation"
+          },
+          {
+            "email": "phatghaa@gmail.com",
+            "username": "phatg"
+          }
+        ],
+        "license": "MIT",
+        "date": "2026-11-05T13:56:50.959Z",
+        "links": {
+          "homepage": "https://github.com/constructive-io/constructive",
+          "repository": "https://github.com/constructive-io/constructive",
+          "bugs": "https://github.com/constructive-io/constructive/issues",
+          "npm": "https://www.npmjs.com/package/@constructive-io/llm-env"
+        }
+      },
+      "score": {
+        "final": 243.83044,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 59466,
+        "weekly": 20949
+      },
+      "dependents": 0,
+      "updated": "2026-11-19T11:18:09.719Z",
+      "searchScore": 243.45755,
+      "package": {
+        "name": "llm-splitter",
+        "keywords": [
+          "llm",
+          "splitter",
+          "chunking",
+          "text",
+          "vectorization"
+        ],
+        "version": "0.3.0",
+        "description": "Efficient, configurable text chunking utility for LLM vectorization. Returns rich chunk metadata.",
+        "sanitized_name": "llm-splitter",
+        "publisher": {
+          "email": "npm-oidc-no-reply@github.com",
+          "trustedPublisher": {
+            "oidcConfigId": "oidc:3310a6ff-a81b-4f91-b442-7bba24ce5dc8",
+            "id": "github"
+          },
+          "username": "GitHub Actions"
+        },
+        "maintainers": [
+          {
+            "email": "eamonn.frisby@nearform.com",
+            "username": "eamonn.frisby"
+          },
+          {
+            "email": "donal.moynihan@nearform.com",
+            "username": "donal.moynihan"
+          },
+          {
+            "email": "contato@gbdev.me",
+            "username": "gbdev13"
+          },
+          {
+            "email": "clifton.cunningham@nearform.com",
+            "username": "clifton-nearform"
+          },
+          {
+            "email": "alfonso.graziano@nearform.com",
+            "username": "alfonsograziano_nf"
+          },
+          {
+            "email": "steve.goode@nearform.com",
+            "username": "sociablesteve"
+          },
+          {
+            "email": "ryan@loose-bits.com",
+            "username": "ryan.roemer"
+          },
+          {
+            "email": "elizibin@gmail.com",
+            "username": "elizibin"
+          },
+          {
+            "email": "simone.busoli@gmail.com",
+            "username": "simoneb"
+          }
+        ],
+        "license": "MIT",
+        "date": "2026-08-25T23:15:49.092Z",
+        "links": {
+          "homepage": "https://github.com/nearform/llm-splitter#readme",
+          "repository": "git+https://github.com/nearform/llm-splitter.git",
+          "bugs": "https://github.com/nearform/llm-splitter/issues",
+          "npm": "https://www.npmjs.com/package/llm-splitter"
+        }
+      },
+      "score": {
+        "final": 243.45755,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 34436,
+        "weekly": 8010
+      },
+      "dependents": "0",
+      "updated": "2026-11-19T15:29:16.999Z",
+      "searchScore": 242.9502,
+      "package": {
+        "name": "@mate-academy/llm-gateway",
+        "keywords": [],
+        "version": "11.44.0",
+        "description": "A gateway package for LLM services.",
+        "sanitized_name": "@mate-academy/llm-gateway",
+        "publisher": {
+          "email": "dev@mate.academy",
+          "username": "mateacademy"
+        },
+        "maintainers": [
+          {
+            "email": "dev@mate.academy",
+            "username": "mateacademy"
+          }
+        ],
+        "license": "MIT",
+        "date": "2026-11-19T15:28:44.847Z",
+        "links": {
+          "npm": "https://www.npmjs.com/package/@mate-academy/llm-gateway"
+        }
+      },
+      "score": {
+        "final": 242.9502,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 9905,
+        "weekly": 3149
+      },
+      "dependents": "0",
+      "updated": "2026-11-19T18:26:11.984Z",
+      "searchScore": 239.75389,
+      "package": {
+        "name": "@node-llm/core",
+        "keywords": [
+          "llm",
+          "large-language-models",
+          "ai",
+          "nodejs",
+          "llm-integration",
+          "architecture",
+          "integration-layer",
+          "provider-agnostic",
+          "vendor-agnostic",
+          "infrastructure",
+          "openai",
+          "anthropic",
+          "gemini",
+          "deepseek",
+          "openrouter",
+          "ollama",
+          "chat",
+          "streaming",
+          "rag",
+          "production"
+        ],
+        "version": "1.20.1",
+        "description": "A provider-agnostic LLM core for Node.js, inspired by ruby-llm.",
+        "sanitized_name": "@node-llm/core",
+        "publisher": {
+          "email": "eshaiju@gmail.com",
+          "username": "shaiju.edakulangara"
+        },
+        "maintainers": [
+          {
+            "email": "eshaiju@gmail.com",
+            "username": "shaiju.edakulangara"
+          }
+        ],
+        "license": "MIT",
+        "date": "2026-11-12T18:20:27.725Z",
+        "links": {
+          "homepage": "https://nodellm.dev",
+          "repository": "git+https://github.com/node-llm/node-llm.git",
+          "bugs": "https://github.com/node-llm/node-llm/issues",
+          "npm": "https://www.npmjs.com/package/@node-llm/core"
+        }
+      },
+      "score": {
+        "final": 239.75389,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 103981,
+        "weekly": 18335
+      },
+      "dependents": "1",
+      "updated": "2026-11-19T18:04:32.051Z",
+      "searchScore": 237.86342,
+      "package": {
+        "name": "llm-polyglot",
+        "keywords": [
+          "llm",
+          "openai",
+          "gemini",
+          "streaming",
+          "anthropic",
+          "llm client",
+          "claude",
+          "gpt-4"
+        ],
+        "version": "3.0.0",
+        "description": "A universal LLM client - provides adapters for various LLM providers to adhere to a universal interface - the openai sdk - allows you to use providers like anthropic using the same openai interface and transforms the responses in the same way - this allow",
+        "sanitized_name": "llm-polyglot",
+        "publisher": {
+          "email": "npm-oidc-no-reply@github.com",
+          "trustedPublisher": {
+            "oidcConfigId": "oidc:ceb9a229-3dd8-4387-986e-60ee7fa3ff51",
+            "id": "github"
+          },
+          "username": "GitHub Actions"
+        },
+        "maintainers": [
+          {
+            "email": "dimitrikennedy@gmail.com",
+            "username": "dimitrikennedy"
+          }
+        ],
+        "license": "MIT",
+        "date": "2026-07-10T03:18:15.028Z",
+        "links": {
+          "homepage": "https://island.hack.dance",
+          "repository": "git+https://github.com/hack-dance/island-ai.git",
+          "bugs": "https://github.com/hack-dance/island-ai/issues",
+          "npm": "https://www.npmjs.com/package/llm-polyglot"
+        }
+      },
+      "score": {
+        "final": 237.86342,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    },
+    {
+      "downloads": {
+        "monthly": 50052,
+        "weekly": 10055
+      },
+      "dependents": "7",
+      "updated": "2026-11-19T18:05:15.961Z",
+      "searchScore": 236.82445,
+      "package": {
+        "name": "llm-info",
+        "keywords": [
+          "llm",
+          "language model",
+          "model",
+          "info",
+          "eval",
+          "prompt",
+          "token",
+          "context-window",
+          "pricing",
+          "token-limit",
+          "provider",
+          "gpt",
+          "claude",
+          "gemini",
+          "deepseek",
+          "openai",
+          "anthropic",
+          "azure-openai",
+          "deepseek",
+          "openrouter",
+          "google",
+          "fireworks"
+        ],
+        "version": "1.0.71",
+        "description": "Information on LLM models, context window token limit, output token limit, pricing and more",
+        "sanitized_name": "llm-info",
+        "publisher": {
+          "email": "zhuliangg11@gmail.com",
+          "actor": {
+            "name": "paradite",
+            "type": "user",
+            "email": "zhuliangg11@gmail.com"
+          },
+          "username": "paradite"
+        },
+        "maintainers": [
+          {
+            "email": "zhuliangg11@gmail.com",
+            "username": "paradite"
+          }
+        ],
+        "license": "MIT",
+        "date": "2026-11-09T15:48:20.581Z",
+        "links": {
+          "homepage": "https://frontierlog.ai/",
+          "repository": "git+ssh://git@github.com/paradite/llm-info.git",
+          "bugs": "https://github.com/paradite/llm-info/issues",
+          "npm": "https://www.npmjs.com/package/llm-info"
+        }
+      },
+      "score": {
+        "final": 236.82445,
+        "detail": {
+          "popularity": 1,
+          "quality": 1,
+          "maintenance": 1
+        }
+      },
+      "flags": {
+        "insecure": 0
+      }
+    }
+  ],
+  "total": 62112,
+  "time": "2026-11-20T09:04:59.313Z"
+}

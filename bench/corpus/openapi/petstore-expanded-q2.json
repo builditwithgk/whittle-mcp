@@ -1,0 +1,17 @@
+{
+ "kind": "openapi",
+ "options": {
+  "operation_ids": [
+   "addPet"
+  ]
+ },
+ "source": "https://raw.githubusercontent.com/OAI/learn.openapis.org/main/examples/v3.0/petstore-expanded.json (query {\"operation_ids\": [\"addPet\"]})",
+ "facts": {
+  "contains": [
+   "addPet",
+   "200",
+   "default",
+   "/pets"
+  ]
+ }
+}

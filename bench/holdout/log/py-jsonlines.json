@@ -1,0 +1,12 @@
+{
+ "kind": "log",
+ "options": {},
+ "source": "script run (py-jsonlines, held out)",
+ "facts": {
+  "contains": [
+   "{\"ts\": 1700000070, \"level\": \"ERROR\", \"msg\": \"upstream 502 from billing\", \"id\": 383276}",
+   "{\"ts\": 1700000400, \"level\": \"ERROR\", \"msg\": \"schema mismatch in payload\", \"id\": 527630}",
+   "{\"ts\": 1700000801, \"level\": \"ERROR\", \"msg\": \"queue depth exceeded\", \"id\": 608489}"
+  ]
+ }
+}

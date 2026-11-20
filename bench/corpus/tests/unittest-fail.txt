@@ -1,0 +1,26 @@
+test_0 (test_textkit.T.test_0) ... FAIL
+test_1 (test_textkit.T.test_1) ... FAIL
+test_2 (test_textkit.T.test_2) ... ok
+
+======================================================================
+FAIL: test_0 (test_textkit.T.test_0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/work/project\test_textkit.py", line 6, in test_0
+    self.assertTrue(slug('A  B') == 'a_b')
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_1 (test_textkit.T.test_1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/work/project\test_textkit.py", line 9, in test_1
+    self.assertTrue(mean([1,2,4]) == 2)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.003s
+
+FAILED (failures=2)

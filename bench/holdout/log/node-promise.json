@@ -1,0 +1,11 @@
+{
+ "kind": "log",
+ "options": {},
+ "source": "script run (node-promise, held out)",
+ "facts": {
+  "contains": [
+   "RangeError: index 99 out of bounds",
+   "ERROR retry budget exhausted"
+  ]
+ }
+}

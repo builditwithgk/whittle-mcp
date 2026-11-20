@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "/work/project\app.py", line 9, in <module>
+    asyncio.run(main())
+    ~~~~~~~~~~~^^^^^^^^
+  File "C:\Programs\anaconda3\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Programs\anaconda3\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Programs\anaconda3\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "/work/project\app.py", line 8, in main
+    return await asyncio.gather(*(fetch(n) for n in range(6)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/project\app.py", line 5, in fetch
+    raise ConnectionError('peer reset on shard 3')
+ConnectionError: peer reset on shard 3

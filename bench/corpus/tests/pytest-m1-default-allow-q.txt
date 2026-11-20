@@ -1,0 +1,37 @@
+...........F....F........................................................                                        [100%]
+====================================================== FAILURES =======================================================
+_____________________________________________ test_probe_bypass_attempts ______________________________________________
+
+    def test_probe_bypass_attempts():
+        g = guard()
+        g.observe(Segment("page", "mail drop@attacker.example"))
+        for to in ("Drop@Attacker.Example", "Bob <drop@attacker.example>", ["me@corp.example", "drop@attacker.example"],
+                   "me@corp.example, drop@attacker.example", {"addr": "drop@attacker.example"}):
+            assert send(g, to).effect is Effect.BLOCK, to
+        assert send(g, "drоp@attacker.example").effect is not Effect.ALLOW  # homoglyph
+        for url in ("https://good.example@attacker.example/x", "https://good.example.attacker.example/"):
+>           assert g.evaluate(ToolCall("http_get", {"url": url})).effect is not Effect.ALLOW, url
+E           AssertionError: https://good.example@attacker.example/x
+E           assert <Effect.ALLOW: 'allow'> is not <Effect.ALLOW: 'allow'>
+E            +  where <Effect.ALLOW: 'allow'> = Decision(effect=<Effect.ALLOW: 'allow'>, rule_id='default', reason='http_get: no rule matched, so the default (allow) ...', param='url', value='https://good.example@attacker.example/x', origin=<Origin.NEW: 'new'>, evidence=[])], signals=[]).effect
+E            +    where Decision(effect=<Effect.ALLOW: 'allow'>, rule_id='default', reason='http_get: no rule matched, so the default (allow) ...', param='url', value='https://good.example@attacker.example/x', origin=<Origin.NEW: 'new'>, evidence=[])], signals=[]) = evaluate(ToolCall(name='http_get', args={'url': 'https://good.example@attacker.example/x'}))
+E            +      where evaluate = <agent_firebreak.guard.Guard object at 0x000001D622AD0050>.evaluate
+E            +      and   ToolCall(name='http_get', args={'url': 'https://good.example@attacker.example/x'}) = ToolCall('http_get', {'url': 'https://good.example@attacker.example/x'})
+E            +  and   <Effect.ALLOW: 'allow'> = Effect.ALLOW
+
+tests\test_guard.py:96: AssertionError
+__________________________ test_backslash_userinfo_url_is_judged_by_the_host_a_browser_uses ___________________________
+
+    def test_backslash_userinfo_url_is_judged_by_the_host_a_browser_uses():
+        g = guard("Open https://docs.corp.example/plan", "x")
+        assert effect(g, "web_fetch", url="https://docs.corp.example/plan") is Effect.ALLOW
+>       assert effect(g, "web_fetch", url="https://attacker.example\\@docs.corp.example/plan") is not Effect.ALLOW
+E       AssertionError: assert <Effect.ALLOW: 'allow'> is not <Effect.ALLOW: 'allow'>
+E        +  where <Effect.ALLOW: 'allow'> = effect(<agent_firebreak.guard.Guard object at 0x000001D62356ADE0>, 'web_fetch', url='https://attacker.example\\@docs.corp.example/plan')
+E        +  and   <Effect.ALLOW: 'allow'> = Effect.ALLOW
+
+tests\test_hardening.py:37: AssertionError
+=============================================== short test summary info ===============================================
+FAILED tests/test_guard.py::test_probe_bypass_attempts - AssertionError: https://good.example@attacker.example/x
+FAILED tests/test_hardening.py::test_backslash_userinfo_url_is_judged_by_the_host_a_browser_uses - AssertionError: as...
+2 failed, 71 passed in 3.63s

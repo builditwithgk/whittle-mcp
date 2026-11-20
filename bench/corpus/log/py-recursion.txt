@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/work/project\app.py", line 5, in <module>
+    f(0)
+    ~^^^
+  File "/work/project\app.py", line 4, in f
+    return f(n+1)
+  File "/work/project\app.py", line 4, in f
+    return f(n+1)
+  File "/work/project\app.py", line 4, in f
+    return f(n+1)
+  [Previous line repeated 1496 more times]
+RecursionError: maximum recursion depth exceeded

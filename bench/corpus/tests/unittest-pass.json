@@ -1,0 +1,10 @@
+{
+ "kind": "tests",
+ "options": {},
+ "source": "python -m unittest -v on a tiny module",
+ "facts": {
+  "contains": [
+   "OK"
+  ]
+ }
+}

@@ -1,0 +1,24 @@
+{
+ "kind": "diff",
+ "options": {},
+ "source": "git show 56b9f94 in mcpreportcard-repo",
+ "facts": {
+  "contains": [
+   "README.md",
+   "space/README.md",
+   "space/index.html",
+   "+### Test your own server in the browser",
+   "+The [browser demo](https://huggingface.co/spaces/builditwithgk/mcp-reportcard) can't launch your server, so save its tool list with the CLI and paste it in:",
+   "+1. Save the tool list (use whatever command starts your server, or an `http(s)://…/mcp` URL):",
+   "+   mcp-reportcard dump \"python server.py\" -o tools.json",
+   "+2. Open `tools.json`, copy everything, and paste it into the text box on the [demo page](https://huggingface.co/spaces/builditwithgk/mcp-reportcard).",
+   "+3. Click **Check tools**.",
+   "+You get the same lint findings as the CLI. Two differences: token counts are a characters ÷ 4 estimate (the CLI with `[tokens]` uses tiktoken), and there's no fuzzing, because the browser never calls your server. To try it without a server of your own, click **Load a bad example** first.",
+   "+### How the demo is built",
+   "+**Test your own server:** run `pip install mcp-reportcard`, then `mcp-reportcard dump \"python server.py\" -o tools.json` (use the command that starts your server, or its URL). Paste the contents of `tools.json` into the box and click **Check tools**. Token counts here are an estimate; the CLI gives exact counts and can also fuzz the server.",
+   "+  details.howto { margin-top: 14px; border-top: 1px solid var(--border); padding-top: 10px; font-size: 14px; }",
+   "+  details.howto summary { cursor: pointer; color: var(--accent); font-weight: 600; }",
+   "+  details.howto ol { margin: 10px 0 6px; padding-left: 20px; }"
+  ]
+ }
+}

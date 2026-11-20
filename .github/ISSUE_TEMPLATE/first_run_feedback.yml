@@ -1,0 +1,31 @@
+name: First-run feedback
+description: You tried it for the first time. Tell us how it went (10 minutes of honest feedback is gold)
+labels: ["feedback"]
+body:
+  - type: checkboxes
+    id: tried
+    attributes:
+      label: What did you try?
+      options:
+        - label: The browser demo
+        - label: "A pipe, for example `pytest 2>&1 | whittle tests`"
+        - label: The MCP server in my agent
+        - label: "`whittle bench`"
+  - type: textarea
+    id: stuck
+    attributes:
+      label: Where did you get stuck or confused?
+    validations:
+      required: true
+  - type: textarea
+    id: missing
+    attributes:
+      label: What did you expect that was missing, or what looked wrong in the trimmed output?
+  - type: dropdown
+    id: use
+    attributes:
+      label: Would you use this on a real agent?
+      options:
+        - Yes, as is
+        - Yes, with changes (say which above)
+        - No

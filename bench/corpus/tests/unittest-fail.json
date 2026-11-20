@@ -1,0 +1,13 @@
+{
+ "kind": "tests",
+ "options": {},
+ "source": "python -m unittest -v on a tiny module",
+ "facts": {
+  "contains": [
+   "test_0 (test_textkit.T.test_0)",
+   "test_1 (test_textkit.T.test_1)",
+   "AssertionError: False is not true",
+   "FAILED (failures=2)"
+  ]
+ }
+}
