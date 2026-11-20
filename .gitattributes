@@ -1,0 +1,4 @@
+# The benchmark samples must be byte-for-byte identical on every OS.
+bench/corpus/** -text
+bench/holdout/** -text
+*.sh text eol=lf
