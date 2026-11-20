@@ -78,6 +78,12 @@ def trim(text: str, max_items: int = 3, max_string: int = 120, max_depth: int = 
     return Trim(_dump(masked[0]))
 
 
+def _shape(node: Any) -> set[str]:
+    """What an item adds to the picture: its own kind, plus the key paths inside it."""
+    kind = "obj" if isinstance(node, Obj) else "arr" if isinstance(node, list) else "num" if isinstance(node, Raw) else type(node).__name__
+    return {"<" + kind + ">"} | _paths(node)
+
+
 def _paths(node: Any, prefix: str = "", depth: int = 0, out: set[str] | None = None) -> set[str]:
     out = set() if out is None else out
     if depth < 3 and isinstance(node, Obj):
@@ -91,22 +97,27 @@ def _paths(node: Any, prefix: str = "", depth: int = 0, out: set[str] | None = N
 
 
 def _pick(items: list[Any], limit: int, extras: int = 3) -> list[int]:
-    """The first `limit` items, plus up to `extras` later items that show keys the kept ones lack (so the shape stays complete)."""
+    """The first `limit` items, plus up to `extras` later items that show a kind of value or a key the kept ones lack."""
     picked = list(range(min(limit, len(items))))
-    if len(items) <= limit or not isinstance(items[0], Obj):
+    if len(items) <= limit:
         return picked
     seen: set[str] = set()
     for i in picked:
-        _paths(items[i], "", 0, seen)
-    for i in range(limit, len(items)):
-        if len(picked) >= limit + extras:
-            break
-        if isinstance(items[i], Obj):
-            new = _paths(items[i], "", 0) - seen
+        seen |= _shape(items[i])
+    # Items that reveal new key paths matter most; items that only add a new kind of value (a null, a number) come second.
+    for wanted_keys in (True, False):
+        for i in range(limit, len(items)):
+            if len(picked) >= limit + extras:
+                break
+            if i in picked:
+                continue
+            new = _shape(items[i]) - seen
+            if wanted_keys:
+                new = {s for s in new if not s.startswith("<")}
             if new:
                 picked.append(i)
-                seen |= new
-    return picked
+                seen |= _shape(items[i])
+    return sorted(picked)
 
 
 def _parse(text: str) -> tuple[list[Any], bool] | None:

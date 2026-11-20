@@ -9,23 +9,33 @@ from whittle_mcp.trimmers.base import Trim
 
 _TS = re.compile(r"\b\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(?:[.,]\d+)?(?:Z|[+-]\d{2}:?\d{2})?\b|\b\d{2}:\d{2}:\d{2}(?:[.,]\d+)?\b")
 _NUM = re.compile(r"\b0x[0-9a-fA-F]+\b|\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b|\b\d+\b")
-# Trouble: levels, exception and error class names, Java "Caused by", crashes.
+# Trouble: levels, exception and error class names, Java "Caused by", crashes, and common failure phrases without a level keyword.
+# (The class-name part is anchored at a word start and capped, so a very long line cannot make the search quadratic.)
 _SIGNAL = re.compile(
-    r"\b(?:ERROR|FATAL|CRITICAL|SEVERE|PANIC|panic|Traceback|FAILED|failed|Failed|WARN(?:ING)?|Killed|OOM)\b"
-    r"|[A-Za-z_.$]*(?:Exception|Error)\b|^\s*Caused by:|[Ss]egmentation fault|exit status \d+|npm ERR!|Out of memory")
+    r"\b(?:ERROR|FATAL|CRITICAL|SEVERE|PANIC|panic|Traceback|FAILED|failed|Failed|WARN(?:ING)?|Killed|OOM|OOMKilled|"
+    r"denied|refused|timed out|[Tt]imeout|aborted)\b"
+    r"|(?<![A-Za-z0-9_.$])[A-Za-z_.$]{0,80}(?:Exception|Error)\b|^\s*Caused by:|[Ss]egmentation fault|core dumped"
+    r"|exit(?:ed)?(?: with)?(?: status| code)+[ =]+[1-9]\d*|npm ERR!|Out of memory|No space left on device|make: \*\*\*")
 _PY_TRACE = re.compile(r"^Traceback \(most recent call last\):")
 _AT_FRAME = re.compile(r"^\s+at\s")
 _SUFFIX = re.compile(r" \(x\d+; lines \d+-\d+\)$")
-MAX_SAME = 3  # keep the first three occurrences of an error of the same shape (numbers ignored), mark the rest
+MAX_SAME = 3      # keep the first three errors of the same shape (numbers ignored), mark the rest
+SCAN = 2000       # characters of a line that are searched for trouble words (its head and its tail)
+
+
+def is_signal(line: str) -> bool:
+    if len(line) <= SCAN:
+        return bool(_SIGNAL.search(line))
+    return bool(_SIGNAL.search(line[:SCAN]) or _SIGNAL.search(line[-SCAN // 2:]))
 
 
 def normalise(line: str) -> str:
-    return _NUM.sub("#", _TS.sub("<ts>", line)).strip()
+    return _NUM.sub("#", _TS.sub("<ts>", line[:SCAN])).strip()
 
 
 def _row_key(line: str) -> str:
     """Repeats differ only in timestamps and numbers; for error lines only timestamps are ignored, so ids and codes survive."""
-    return _TS.sub("<ts>", line).strip() if _SIGNAL.search(line) else normalise(line)
+    return _TS.sub("<ts>", line[:SCAN]).strip() if is_signal(line) else normalise(line)
 
 
 def trim(text: str, head: int = 5, tail: int = 25, max_frames: int = 3, handle: str | None = None, **_: object) -> Trim:
@@ -36,20 +46,31 @@ def trim(text: str, head: int = 5, tail: int = 25, max_frames: int = 3, handle: 
     n = len(rows)
     keep = [False] * n
     seen: dict[str, int] = {}
+    first_row: dict[str, str] = {}
+    hidden: dict[str, int] = {}
+    signals = [is_signal(row) for row in rows]
     for i, row in enumerate(rows):
-        if _SIGNAL.search(row):
+        if signals[i]:
             key = normalise(_SUFFIX.sub("", row))
             seen[key] = seen.get(key, 0) + 1
+            first_row.setdefault(key, _SUFFIX.sub("", row)[:100])
             if seen[key] <= MAX_SAME:
                 keep[i] = True
-                if i + 1 < n and not row.startswith(" ") and not _SIGNAL.search(rows[i + 1]):
+                if i + 1 < n and not row.startswith(" ") and not signals[i + 1]:
                     keep[i + 1] = True   # one line of context after an error, unless that line is itself an error (counted on its own)
+            else:
+                hidden[key] = hidden.get(key, 0) + spans[i][1] - spans[i][0] + 1
     for i in range(min(head, n)):
         keep[i] = True
     for i in range(max(0, n - tail), n):
         keep[i] = True
     _keep_traceback_edges(rows, keep, max_frames)
     out, omitted = compose(rows, keep, handle, spans)
+    # Errors of a shape already shown three times are omitted: say how many, so the counts are not lost.
+    shown_hidden = {k: c for k, c in hidden.items() if c}
+    if shown_hidden:
+        for key, count in sorted(shown_hidden.items(), key=lambda kv: -kv[1])[:8]:
+            out.append(f"[... {count} more like: {first_row[key]} ...]")
     return Trim("\n".join(out), omitted_lines=omitted)
 
 

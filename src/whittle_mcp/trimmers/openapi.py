@@ -45,7 +45,11 @@ def trim(text: str, paths: list[str] | None = None, tags: list[str] | None = Non
         return Trim("\n".join([head, *rows]), notes=["index"])
     wanted = [(p, m, op) for p, m, op in ops if _match(p, m, op, paths, tags, operation_ids, methods)]
     if not wanted:
-        return Trim("No operations matched. Use the index (no filters) to see what exists.", notes=["no match"])
+        given = {k: v for k, v in (("paths", paths), ("tags", tags), ("operation_ids", operation_ids), ("methods", methods)) if v}
+        hint = ""
+        if any(":/" in p for p in paths or []):
+            hint = " A leading / in a path was rewritten by Git Bash on Windows: set MSYS_NO_PATHCONV=1 or use operation ids."
+        return Trim(f"No operations matched {given}. Ask for the index (no filters) to see what exists.{hint}", notes=["no match"])
     out: dict[str, Any] = {k: spec[k] for k in ("openapi", "swagger", "basePath", "host", "schemes") if k in spec}
     info = spec.get("info", {})
     out["info"] = {k: info[k] for k in ("title", "version") if k in info}

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import codecs
 import json
 import os
 import sys
@@ -15,9 +16,26 @@ from whittle_mcp.store import Store, default_directory
 from whittle_mcp.tokens import get_counter
 
 
+class CliError(Exception):
+    """A problem the user can fix; printed without a traceback."""
+
+
+def _decode(data: bytes) -> str:
+    """UTF-8 (with or without a BOM) and UTF-16 (what Windows PowerShell 5.1 writes for `>`); anything else is read as cp1252."""
+    if data.startswith(codecs.BOM_UTF8):
+        return data[len(codecs.BOM_UTF8):].decode("utf-8", "replace")
+    if data.startswith((codecs.BOM_UTF16_LE, codecs.BOM_UTF16_BE)):
+        return data.decode("utf-16", "replace")
+    if len(data) > 3 and data[1:2] == bytes(1) and data[3:4] == bytes(1):   # UTF-16 LE without a BOM, ASCII text
+        return data.decode("utf-16-le", "replace")
+    try:
+        return data.decode("utf-8")
+    except UnicodeDecodeError:
+        return data.decode("cp1252", "replace")
+
+
 def _read(source: str) -> str:
-    data = sys.stdin.buffer.read() if source == "-" else Path(source).read_bytes()
-    return data.decode("utf-8", "replace")
+    return _decode(sys.stdin.buffer.read() if source == "-" else Path(source).read_bytes())
 
 
 def _write(text: str) -> None:
@@ -33,7 +51,14 @@ def _write(text: str) -> None:
 
 def _engine(args: argparse.Namespace) -> Whittle:
     directory = None if getattr(args, "no_store", False) else Path(args.store_dir) if args.store_dir else default_directory()
-    return Whittle(counter=get_counter(args.counter), store=Store(directory))
+    try:
+        counter = get_counter(args.counter)
+    except Exception as exc:  # noqa: BLE001 - tiktoken missing, or it could not download its data
+        raise CliError(f"the {args.counter} token counter is not available ({type(exc).__name__}); try --counter estimate") from exc
+    try:
+        return Whittle(counter=counter, store=Store(directory))
+    except OSError as exc:
+        raise CliError(f"cannot use the store folder {directory}: {exc.strerror or exc}") from exc
 
 
 def _log_event(engine: Whittle, event: dict) -> None:
@@ -80,6 +105,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--index", action="store_true", help="list operations only")
     p = sub.add_parser("expand", help="print what a marker omitted")
     p.add_argument("id")
+    p.add_argument("marker_args", nargs="*", help="the rest of a marker, pasted as printed: lines=45-356 or path=$.items")
     p.add_argument("--lines", help="START-END, as printed in the marker")
     p.add_argument("--path", help="for JSON: a path such as $.items[3]")
     _add_common(p)
@@ -106,11 +132,18 @@ def main(argv: list[str] | None = None) -> int:
         sys.stderr.reconfigure(errors="backslashreplace")
     try:
         return _run(args)
+    except CliError as exc:
+        print(f"whittle: {exc}", file=sys.stderr)
+        return 2
     except FileNotFoundError as exc:
         print(f"whittle: cannot read {exc.filename}: file not found", file=sys.stderr)
         return 2
-    except IsADirectoryError as exc:
-        print(f"whittle: {exc.filename} is a folder, not a file", file=sys.stderr)
+    except (IsADirectoryError, PermissionError) as exc:
+        what = "a folder, not a file" if os.path.isdir(exc.filename or "") else "not readable (permission denied)"
+        print(f"whittle: {exc.filename} is {what}", file=sys.stderr)
+        return 2
+    except OSError as exc:
+        print(f"whittle: cannot read {exc.filename or 'input'}: {exc.strerror or exc}", file=sys.stderr)
         return 2
     except BrokenPipeError:   # for example `whittle expand ID | head`
         try:
@@ -129,7 +162,16 @@ def _run(args: argparse.Namespace) -> int:
         return run_cli(args)
     engine = _engine(args)
     if args.cmd == "expand":
-        out, ok = engine.expand_checked(args.id, lines=args.lines, path=args.path)
+        lines, path = args.lines, args.path
+        for token in args.marker_args:
+            key, _, value = token.partition("=")
+            if key == "lines" and value:
+                lines = value
+            elif key == "path" and value:
+                path = value
+            else:
+                raise CliError(f"unexpected argument {token!r}; use lines=START-END or path=$.json.path as printed in the marker")
+        out, ok = engine.expand_checked(args.id, lines=lines, path=path)
         if not ok:
             print(f"whittle: {out}", file=sys.stderr)
             return 1
@@ -163,6 +205,7 @@ def _report(engine: Whittle, args: argparse.Namespace) -> int:
     print(f"trims: {data['calls']}   raw: {data['raw_tokens']:,}   returned: {data['returned_tokens']:,}   "
           f"re-expanded: {data['expanded_tokens']:,}")
     print(f"net tokens saved: {data['net_saved_tokens']:,} ({data['net_saved_percent']}%)   counter: {data['counter']}")
+    print(f"(adds up every trim recorded in {directory}, including earlier projects; set WHITTLE_DIR per project to separate them)")
     print(f"assumes each output stays in context for {data['later_turns_assumed']} more turns, "
           f"{'with' if data['cached_assumed'] else 'without'} prompt caching")
     note = "EXAMPLE prices" if not args.prices else f"prices from {args.prices}"

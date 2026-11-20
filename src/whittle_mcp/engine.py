@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from typing import Any, Callable
 
@@ -12,6 +13,8 @@ from whittle_mcp.trimmers import diffs, jsonmask, logs, openapi, tests
 from whittle_mcp.trimmers.base import Trim
 
 CR, LF, CRLF = chr(13), chr(10), chr(13) + chr(10)
+_ANSI = re.compile(chr(27) + r"\[[0-9;?]*[ -/]*[@-~]")   # terminal colour and cursor codes cost tokens and carry no meaning
+LINES = re.compile(r"^\d+(?:-\d+)?$")
 
 TRIMMERS: dict[str, Callable[..., Trim]] = {
     "tests": tests.trim, "log": logs.trim, "json": jsonmask.trim, "diff": diffs.trim, "openapi": openapi.trim,
@@ -59,7 +62,7 @@ class Whittle:
     def trim(self, kind: str, text: str, keep_original: bool = True, **options: Any) -> Result:
         if kind not in TRIMMERS:
             raise ValueError(f"unknown kind {kind!r}; choose one of {', '.join(TRIMMERS)}")
-        text = text.replace(CRLF, LF).replace(CR, LF)   # CRLF and carriage-return progress output become plain lines
+        text = _ANSI.sub("", text.replace(CRLF, LF).replace(CR, LF))   # CRLF, progress output and colour codes become plain text
         raw_tokens = self.counter.count(text)
         handle = self.store.put(text) if keep_original and text else None
         trimmed = TRIMMERS[kind](text, handle=handle, **options)
@@ -71,7 +74,7 @@ class Whittle:
             result = Result(kind, trimmed.text, raw_tokens, out_tokens, handle, trimmed.omitted_lines, trimmed.notes,
                             self.counter.name)
         self.events.append({"event": "trim", "kind": kind, "raw": result.raw_tokens, "out": result.out_tokens,
-                            "handle": result.handle})
+                            "handle": result.handle, "counter": self.counter.name})
         return result
 
     def expand(self, handle: str, lines: str | None = None, path: str | None = None) -> str:
@@ -82,14 +85,18 @@ class Whittle:
         """Like expand, but also says whether it worked (the CLI turns a failure into a non-zero exit code)."""
         text = self.store.get(handle)
         if text is None:
-            return f"No stored output for id {handle!r}. It may have expired, or was created with storage turned off.", False
+            return (f"No stored output for id {handle!r}. Stored text expires after 24 hours, the command-line tool and the MCP server "
+                    "keep separate stores, and nothing is stored when it was trimmed with storage turned off."), False
+        if lines and path:
+            return "Give either lines or path, not both.", False
         out = text
         if lines:
-            try:
-                start, _, end = lines.partition("-")
-                first, last = int(start), int(end or start)
-            except ValueError:
+            if not LINES.match(lines):
                 return f"Bad lines value {lines!r}; use START-END, for example 45-356.", False
+            start, _, end = lines.partition("-")
+            first, last = int(start), int(end or start)
+            if first < 1 or last < first:
+                return f"Bad lines value {lines!r}; the range must start at 1 or more and not run backwards.", False
             total = len(text.splitlines())
             if first > total:
                 return f"Lines {lines} are past the end: the stored output has {total} lines.", False
@@ -110,8 +117,10 @@ class Whittle:
         net = raw - out - expanded
         prices = prices if prices is not None else load_prices()
         cost = {name: round(saved_cost(raw, out + expanded, price, later_turns, cached), 6) for name, price in prices.items()}
+        counters = sorted({e.get("counter", self.counter.name) for e in self.events})
+        counter_name = counters[0] if len(counters) == 1 else "mixed (" + ", ".join(counters) + ")"
         return {"calls": len(trims), "raw_tokens": raw, "returned_tokens": out, "expanded_tokens": expanded,
                 "gross_saved_tokens": raw - out, "net_saved_tokens": net,
                 "net_saved_percent": round(100.0 * net / raw, 1) if raw else 0.0,
-                "later_turns_assumed": later_turns, "cached_assumed": cached, "counter": self.counter.name,
+                "later_turns_assumed": later_turns, "cached_assumed": cached, "counter": counter_name,
                 "saved_usd_at_example_prices": cost}

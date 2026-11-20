@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 
-from whittle_mcp.compose import marker
+from whittle_mcp.compose import marker, shorten_row
 from whittle_mcp.trimmers.base import Trim
 
 _GENERATED = re.compile(
@@ -12,7 +12,7 @@ _GENERATED = re.compile(
     r"|\.min\.(js|css)$|\.map$|(^|/)(dist|build|vendor|node_modules|__pycache__)/|\.snap$|\.pb\.go$|_pb2\.py$")
 # In these files a change of indentation changes the meaning, so only trailing whitespace counts as whitespace-only.
 _INDENT_MATTERS = (".py", ".pyi", ".yml", ".yaml", ".md", ".rst", ".toml", ".mk", "Makefile", ".nim", ".hs", ".coffee", ".sass", ".pug")
-_FILE = re.compile(r"^diff --git a/(.+?) b/(.+)$")
+_FILE = re.compile(r"^diff --git \"?a/(.+?)\"? \"?b/(.+?)\"?$")
 NEW_FILE_HEAD = 40
 
 
@@ -29,8 +29,7 @@ def trim(text: str, context: int = 1, handle: str | None = None, **_: object) ->
     for a, b in zip(starts, starts[1:], strict=False):
         section = lines[a:b]
         name = _FILE.match(section[0]).group(2)  # type: ignore[union-attr]
-        plus = sum(1 for ln in section if ln.startswith("+") and not ln.startswith("+++"))
-        minus = sum(1 for ln in section if ln.startswith("-") and not ln.startswith("---"))
+        plus, minus = _count_changes(section)
         files, adds, dels = files + 1, adds + plus, dels + minus
         reason = _collapse_reason(name, section, plus, minus)
         if reason:
@@ -46,7 +45,21 @@ def trim(text: str, context: int = 1, handle: str | None = None, **_: object) ->
     if collapsed:
         summary += "; collapsed: " + ", ".join(f"{count} {reason}" for reason, count in collapsed.items())
     prefix = [lines[i] for i in range(0, starts[0])]  # anything before the first file (commit header)
-    return Trim("\n".join([summary, *prefix, *out]), omitted_lines=omitted_total)
+    return Trim("\n".join([summary, *prefix, *(shorten_row(row) for row in out)]), omitted_lines=omitted_total)
+
+
+def _count_changes(section: list[str]) -> tuple[int, int]:
+    """Added and removed lines: only lines inside a hunk count, so a removed SQL comment (`-- x`) is not mistaken for a file header."""
+    in_hunk = False
+    plus = minus = 0
+    for ln in section:
+        if ln.startswith("@@"):
+            in_hunk = True
+        elif in_hunk and ln.startswith("+"):
+            plus += 1
+        elif in_hunk and ln.startswith("-"):
+            minus += 1
+    return plus, minus
 
 
 def _collapse_reason(name: str, section: list[str], plus: int, minus: int) -> str | None:
@@ -55,8 +68,10 @@ def _collapse_reason(name: str, section: list[str], plus: int, minus: int) -> st
     if _GENERATED.search(name):
         return "generated, vendored or lock file"
     norm = (lambda s: s.rstrip()) if name.endswith(_INDENT_MATTERS) else (lambda s: s.strip())
-    added = sorted(norm(ln[1:]) for ln in section if ln.startswith("+") and not ln.startswith("+++"))
-    removed = sorted(norm(ln[1:]) for ln in section if ln.startswith("-") and not ln.startswith("---"))
+    start = next((i for i, ln in enumerate(section) if ln.startswith("@@")), len(section))
+    body = section[start:]   # only lines inside hunks are changes (a removed SQL comment `-- x` is not a header)
+    added = sorted(norm(ln[1:]) for ln in body if ln.startswith("+"))
+    removed = sorted(norm(ln[1:]) for ln in body if ln.startswith("-"))
     if (plus or minus) and added == removed:
         return "whitespace-only change"
     return None

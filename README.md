@@ -29,7 +29,7 @@ curl -s https://api.example.com/items | whittle json
 whittle log build.log                # repeats counted, long tracebacks shortened, every distinct error kept
 whittle openapi spec.json --index    # one line per operation
 whittle openapi spec.json --path '/pets*' --method get      # Git Bash on Windows rewrites a leading /: use MSYS_NO_PATHCONV=1 or --operation-id / --tag
-whittle expand a1b2c3d4 --lines 45-356     # get back what a marker omitted
+whittle expand a1b2c3d4 lines=45-356       # get back what a marker omitted: paste the marker as printed (or use --lines 45-356)
 whittle report                       # tokens saved so far, net of anything you expanded
 ```
 The receipt (`[whittle tests] 12,431 -> 912 tokens (-92.7%) | full output: whittle expand a1b2c3d4 | counter: tiktoken:o200k_base`) goes to stderr, so pipes stay clean. Note that in a pipe the exit code is whittle's, not the test runner's: use `set -o pipefail` (bash) if a script needs the runner's status.
@@ -42,13 +42,13 @@ claude mcp add whittle -- uvx whittle-mcp --tools tests,log      # Claude Code, 
 ```json
 { "mcpServers": { "whittle": { "command": "uvx", "args": ["whittle-mcp"] } } }
 ```
-The tools take a **file path** (or, if you start the server with `--allow-run`, a command). A `text` argument exists for small inputs, but sending a big text through a tool call costs the tokens you meant to save, so do not use it for large output. Refusals (a path outside the root, commands switched off) come back with their reason. Typical use: the agent runs `pytest > out.log` and calls `trim_tests(path="out.log")`.
+The tools take a **file path** (or, if you start the server with `--allow-run`, a command). A `text` argument exists for small inputs, but sending a big text through a tool call costs the tokens you meant to save, so do not use it for large output. Refusals (a path outside the root, commands switched off) and command failures (not found, timed out) come back with their reason. A large input that is not in the format you asked for is not echoed back: you get its first lines and a hint. Typical use: the agent runs `pytest > out.log` and calls `trim_tests(path="out.log")`.
 
 | Tool | What it does |
 |---|---|
-| `trim_tests` | pytest, unittest, jest, go test, cargo test: failures with their assertions and locations, plus the summary |
-| `trim_log` | repeats collapsed, long tracebacks keep their last frames, every distinct error line stays |
-| `mask_json` | every key path stays; long arrays and strings are shortened; the result is still valid JSON |
+| `trim_tests` | pytest, unittest, jest, mocha, RSpec, TAP, go test, cargo test: failures with their assertions and locations, plus the summary. Any other format is returned unchanged |
+| `trim_log` | adjacent repeats collapsed and counted, long tracebacks keep their last frames, the first three errors of each shape stay (and the rest are summarised as "N more like ...") |
+| `mask_json` | object keys stay; arrays show their first three items plus up to three later ones that add a new key or a new kind of value; long strings are shortened; the result is still valid JSON |
 | `trim_diff` | lockfiles, generated or vendored files and whitespace-only changes collapse; long runs of unchanged lines are cut |
 | `slice_openapi` | an index of operations, or only the operations you ask for plus the schemas they use |
 | `expand` | returns what a marker omitted, by line range or JSON path |
@@ -64,7 +64,7 @@ Token counter: tiktoken `o200k_base`. "Naive" is head-and-tail truncation to the
 
 | Corpus | Samples | Tokens saved (whittle) | Facts kept: whittle | Facts kept: naive truncation |
 |---|---:|---:|---:|---:|
-| Development corpus (tests, logs, JSON, diffs, OpenAPI) | 48 | 53.3% | 100% | 84.2% |
+| Development corpus (tests, logs, JSON, diffs, OpenAPI) | 48 | 53.3% | 100% | 84.4% |
 | Held-out set (written after the trimmers) | 16 | 61.3% | 100% | 85.8% |
 
 Savings depend on the input and are token-weighted, so large outputs dominate: logs shrank about 96%, OpenAPI slices 84%, diffs 60%, test output 47%. **Short outputs save little**: half the diffs and most short `pytest -q` runs in the corpus saved under 15%, and on the held-out set's short test runs the saving was 7%. **Honest limits of these numbers:** the corpus is small and was built by the author; the "must-keep facts" were chosen by the author (failing test ids and assertion lines, error lines, changed files, JSON key paths, operation ids); the development corpus was in view while the trimmers were written, which is why the held-out set exists; and **end-to-end agent success with and without trimming has not been measured yet**. Treat the numbers as a regression suite and a starting point. Samples that break it are the most useful contribution you can make.
@@ -75,10 +75,13 @@ Provider prices change, so the tool never bakes one in. `whittle report` and the
 
 ## Limits
 
-- It uses **rules, not a model**: common formats are handled well, unknown formats pass through unchanged (never mangled).
-- Errors that differ **only in numbers** (order ids, codes) count as repeats after the third; the rest are one `expand` away.
+- It uses **rules, not a model**: common formats are handled well, and a format it does not recognise (a test runner it does not know, text that is not JSON) is returned unchanged, never mangled.
+- Errors that differ **only in numbers** (order ids, codes) count as the same shape after the third occurrence; the rest are summarised (`N more like ...`) and are one `expand` away. Only *adjacent* repeats are collapsed and counted inline, and a failure with no recognisable keyword (no `ERROR`, no exception name, none of the common phrases such as `No space left on device` or `exited with code 137`) can fall into an omitted range.
+- Terminal colour codes are removed, and a line longer than 1,000 characters keeps its first 700 and last 300.
 - `trim_diff` output is for reading, not for applying. Lockfile bodies are collapsed, so a newly added dependency is not visible until you `expand` it: expand lockfiles when you review dependency changes. Files under `dist/`, `build/` or `vendor/` are treated as generated even if you wrote them. An indentation-only change is collapsed only for languages where it cannot change meaning; in Python and YAML it is shown.
 - JSON: numbers and duplicate keys are kept exactly as written; arrays show the first three items (plus any that reveal other keys) and a string marker such as `... +497 more items`, and long strings are cut at 120 characters. Input nested more than about a thousand levels is returned unchanged.
+- **Windows:** files written by PowerShell 5.1's `>` (UTF-16) and UTF-8 files with a BOM are read correctly, and output is always UTF-8. Text you *pipe* from PowerShell 5.1 is re-encoded by PowerShell itself (its `$OutputEncoding` is ASCII); set `$OutputEncoding = [Text.Encoding]::UTF8` or pass a file name instead.
+- Installing pulls in the MCP SDK and its dependencies, even if you only use the command line.
 - Small inputs are returned unchanged: there is nothing to gain from a short log (under about 40 lines) or a short test run (under 12 lines). CRLF line endings and carriage-return progress output are turned into plain lines first.
 - Token counts differ between providers; `tiktoken` is used when installed, otherwise an estimate (`chars/4`, labelled).
 - An agent only benefits if it calls the tool. The shell filter and a one-line instruction in your agent settings (below) help.

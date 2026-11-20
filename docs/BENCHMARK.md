@@ -20,8 +20,8 @@ Token counter: `tiktoken:o200k_base`. Savings are token-weighted; retention is t
 | tests | naive | 12 | 47.6% | 95.6% | 8/12 |
 | tests | whittle | 12 | 46.9% | 100.0% | 12/12 |
 | log | none | 6 | 0.0% | 100.0% | 6/6 |
-| log | naive | 6 | 96.0% | 95.8% | 5/6 |
-| log | whittle | 6 | 96.0% | 100.0% | 6/6 |
+| log | naive | 6 | 95.8% | 95.8% | 5/6 |
+| log | whittle | 6 | 95.7% | 100.0% | 6/6 |
 | json | none | 11 | 0.0% | 100.0% | 11/11 |
 | json | naive | 11 | 44.5% | 95.4% | 4/11 |
 | json | whittle | 11 | 44.5% | 100.0% | 11/11 |
@@ -29,10 +29,10 @@ Token counter: `tiktoken:o200k_base`. Savings are token-weighted; retention is t
 | diff | naive | 12 | 60.1% | 86.0% | 5/12 |
 | diff | whittle | 12 | 60.0% | 100.0% | 12/12 |
 | openapi | none | 7 | 0.0% | 100.0% | 7/7 |
-| openapi | naive | 7 | 84.6% | 33.8% | 0/7 |
-| openapi | whittle | 7 | 84.1% | 100.0% | 7/7 |
+| openapi | naive | 7 | 83.9% | 35.3% | 0/7 |
+| openapi | whittle | 7 | 83.3% | 100.0% | 7/7 |
 | all | none | 48 | 0.0% | 100.0% | 48/48 |
-| all | naive | 48 | 53.4% | 84.2% | 22/48 |
+| all | naive | 48 | 53.3% | 84.4% | 22/48 |
 | all | whittle | 48 | 53.3% | 100.0% | 48/48 |
 
 ### Held-out set (16 samples)
@@ -45,18 +45,19 @@ Token counter: `tiktoken:o200k_base`. Savings are token-weighted; retention is t
 | tests | naive | 7 | 8.1% | 87.9% | 2/7 |
 | tests | whittle | 7 | 7.2% | 100.0% | 7/7 |
 | log | none | 3 | 0.0% | 100.0% | 3/3 |
-| log | naive | 3 | 95.3% | 66.7% | 2/3 |
-| log | whittle | 3 | 95.3% | 100.0% | 3/3 |
+| log | naive | 3 | 94.9% | 66.7% | 2/3 |
+| log | whittle | 3 | 94.9% | 100.0% | 3/3 |
 | json | none | 6 | 0.0% | 100.0% | 6/6 |
 | json | naive | 6 | 55.9% | 93.0% | 3/6 |
 | json | whittle | 6 | 55.9% | 100.0% | 6/6 |
 | all | none | 16 | 0.0% | 100.0% | 16/16 |
-| all | naive | 16 | 61.4% | 85.8% | 7/16 |
+| all | naive | 16 | 61.3% | 85.8% | 7/16 |
 | all | whittle | 16 | 61.3% | 100.0% | 16/16 |
 
 ## Reading these results honestly
 
 - **The development corpus was in view while the trimmers were written** (for example, JSON array sampling was changed after a loss showed up). A perfect score there is optimistic. The held-out set exists for that reason, and it is small; it covers tests, logs and JSON, not diffs or OpenAPI.
+- **The key-path check stops at depth 3 and the samples have fairly uniform arrays.** A trimmer that keeps every key path in these samples can still drop one in an array of mixed values; whittle reports that case honestly in the README rather than claiming completeness.
 - **The facts are the author's choice.** They are objective in the sense that code extracts them from the raw text, but a different reader might care about other lines. If you find output a trimmer shrank and something you needed went missing, that is a bug report, and a new sample.
 - **Naive truncation is an easy baseline.** It shows why trimming by structure matters, not that whittle beats every other tool.
 - **Short inputs save little.** On the held-out test output (short `pytest -q` runs) whittle saved about 7%: there was little to remove.
