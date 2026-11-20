@@ -18,7 +18,9 @@ _FAIL_WORDS = re.compile(r"\b(FAILED|FAIL|ERROR|ERRORS|panicked)\b|^E\s|--- FAIL
 # (pattern, lines kept before, lines kept after): the part of a failure that carries its meaning
 _WINDOWS = [
     (re.compile(r"^(FAIL|ERROR)(ED)?[: ]|^\s*(FAILED|ERROR) "), 0, 6),
-    (re.compile(r"^--- FAIL"), 0, 8),
+    (re.compile(r"^\s*--- FAIL"), 3, 8),
+    (re.compile(r"_test\.go:\d+:"), 0, 0),
+    (re.compile(r"\.\.\. FAILED$"), 0, 0),
     (re.compile(r"^\s*● "), 0, 14),
     (re.compile(r"^---- .+ stdout ----$"), 0, 8),
     (re.compile(r"panicked at"), 0, 4),

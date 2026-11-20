@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -15,9 +16,19 @@ from whittle_mcp.tokens import get_counter
 
 
 def _read(source: str) -> str:
-    if source == "-":
-        return sys.stdin.buffer.read().decode("utf-8", "replace")
-    return Path(source).read_text(encoding="utf-8", errors="replace")
+    data = sys.stdin.buffer.read() if source == "-" else Path(source).read_bytes()
+    return data.decode("utf-8", "replace")
+
+
+def _write(text: str) -> None:
+    """Write UTF-8 bytes, so a Windows console code page can never crash the filter or garble the text."""
+    data = (text if text.endswith(chr(10)) else text + chr(10)).encode("utf-8", "replace")
+    buffer = getattr(sys.stdout, "buffer", None)
+    if buffer is not None:
+        buffer.write(data)
+        buffer.flush()
+    else:
+        sys.stdout.write(data.decode("utf-8"))
 
 
 def _engine(args: argparse.Namespace) -> Whittle:
@@ -91,6 +102,25 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    if hasattr(sys.stderr, "reconfigure"):
+        sys.stderr.reconfigure(errors="backslashreplace")
+    try:
+        return _run(args)
+    except FileNotFoundError as exc:
+        print(f"whittle: cannot read {exc.filename}: file not found", file=sys.stderr)
+        return 2
+    except IsADirectoryError as exc:
+        print(f"whittle: {exc.filename} is a folder, not a file", file=sys.stderr)
+        return 2
+    except BrokenPipeError:   # for example `whittle expand ID | head`
+        try:
+            sys.stdout = open(os.devnull, "w")  # noqa: SIM115 - stop the interpreter complaining again at exit
+        except OSError:
+            pass
+        return 0
+
+
+def _run(args: argparse.Namespace) -> int:
     if args.cmd == "prices":
         print(json.dumps(EXAMPLE_PRICES, indent=2))
         return 0
@@ -99,9 +129,12 @@ def main(argv: list[str] | None = None) -> int:
         return run_cli(args)
     engine = _engine(args)
     if args.cmd == "expand":
-        out = engine.expand(args.id, lines=args.lines, path=args.path)
-        sys.stdout.write(out if out.endswith("\n") else out + "\n")
-        _log_event(engine, engine.events[-1]) if engine.events else None
+        out, ok = engine.expand_checked(args.id, lines=args.lines, path=args.path)
+        if not ok:
+            print(f"whittle: {out}", file=sys.stderr)
+            return 1
+        _write(out)
+        _log_event(engine, engine.events[-1])
         return 0
     if args.cmd == "report":
         return _report(engine, args)
@@ -109,7 +142,7 @@ def main(argv: list[str] | None = None) -> int:
                if k in ("max_failure_lines", "head", "tail", "max_items", "max_string", "max_depth", "context", "paths",
                         "tags", "operation_ids", "methods", "index") and v is not None}
     result = engine.trim(args.cmd, _read(args.file), keep_original=not args.no_store, **options)
-    sys.stdout.write(result.text if result.text.endswith("\n") else result.text + "\n")
+    _write(result.text)
     if not args.quiet:
         print(result.receipt(), file=sys.stderr)
     _log_event(engine, engine.events[-1])

@@ -201,7 +201,8 @@ def run_cli(args: argparse.Namespace) -> int:
     corpus = Path(args.corpus)
     samples = load_corpus(corpus)
     if not samples:
-        print(f"No samples found in {corpus}. Build them with bench/make_corpus.py.", file=sys.stderr)
+        print(f"No samples found in {corpus}. The corpus lives in the git repository, not in the pip package: clone "
+              "https://github.com/builditwithgk/whittle-mcp and run `whittle bench` there.", file=sys.stderr)
         return 2
     counter = get_counter(args.counter)
     tools: dict[str, Callable[[Sample], str]] = {}

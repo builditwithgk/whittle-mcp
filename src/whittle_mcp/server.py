@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Annotated
 
 from mcp.server.mcpserver import MCPServer
+from mcp.server.mcpserver.exceptions import ToolError
 from mcp.types import ToolAnnotations
 from pydantic import Field
 
@@ -43,20 +44,20 @@ def build_server(root: Path, allow_run: bool = False, store_dir: Path | None = N
     def source(path: str | None, text: str | None, command: str | None) -> str:
         given = [x for x in (path, text, command) if x]
         if len(given) != 1:
-            raise ValueError("Give exactly one of path, text or command.")
+            raise ToolError("Give exactly one of path, text or command.")
         if text is not None:
             return text
         if path:
             target = (root / path).resolve()
             if not target.is_relative_to(root):
-                raise ValueError(f"{path!r} is outside the root folder {root}.")
+                raise ToolError(f"{path!r} is outside the root folder {root}.")
             if not target.is_file():
-                raise ValueError(f"{path!r} is not a file.")
+                raise ToolError(f"{path!r} is not a file.")
             if target.stat().st_size > MAX_BYTES:
-                raise ValueError(f"{path!r} is larger than {MAX_BYTES // (1024 * 1024)} MB.")
+                raise ToolError(f"{path!r} is larger than {MAX_BYTES // (1024 * 1024)} MB.")
             return target.read_text(encoding="utf-8", errors="replace")
         if not allow_run:
-            raise ValueError("Running commands is off. Start the server with --allow-run, or pass a file path.")
+            raise ToolError("Running commands is off. Start the server with --allow-run, or pass a file path.")
         argv = shlex.split(command or "", posix=os.name != "nt")
         done = subprocess.run(argv, cwd=root, capture_output=True, timeout=120, check=False)  # noqa: S603 - opt-in, no shell
         out = (done.stdout + (b"\n" + done.stderr if done.stderr else b""))[:MAX_BYTES].decode("utf-8", "replace")

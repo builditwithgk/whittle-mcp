@@ -69,7 +69,7 @@ def test_every_trimmer_output_line_comes_from_the_input():
             continue
         original = {ln.strip() for ln in s.text.splitlines()}
         for line in engine.trim(s.kind, s.text).text.splitlines():
-            line = re.sub(r" \(x\d+\)$", "", line).strip()
+            line = re.sub(r" \(x\d+(?:; lines \d+-\d+)?\)$", "", line).strip()
             assert line.startswith("[... ") or line in original, (s.name, line)
 
 

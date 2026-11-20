@@ -15,6 +15,8 @@ Coding agents spend most of their tokens re-reading tool output: test runs, logs
 
 ```bash
 pip install whittle-mcp          # or: uvx whittle-mcp
+pip install "whittle-mcp[tokens]"   # optional: exact token counts with tiktoken (otherwise an estimate, labelled)
+pip install "whittle-mcp[yaml]"     # optional: read YAML OpenAPI documents
 ```
 
 **As a filter in any agent's shell** (the simplest way, and it works with every agent):
@@ -26,11 +28,11 @@ git diff | whittle diff              # lockfiles and generated files collapse to
 curl -s https://api.example.com/items | whittle json
 whittle log build.log                # repeats counted, long tracebacks shortened, every distinct error kept
 whittle openapi spec.json --index    # one line per operation
-whittle openapi spec.json --path '/pets*' --method get
+whittle openapi spec.json --path '/pets*' --method get      # Git Bash on Windows rewrites a leading /: use MSYS_NO_PATHCONV=1 or --operation-id / --tag
 whittle expand a1b2c3d4 --lines 45-356     # get back what a marker omitted
 whittle report                       # tokens saved so far, net of anything you expanded
 ```
-The receipt (`[whittle tests] 12,431 -> 912 tokens (-92.7%) | full output: whittle expand a1b2c3d4`) goes to stderr, so pipes stay clean.
+The receipt (`[whittle tests] 12,431 -> 912 tokens (-92.7%) | full output: whittle expand a1b2c3d4 | counter: tiktoken:o200k_base`) goes to stderr, so pipes stay clean. Note that in a pipe the exit code is whittle's, not the test runner's: use `set -o pipefail` (bash) if a script needs the runner's status.
 
 **As an MCP server:**
 
@@ -40,14 +42,14 @@ claude mcp add whittle -- uvx whittle-mcp --tools tests,log      # Claude Code, 
 ```json
 { "mcpServers": { "whittle": { "command": "uvx", "args": ["whittle-mcp"] } } }
 ```
-The tools take a **file path** (or, if you start the server with `--allow-run`, a command), never the raw text, because sending a big text through a tool call would cost the tokens you meant to save. Typical use: the agent runs `pytest > out.log` and calls `trim_tests(path="out.log")`.
+The tools take a **file path** (or, if you start the server with `--allow-run`, a command). A `text` argument exists for small inputs, but sending a big text through a tool call costs the tokens you meant to save, so do not use it for large output. Refusals (a path outside the root, commands switched off) come back with their reason. Typical use: the agent runs `pytest > out.log` and calls `trim_tests(path="out.log")`.
 
 | Tool | What it does |
 |---|---|
 | `trim_tests` | pytest, unittest, jest, go test, cargo test: failures with their assertions and locations, plus the summary |
 | `trim_log` | repeats collapsed, long tracebacks keep their last frames, every distinct error line stays |
 | `mask_json` | every key path stays; long arrays and strings are shortened; the result is still valid JSON |
-| `trim_diff` | lockfiles, generated files and whitespace-only changes collapse; context is cut to one line |
+| `trim_diff` | lockfiles, generated or vendored files and whitespace-only changes collapse; long runs of unchanged lines are cut |
 | `slice_openapi` | an index of operations, or only the operations you ask for plus the schemas they use |
 | `expand` | returns what a marker omitted, by line range or JSON path |
 | `report` | tokens saved this session, net of anything re-expanded, and money saved at *your* prices |
@@ -75,10 +77,12 @@ Provider prices change, so the tool never bakes one in. `whittle report` and the
 
 - It uses **rules, not a model**: common formats are handled well, unknown formats pass through unchanged (never mangled).
 - Errors that differ **only in numbers** (order ids, codes) count as repeats after the third; the rest are one `expand` away.
-- `trim_diff` output is for reading, not for applying.
+- `trim_diff` output is for reading, not for applying. Lockfile bodies are collapsed, so a newly added dependency is not visible until you `expand` it: expand lockfiles when you review dependency changes. Files under `dist/`, `build/` or `vendor/` are treated as generated even if you wrote them. An indentation-only change is collapsed only for languages where it cannot change meaning; in Python and YAML it is shown.
+- JSON: numbers and duplicate keys are kept exactly as written; arrays show the first three items (plus any that reveal other keys) and a string marker such as `... +497 more items`, and long strings are cut at 120 characters. Input nested more than about a thousand levels is returned unchanged.
+- Small inputs are returned unchanged: there is nothing to gain from a short log (under about 40 lines) or a short test run (under 12 lines). CRLF line endings and carriage-return progress output are turned into plain lines first.
 - Token counts differ between providers; `tiktoken` is used when installed, otherwise an estimate (`chars/4`, labelled).
 - An agent only benefits if it calls the tool. The shell filter and a one-line instruction in your agent settings (below) help.
-- `whittle` keeps the full text you trim in a temp folder so `expand` works (24 hours). Logs can contain secrets: use `--no-store` to keep nothing.
+- The CLI keeps the full text you trim in one shared temp folder (`$WHITTLE_DIR`, default `whittle-store` in your temp directory) so `expand` works for 24 hours; the MCP server keeps it in memory unless you pass `--store-dir`, so ids from one do not work in the other. `whittle report` adds up everything in that folder, including earlier projects. Logs can contain secrets: use `--no-store` to keep nothing, or point `WHITTLE_DIR` at a folder per project.
 - The MCP tools read files only inside `--root` (default: the current folder) and run commands only with `--allow-run`.
 
 ## How other tools relate
@@ -98,7 +102,7 @@ For long command output, pipe it through whittle first: `pytest 2>&1 | whittle t
 ```bash
 pip install -e ".[dev]"
 pytest -q
-whittle bench                              # the development corpus
+whittle bench                              # the development corpus (needs a git clone: the corpus is not in the pip package)
 whittle bench --corpus bench/holdout       # the held-out set
 python bench/make_corpus.py --source-repo <a Python repo with tests and git history>   # rebuild the corpus
 ```

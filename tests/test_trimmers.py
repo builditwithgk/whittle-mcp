@@ -111,7 +111,7 @@ index 5..6 100644
 def test_diff_collapses_lockfiles_and_whitespace_only_and_keeps_changes():
     text = diffs.trim(DIFF).text
     assert "-old_value = 1" in text and "+new_value = 2" in text
-    assert "generated or lock file" in text and "whitespace-only change" in text
+    assert "generated, vendored or lock file" in text and "whitespace-only change" in text
     assert '"dep30"' not in text
     assert text.splitlines()[0].startswith("whittle diff: 3 files")
 

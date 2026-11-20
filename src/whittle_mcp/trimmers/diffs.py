@@ -10,6 +10,8 @@ from whittle_mcp.trimmers.base import Trim
 _GENERATED = re.compile(
     r"(^|/)(package-lock\.json|yarn\.lock|pnpm-lock\.yaml|poetry\.lock|uv\.lock|Pipfile\.lock|Cargo\.lock|go\.sum|composer\.lock|Gemfile\.lock)$"
     r"|\.min\.(js|css)$|\.map$|(^|/)(dist|build|vendor|node_modules|__pycache__)/|\.snap$|\.pb\.go$|_pb2\.py$")
+# In these files a change of indentation changes the meaning, so only trailing whitespace counts as whitespace-only.
+_INDENT_MATTERS = (".py", ".pyi", ".yml", ".yaml", ".md", ".rst", ".toml", ".mk", "Makefile", ".nim", ".hs", ".coffee", ".sass", ".pug")
 _FILE = re.compile(r"^diff --git a/(.+?) b/(.+)$")
 NEW_FILE_HEAD = 40
 
@@ -51,9 +53,10 @@ def _collapse_reason(name: str, section: list[str], plus: int, minus: int) -> st
     if any(ln.startswith("Binary files") or ln.startswith("GIT binary patch") for ln in section):
         return None  # already one line
     if _GENERATED.search(name):
-        return "generated or lock file"
-    added = sorted(re.sub(r"\s+", "", ln[1:]) for ln in section if ln.startswith("+") and not ln.startswith("+++"))
-    removed = sorted(re.sub(r"\s+", "", ln[1:]) for ln in section if ln.startswith("-") and not ln.startswith("---"))
+        return "generated, vendored or lock file"
+    norm = (lambda s: s.rstrip()) if name.endswith(_INDENT_MATTERS) else (lambda s: s.strip())
+    added = sorted(norm(ln[1:]) for ln in section if ln.startswith("+") and not ln.startswith("+++"))
+    removed = sorted(norm(ln[1:]) for ln in section if ln.startswith("-") and not ln.startswith("---"))
     if (plus or minus) and added == removed:
         return "whitespace-only change"
     return None

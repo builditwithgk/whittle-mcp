@@ -1,4 +1,4 @@
-"""OpenAPI documents (JSON; YAML too when PyYAML is installed): an index, or only the operations you ask for plus the schemas they use."""
+"""OpenAPI and Swagger documents (JSON; YAML with PyYAML): an index, or only the operations you ask for plus what they use."""
 
 from __future__ import annotations
 
@@ -9,26 +9,33 @@ from typing import Any
 from whittle_mcp.trimmers.base import Trim
 
 METHODS = ("get", "put", "post", "delete", "options", "head", "patch", "trace")
+PATH_ITEM_KEYS = ("summary", "description", "parameters", "servers")   # shared by every operation under a path
 
 
-def load(text: str) -> dict[str, Any] | None:
+def load(text: str) -> tuple[dict[str, Any] | None, str]:
+    """Return (document, reason it could not be read)."""
     try:
         data = json.loads(text)
     except ValueError:
         try:
             import yaml  # type: ignore[import-untyped]
+        except ImportError:
+            return None, "not JSON (for YAML install whittle-mcp[yaml])"
+        try:
             data = yaml.safe_load(text)
         except Exception:  # noqa: BLE001
-            return None
-    return data if isinstance(data, dict) and "paths" in data else None
+            return None, "not valid JSON or YAML"
+    if isinstance(data, dict) and "paths" in data:
+        return data, ""
+    return None, "not an OpenAPI or Swagger document (no `paths`)"
 
 
 def trim(text: str, paths: list[str] | None = None, tags: list[str] | None = None, operation_ids: list[str] | None = None,
          methods: list[str] | None = None, index: bool = False, max_description: int = 200, handle: str | None = None,
          **_: object) -> Trim:
-    spec = load(text)
+    spec, reason = load(text)
     if spec is None:
-        return Trim(text, changed=False, notes=["not an OpenAPI document with `paths`, returned as is"])
+        return Trim(text, changed=False, notes=[reason + ", returned as is"])
     ops = list(_operations(spec))
     if index or not (paths or tags or operation_ids or methods):
         title = spec.get("info", {}).get("title", "")
@@ -39,19 +46,29 @@ def trim(text: str, paths: list[str] | None = None, tags: list[str] | None = Non
     wanted = [(p, m, op) for p, m, op in ops if _match(p, m, op, paths, tags, operation_ids, methods)]
     if not wanted:
         return Trim("No operations matched. Use the index (no filters) to see what exists.", notes=["no match"])
-    out: dict[str, Any] = {k: spec[k] for k in ("openapi", "swagger") if k in spec}
+    out: dict[str, Any] = {k: spec[k] for k in ("openapi", "swagger", "basePath", "host", "schemes") if k in spec}
     info = spec.get("info", {})
     out["info"] = {k: info[k] for k in ("title", "version") if k in info}
     if spec.get("servers"):
         out["servers"] = spec["servers"][:2]
+    if "security" in spec:
+        out["security"] = spec["security"]
     out["paths"] = {}
     for p, m, op in wanted:
-        out["paths"].setdefault(p, {})[m] = _shorten(op, max_description)
-    needed = _closure(spec, out)
-    if needed:
-        out["components"] = needed
-    return Trim(json.dumps(out, separators=(",", ":"), ensure_ascii=False),
-                notes=[f"{len(wanted)} of {len(ops)} operations"])
+        shared = {k: _shorten(spec["paths"][p][k], max_description) for k in PATH_ITEM_KEYS if k in spec["paths"][p]}
+        item = out["paths"].setdefault(p, shared)
+        item[m] = _shorten(op, max_description)
+    _add_references(spec, out, max_description)
+    for where in (("components", "securitySchemes"), ("securityDefinitions",)):   # how the API is authenticated stays visible
+        node: Any = spec
+        for part in where:
+            node = node.get(part) if isinstance(node, dict) else None
+        if node:
+            cur = out
+            for part in where[:-1]:
+                cur = cur.setdefault(part, {})
+            cur[where[-1]] = node
+    return Trim(json.dumps(out, separators=(",", ":"), ensure_ascii=False), notes=[f"{len(wanted)} of {len(ops)} operations"])
 
 
 def _operations(spec: dict[str, Any]):
@@ -98,22 +115,26 @@ def _refs(node: Any):
             yield from _refs(v)
 
 
-def _closure(spec: dict[str, Any], out: dict[str, Any]) -> dict[str, Any]:
-    """Every component the selected operations use, directly or through other components."""
+def _add_references(spec: dict[str, Any], out: dict[str, Any], limit: int) -> None:
+    """Copy every shared definition the selected operations use, directly or through other definitions, to the same place in the output.
+
+    Works for OpenAPI 3 (#/components/schemas/X, #/components/parameters/Y, ...) and Swagger 2 (#/definitions/X, #/parameters/Y).
+    """
     todo = list(_refs(out["paths"]))
     done: set[str] = set()
-    result: dict[str, Any] = {}
     while todo:
         ref = todo.pop()
         if ref in done:
             continue
         done.add(ref)
-        parts = ref.removeprefix("#/").split("/")
+        parts = [p.replace("~1", "/").replace("~0", "~") for p in ref.removeprefix("#/").split("/")]
         node: Any = spec
         for part in parts:
             node = node.get(part) if isinstance(node, dict) else None
-        if node is None or parts[0] != "components" or len(parts) < 3:
+        if node is None:
             continue
-        result.setdefault(parts[1], {})[parts[2]] = _shorten(node, 200)
+        cur = out
+        for part in parts[:-1]:
+            cur = cur.setdefault(part, {})
+        cur[parts[-1]] = _shorten(node, limit)
         todo.extend(_refs(node))
-    return result

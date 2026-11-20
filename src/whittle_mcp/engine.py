@@ -11,6 +11,8 @@ from whittle_mcp.tokens import TokenCounter, get_counter
 from whittle_mcp.trimmers import diffs, jsonmask, logs, openapi, tests
 from whittle_mcp.trimmers.base import Trim
 
+CR, LF, CRLF = chr(13), chr(10), chr(13) + chr(10)
+
 TRIMMERS: dict[str, Callable[..., Trim]] = {
     "tests": tests.trim, "log": logs.trim, "json": jsonmask.trim, "diff": diffs.trim, "openapi": openapi.trim,
 }
@@ -37,6 +39,9 @@ class Result:
 
     def receipt(self) -> str:
         line = f"[whittle {self.kind}] {self.raw_tokens:,} -> {self.out_tokens:,} tokens ({-self.percent:.1f}%)"
+        reasons = [n for n in self.notes if n != "unchanged"]
+        if "unchanged" in self.notes and reasons:
+            line += f" | unchanged: {reasons[0]}"
         if self.handle and self.omitted_lines:
             line += f" | full output: whittle expand {self.handle}"
         return line + f" | counter: {self.counter}"
@@ -54,6 +59,7 @@ class Whittle:
     def trim(self, kind: str, text: str, keep_original: bool = True, **options: Any) -> Result:
         if kind not in TRIMMERS:
             raise ValueError(f"unknown kind {kind!r}; choose one of {', '.join(TRIMMERS)}")
+        text = text.replace(CRLF, LF).replace(CR, LF)   # CRLF and carriage-return progress output become plain lines
         raw_tokens = self.counter.count(text)
         handle = self.store.put(text) if keep_original and text else None
         trimmed = TRIMMERS[kind](text, handle=handle, **options)
@@ -70,21 +76,31 @@ class Whittle:
 
     def expand(self, handle: str, lines: str | None = None, path: str | None = None) -> str:
         """Give back what was omitted: a line range (`45-356`), a JSON path (`$.items`), or everything."""
+        return self.expand_checked(handle, lines, path)[0]
+
+    def expand_checked(self, handle: str, lines: str | None = None, path: str | None = None) -> tuple[str, bool]:
+        """Like expand, but also says whether it worked (the CLI turns a failure into a non-zero exit code)."""
         text = self.store.get(handle)
         if text is None:
-            return f"No stored output for id {handle!r}. It may have expired, or was created with storage turned off."
+            return f"No stored output for id {handle!r}. It may have expired, or was created with storage turned off.", False
         out = text
         if lines:
             try:
                 start, _, end = lines.partition("-")
-                out = self.store.lines(handle, int(start), int(end or start)) or ""
+                first, last = int(start), int(end or start)
             except ValueError:
-                return f"Bad lines value {lines!r}; use START-END, for example 45-356."
+                return f"Bad lines value {lines!r}; use START-END, for example 45-356.", False
+            total = len(text.splitlines())
+            if first > total:
+                return f"Lines {lines} are past the end: the stored output has {total} lines.", False
+            out = self.store.lines(handle, first, last) or ""
         elif path:
             sub = jsonmask.subtree(text, path)
-            out = sub if sub is not None else f"Path {path!r} not found in the stored JSON."
+            if sub is None:
+                return f"Path {path!r} not found in the stored JSON.", False
+            out = sub
         self.events.append({"event": "expand", "handle": handle, "tokens": self.counter.count(out)})
-        return out
+        return out, True
 
     def report(self, prices: dict[str, Price] | None = None, later_turns: int = 10, cached: bool = True) -> dict[str, Any]:
         trims = [e for e in self.events if e["event"] == "trim"]

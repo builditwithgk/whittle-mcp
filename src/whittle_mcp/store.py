@@ -41,7 +41,7 @@ class Store:
         handle = hashlib.sha1(text.encode("utf-8", "surrogatepass")).hexdigest()[:8]
         self._memory[handle] = text
         if self.directory:
-            (self.directory / f"{handle}.txt").write_text(text, encoding="utf-8", errors="surrogatepass")
+            (self.directory / f"{handle}.txt").write_bytes(text.encode("utf-8", "surrogatepass"))
         return handle
 
     def get(self, handle: str) -> str | None:
@@ -50,7 +50,7 @@ class Store:
         if self.directory and handle.isalnum():
             path = self.directory / f"{handle}.txt"
             if path.is_file():
-                return path.read_text(encoding="utf-8", errors="surrogatepass")
+                return path.read_bytes().decode("utf-8", "surrogatepass")
         return None
 
     def lines(self, handle: str, start: int, end: int) -> str | None:
