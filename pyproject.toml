@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "whittle-mcp"
-version = "0.1.0"
+version = "0.1.1"
 description = "Trim what your agent reads, and measure what it kept: test, log, JSON, diff and OpenAPI trimmers as an MCP server and a CLI filter, with a retention-checked benchmark."
 readme = "README.md"
 license = "MIT"

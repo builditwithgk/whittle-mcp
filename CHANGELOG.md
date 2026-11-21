@@ -1,6 +1,9 @@
 # Changelog
 
-## 0.1.0 (unreleased)
+## 0.1.1
+- Listing metadata for the official MCP Registry (`server.json`, an `mcp-name` marker in the README) and Glama (`glama.json`). No code changes.
+
+## 0.1.0
 First version. Fixes made after a fresh-agent walkthrough of the first build, before any release:
 - Windows: the CLI reads and writes UTF-8 bytes, so a narrow console code page can no longer crash it or garble text; CRLF and carriage-return output is normalised, and the store no longer writes `\r\r\n`.
 - CLI: a missing file or an unknown id gives a clear message and a non-zero exit code; closing a pipe early (`| head`) is quiet.
