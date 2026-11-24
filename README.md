@@ -2,6 +2,8 @@
 
 <!-- mcp-name: io.github.builditwithgk/whittle-mcp -->
 
+[![builditwithgk/whittle-mcp MCP server](https://glama.ai/mcp/servers/builditwithgk/whittle-mcp/badges/score.svg)](https://glama.ai/mcp/servers/builditwithgk/whittle-mcp)
+
 **Trim what your agent reads, and measure what it kept.**
 
 Coding agents spend most of their tokens re-reading tool output: test runs, logs and stack traces, big JSON, diffs and API specs. Every result stays in the conversation and is re-sent on every later turn. whittle-mcp shrinks that output *without losing the facts*, and it proves what it kept.
